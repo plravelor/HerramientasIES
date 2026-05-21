@@ -736,22 +736,164 @@ table.tbl tr:hover td{background:rgba(10,132,255,.035)!important;}
     <p class="body" style="margin-top:7px"><strong>Ejemplo:</strong> 80.000 estudiantes colombianos. Los que escuchan música mientras estudian obtienen promedio de 3.52/5.0 vs. 3.48/5.0 los que estudian en silencio. p menor a 0.001 — estadísticamente significativo. Pero ¿vale la pena cambiar todos los salones por una diferencia de 0.04 puntos? Probablemente no.</p>
   </div>
   <div class="card">
-    <div class="ctit">Tamaño del efecto — cómo medir la importancia real</div>
-    <p class="body" style="margin-bottom:9px">El tamaño del efecto cuantifica <em>qué tan grande</em> es el efecto, independientemente del tamaño de la muestra:</p>
-    <div style="display:flex;flex-direction:column;gap:7px">
-      <div style="padding:12px;background:var(--azd);border-radius:var(--rs);border-left:3px solid var(--az)">
-        <p class="body"><strong style="color:var(--az)">d de Cohen (para prueba t):</strong> diferencia entre medias en unidades de desviación estándar. d menor a 0.2 trivial, 0.2–0.5 pequeño, 0.5–0.8 mediano, mayor a 0.8 grande.</p>
-        <div class="formula" style="margin-top:6px"><span class="fc">d = (media grupo 1 − media grupo 2) ÷ desviación estándar combinada</span></div>
+  <div class="ctit">Tamaño del efecto — qué tan importante es realmente el hallazgo</div>
+
+  <p class="body" style="margin-bottom:9px">
+    El valor p solo indica si el resultado sería raro por azar bajo H₀. 
+    Pero no dice si el efecto es pequeño, útil, relevante o importante en la práctica.
+  </p>
+
+  <p class="body" style="margin-bottom:12px">
+    El <strong>tamaño del efecto</strong> cuantifica la magnitud real del fenómeno observado. 
+    Permite responder preguntas como:
+    <em>¿la diferencia entre grupos es apenas perceptible o realmente grande?</em>
+    o 
+    <em>¿la relación entre variables es débil o suficientemente fuerte como para importar?</em>
+  </p>
+
+  <div style="display:flex;flex-direction:column;gap:10px">
+
+    <!-- COHEN D -->
+
+    <div style="padding:14px;background:var(--azd);border-radius:var(--rs);border-left:4px solid var(--az)">
+
+      <p class="body">
+        <strong style="color:var(--az)">d de Cohen (prueba t):</strong>
+        mide qué tan separadas están las medias de dos grupos en unidades de desviación estándar.
+      </p>
+
+      <p class="body" style="margin-top:7px">
+        En otras palabras:
+        indica cuánto cambia el resultado promedio de un grupo respecto al otro.
+      </p>
+
+      <div class="formula" style="margin-top:8px">
+        <span class="fc">
+          d = (media grupo 1 − media grupo 2) ÷ desviación estándar combinada
+        </span>
       </div>
-      <div style="padding:12px;background:var(--pud);border-radius:var(--rs);border-left:3px solid var(--pu)">
-        <p class="body"><strong style="color:var(--pu)">η² — eta cuadrado (para ANOVA):</strong> proporción de la varianza total explicada por el factor. η² menor a 0.01 trivial, 0.01–0.06 pequeño, 0.06–0.14 mediano, mayor a 0.14 grande.</p>
-        <div class="formula" style="margin-top:6px"><span class="fc">η² = varianza atribuida al factor ÷ varianza total</span></div>
+
+      <p class="body" style="margin-top:10px">
+        <strong>Interpretación típica:</strong><br>
+        d ≈ 0.20 → efecto pequeño<br>
+        d ≈ 0.50 → efecto mediano<br>
+        d ≥ 0.80 → efecto grande
+      </p>
+
+      <p class="body" style="margin-top:10px">
+        <strong>Ejemplo:</strong>
+        un grupo con terapia A obtiene media = 18 y otro media = 12. 
+        Si la desviación estándar combinada es 6:
+      </p>
+
+      <div class="formula" style="margin-top:6px">
+        <span class="fc">
+          d = (18 − 12) ÷ 6 = 1.0
+        </span>
       </div>
-      <div style="padding:12px;background:var(--gnd);border-radius:var(--rs);border-left:3px solid var(--gn)">
-        <p class="body"><strong style="color:var(--gn)">r de Pearson (para correlación):</strong> ya es por sí mismo una medida de efecto. r menor a 0.10 pequeño, 0.30 mediano, 0.50 grande.</p>
-      </div>
+
+      <p class="body" style="margin-top:8px">
+        Eso indica un efecto muy grande: los grupos están claramente separados.
+      </p>
+
     </div>
-    <div class="ins am" style="margin-top:8px">En APA SIEMPRE se reporta el estadístico + p-valor + tamaño del efecto. Ejemplo correcto: F(2,87) = 8.34, p = .001, η² = .16. Reportar solo p es una práctica incompleta.</div>
+
+    <!-- ETA -->
+
+    <div style="padding:14px;background:var(--pud);border-radius:var(--rs);border-left:4px solid var(--pu)">
+
+      <p class="body">
+        <strong style="color:var(--pu)">η² — eta cuadrado (ANOVA):</strong>
+        indica qué proporción de toda la variabilidad observada puede explicarse por el factor estudiado.
+      </p>
+
+      <p class="body" style="margin-top:7px">
+        Ayuda a responder:
+        <em>¿el factor realmente explica diferencias importantes o apenas una parte mínima?</em>
+      </p>
+
+      <div class="formula" style="margin-top:8px">
+        <span class="fc">
+          η² = varianza explicada por el factor ÷ varianza total
+        </span>
+      </div>
+
+      <p class="body" style="margin-top:10px">
+        <strong>Interpretación típica:</strong><br>
+        η² ≈ 0.01 → pequeño<br>
+        η² ≈ 0.06 → mediano<br>
+        η² ≥ 0.14 → grande
+      </p>
+
+      <p class="body" style="margin-top:10px">
+        <strong>Ejemplo:</strong>
+        si η² = .18 en un ANOVA sobre métodos de enseñanza,
+        significa que el 18% de las diferencias en rendimiento puede atribuirse al método utilizado.
+      </p>
+
+      <p class="body" style="margin-top:8px">
+        En ciencias sociales, explicar un porcentaje grande de la varianza suele ser difícil,
+        por lo que valores moderados pueden ser muy relevantes.
+      </p>
+
+    </div>
+
+    <!-- R -->
+
+    <div style="padding:14px;background:var(--gnd);border-radius:var(--rs);border-left:4px solid var(--gn)">
+
+      <p class="body">
+        <strong style="color:var(--gn)">r de Pearson (correlación):</strong>
+        mide la fuerza y dirección de la relación lineal entre dos variables.
+      </p>
+
+      <p class="body" style="margin-top:7px">
+        r puede variar entre −1 y +1:
+      </p>
+
+      <p class="body" style="margin-top:7px">
+        r > 0 → cuando una variable aumenta, la otra tiende a aumentar.<br>
+        r < 0 → cuando una aumenta, la otra tiende a disminuir.<br>
+        r ≈ 0 → prácticamente no hay relación lineal.
+      </p>
+
+      <p class="body" style="margin-top:10px">
+        <strong>Magnitud aproximada:</strong><br>
+        r ≈ 0.10 → pequeña<br>
+        r ≈ 0.30 → mediana<br>
+        r ≥ 0.50 → fuerte
+      </p>
+
+      <p class="body" style="margin-top:10px">
+        <strong>Ejemplo:</strong>
+        si horas de estudio y puntaje tienen r = .62,
+        existe una relación positiva fuerte:
+        quienes estudian más tienden a obtener puntajes más altos.
+      </p>
+
+      <p class="body" style="margin-top:8px">
+        Importante:
+        correlación NO implica causalidad.
+        Dos variables pueden relacionarse sin que una cause a la otra.
+      </p>
+
+    </div>
+
+  </div>
+
+  <div class="ins am" style="margin-top:10px">
+    <strong>Reporte APA correcto:</strong><br>
+    siempre se informa:
+    estadístico + grados de libertad + p + tamaño del efecto.<br><br>
+
+    Ejemplo:<br>
+    <strong>F</strong>(2, 87) = 8.34, p = .001, η² = .16
+    <br><br>
+
+    Reportar solo el valor p es insuficiente,
+    porque un resultado puede ser estadísticamente significativo
+    pero tener un efecto muy pequeño en la práctica.
+  </div>
   </div>
   <div class="card">
     <div class="ctit">Error Tipo I y Error Tipo II</div>
