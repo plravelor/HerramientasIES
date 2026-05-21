@@ -1,1 +1,1702 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>EstadísticaLab Pro · Capítulo 10</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=DM+Serif+Display&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F8FAFC;--bg2:#F1F5F9;--bg3:#E2E8F0;--card:#fff;--border:#E2E8F0;--border2:#CBD5E1;
+  --tx:#0F172A;--tx2:#475569;--tx3:#94A3B8;
+  --az:#2563EB;--azd:rgba(37,99,235,.08);--azb:rgba(37,99,235,.2);
+  --gn:#16A34A;--gnd:rgba(22,163,74,.08);--gnb:rgba(22,163,74,.2);
+  --am:#B45309;--amd:rgba(180,83,9,.08);--amb:rgba(180,83,9,.2);
+  --rd:#DC2626;--rdd:rgba(220,38,38,.08);--rdb:rgba(220,38,38,.2);
+  --pu:#7C3AED;--pud:rgba(124,58,237,.08);--pub:rgba(124,58,237,.2);
+  --cy:#0891B2;--cyd:rgba(8,145,178,.08);--cyb:rgba(8,145,178,.2);
+  --r:10px;--rs:6px;
+  --mono:'JetBrains Mono',monospace;--sans:'DM Sans',sans-serif;--serif:'DM Serif Display',serif;
+  --sh:0 1px 3px rgba(0,0,0,.07);--shm:0 4px 12px rgba(0,0,0,.09);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--sans);background:var(--bg);color:var(--tx);-webkit-font-smoothing:antialiased;}
+#nav{position:fixed;left:0;top:0;bottom:0;width:214px;background:var(--card);border-right:1px solid var(--border);overflow-y:auto;padding:16px 0;z-index:50;display:flex;flex-direction:column;}
+#nav .logo{padding:0 16px 14px;border-bottom:1px solid var(--border);margin-bottom:8px;}
+#nav .logo h1{font-family:var(--serif);font-size:17px;color:var(--tx);}
+#nav .logo p{font-size:10px;color:var(--tx3);font-family:var(--mono);margin-top:2px;}
+.ni{display:flex;align-items:center;gap:8px;padding:7px 16px;font-size:12.5px;font-weight:500;color:var(--tx2);cursor:pointer;transition:all .13s;border-left:2px solid transparent;}
+.ni:hover{background:var(--bg2);color:var(--tx);}
+.ni.on{color:var(--az);background:var(--azd);border-left-color:var(--az);font-weight:700;}
+.ni .ico{font-size:13px;width:18px;text-align:center;}
+.ng{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--tx3);padding:10px 16px 3px;}
+#navmob{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--border);z-index:50;padding:6px 4px;overflow-x:auto;white-space:nowrap;}
+#navmob .nm{display:inline-flex;flex-direction:column;align-items:center;gap:2px;padding:5px 8px;font-size:9.5px;color:var(--tx3);cursor:pointer;border-radius:var(--rs);min-width:50px;text-align:center;}
+#navmob .nm.on{color:var(--az);background:var(--azd);}
+#navmob .nm .i{font-size:15px;}
+#main{margin-left:214px;padding:26px 26px 80px;}
+.scr{display:none;max-width:740px;margin:0 auto;}
+.scr.on{display:block;animation:fi .2s ease;}
+@keyframes fi{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:translateY(0);}}
+h1{font-family:var(--serif);font-size:clamp(24px,4vw,40px);line-height:1.1;margin-bottom:11px;}
+h2{font-family:var(--serif);font-size:clamp(19px,3vw,30px);line-height:1.15;margin-bottom:10px;}
+h3{font-size:14.5px;font-weight:700;margin-bottom:6px;color:var(--tx);}
+.lead{font-size:14.5px;line-height:1.78;color:var(--tx2);margin-bottom:16px;}
+.body{font-size:13.5px;line-height:1.8;color:var(--tx2);}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px;margin-bottom:13px;box-shadow:var(--sh);}
+.ctit{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--tx3);margin-bottom:10px;}
+.divider{height:1px;background:var(--border);margin:18px 0;}
+.ins{border-left:3px solid var(--gn);padding:11px 13px;background:var(--gnd);border-radius:0 var(--rs) var(--rs) 0;margin:10px 0;font-size:13.5px;line-height:1.75;}
+.ins.az{border-color:var(--az);background:var(--azd);}
+.ins.am{border-color:var(--am);background:var(--amd);}
+.ins.rd{border-color:var(--rd);background:var(--rdd);}
+.ins.pu{border-color:var(--pu);background:var(--pud);}
+.ins.cy{border-color:var(--cy);background:var(--cyd);}
+.warn{background:#FFFBEB;border:1px solid #FDE68A;border-radius:var(--r);padding:12px 15px;margin:10px 0;}
+.warn .wt{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#92400E;margin-bottom:4px;}
+.warn p{font-size:13.5px;line-height:1.7;color:#78350F;}
+.warn p+p{margin-top:5px;}
+.btn{display:block;color:#fff;font-family:var(--sans);font-size:14px;font-weight:700;padding:12px 20px;border:none;border-radius:var(--r);cursor:pointer;width:100%;margin-top:11px;transition:transform .14s,box-shadow .14s;text-align:center;}
+.btn:hover{transform:translateY(-2px);}
+.btn-gn{background:var(--gn);box-shadow:0 2px 8px rgba(22,163,74,.22);}
+.btn-az{background:var(--az);box-shadow:0 2px 8px rgba(37,99,235,.2);}
+.btn:disabled{background:#94A3B8;cursor:not-allowed;transform:none;box-shadow:none;}
+.badge{display:inline-block;font-family:var(--mono);font-size:10px;font-weight:600;padding:3px 9px;border-radius:20px;letter-spacing:1.2px;text-transform:uppercase;}
+.b-az{color:var(--az);background:var(--azd);border:1px solid var(--azb);}
+.b-gn{color:var(--gn);background:var(--gnd);border:1px solid var(--gnb);}
+.b-am{color:var(--am);background:var(--amd);border:1px solid var(--amb);}
+.b-pu{color:var(--pu);background:var(--pud);border:1px solid var(--pub);}
+.b-cy{color:var(--cy);background:var(--cyd);border:1px solid var(--cyb);}
+.sc-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:11px 0;}
+.sc{padding:13px;border-radius:var(--rs);border:1px solid var(--border2);background:var(--card);box-shadow:var(--sh);border-top:3px solid;}
+.sc.nom{border-top-color:var(--az);}
+.sc.ord{border-top-color:var(--gn);}
+.sc.int{border-top-color:var(--am);}
+.sc.rat{border-top-color:var(--pu);}
+.sc h4{font-size:12.5px;font-weight:700;margin-bottom:5px;}
+.sc p{font-size:12px;color:var(--tx2);line-height:1.65;}
+.qbox{background:var(--azd);border:1px solid var(--azb);border-radius:var(--r);padding:15px;margin:15px 0;}
+.qlabel{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--az);margin-bottom:7px;}
+.qp{font-size:14px;font-weight:500;color:var(--tx);margin-bottom:11px;line-height:1.6;}
+.qch{display:flex;flex-direction:column;gap:6px;}
+.qo{padding:10px 13px;border:1px solid var(--border2);border-radius:var(--rs);background:var(--card);cursor:pointer;font-size:13px;text-align:left;color:var(--tx);transition:all .13s;box-shadow:var(--sh);line-height:1.5;}
+.qo:hover{border-color:var(--az);background:var(--azd);}
+.qo.ok{border-color:var(--gn);background:var(--gnd);color:#166534;pointer-events:none;}
+.qo.bad{border-color:var(--rd);background:var(--rdd);color:#991B1B;pointer-events:none;}
+.qo.dim{pointer-events:none;opacity:.4;}
+.qfb{margin-top:9px;padding:10px 13px;border-radius:var(--rs);font-size:13px;line-height:1.7;display:none;}
+.qfb.ok{display:block;background:var(--gnd);border:1px solid var(--gnb);color:#166534;}
+.qfb.bad{display:block;background:var(--rdd);border:1px solid var(--rdb);color:#991B1B;}
+.clf{display:flex;flex-direction:column;gap:6px;margin:10px 0;}
+.clrow{display:flex;align-items:center;gap:8px;padding:9px 12px;background:var(--card);border:1px solid var(--border);border-radius:var(--rs);box-shadow:var(--sh);flex-wrap:wrap;}
+.clvar{font-size:13px;font-weight:600;flex:1;min-width:160px;}
+.clbtns{display:flex;gap:4px;flex-wrap:wrap;}
+.clb{padding:3px 9px;border:1px solid var(--border2);border-radius:20px;font-size:11px;font-family:var(--mono);cursor:pointer;background:var(--card);color:var(--tx2);transition:all .13s;}
+.clb:hover{border-color:var(--az);color:var(--az);}
+.clb.ok{background:var(--gnd);border-color:var(--gnb);color:var(--gn);pointer-events:none;}
+.clb.bad{background:var(--rdd);border-color:var(--rdb);color:var(--rd);}
+.clffb{font-size:11px;color:var(--tx3);}
+.clffb.ok{color:var(--gn);font-weight:600;}
+.clffb.bad{color:var(--rd);}
+.vvrow{background:var(--card);border:1px solid var(--border2);border-radius:var(--rs);padding:11px 13px;margin-bottom:8px;box-shadow:var(--sh);}
+.vvn{font-size:13.5px;font-weight:600;color:var(--tx);margin-bottom:4px;}
+.vvd{font-size:12.5px;color:var(--tx2);margin-bottom:7px;line-height:1.6;}
+.vvbtns{display:flex;gap:6px;flex-wrap:wrap;}
+.vvb{padding:7px 13px;border:1px solid var(--border2);border-radius:var(--rs);font-size:12.5px;font-weight:600;cursor:pointer;background:var(--card);color:var(--tx2);transition:all .13s;}
+.vvb:hover{border-color:var(--az);background:var(--azd);}
+.vvb.ok{background:var(--gnd);border-color:var(--gnb);color:var(--gn);pointer-events:none;}
+.vvb.bad{background:var(--rdd);border-color:var(--rdb);color:var(--rd);}
+.vvfb{font-size:12px;margin-top:5px;display:none;line-height:1.6;}
+.vvfb.on{display:block;}
+.chart-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:13px;margin:10px 0;overflow-x:auto;box-shadow:var(--sh);}
+.ctitle{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--tx2);margin-bottom:9px;}
+.legend{display:flex;gap:11px;flex-wrap:wrap;margin-top:7px;}
+.li{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--tx2);}
+.ld{width:10px;height:10px;border-radius:3px;}
+.scen-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:13px 0;}
+.sb{padding:14px;border:2px solid var(--border2);border-radius:var(--r);background:var(--card);cursor:pointer;transition:all .18s;text-align:left;box-shadow:var(--sh);line-height:1.5;}
+.sb .si{font-size:20px;display:block;margin-bottom:5px;}
+.sb .stit{font-size:12.5px;font-weight:700;color:var(--tx);}
+.sb .ssub{font-size:10.5px;color:var(--tx3);font-family:var(--mono);margin-top:3px;display:block;}
+.sb:hover{border-color:var(--az);background:var(--azd);transform:translateY(-2px);}
+.sb.on{border-color:var(--gn);background:var(--gnd);}
+.tbl-wrap{overflow-x:auto;border-radius:var(--r);border:1px solid var(--border);margin:10px 0;box-shadow:var(--sh);}
+table.tbl{width:100%;border-collapse:collapse;font-size:12.5px;}
+table.tbl th{background:var(--bg3);padding:8px 11px;text-align:left;font-weight:700;font-size:10.5px;text-transform:uppercase;letter-spacing:.4px;color:var(--tx2);border-bottom:1px solid var(--border2);}
+table.tbl td{padding:8px 11px;border-bottom:1px solid var(--border);color:var(--tx2);line-height:1.55;}
+table.tbl tr:last-child td{border-bottom:none;}
+table.tbl .ok{color:var(--gn);font-weight:700;}
+table.tbl .no{color:var(--rd);}
+.formula{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--rs);padding:12px 15px;font-family:var(--mono);font-size:13px;margin:9px 0;text-align:center;color:var(--tx);line-height:1.8;}
+.formula .fc{font-size:14px;font-weight:700;color:var(--az);}
+.stat3{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:10px 0;}
+.stc{background:var(--card);border:1px solid var(--border);border-radius:var(--rs);padding:11px 7px;text-align:center;box-shadow:var(--sh);}
+.stl{font-size:9px;font-family:var(--mono);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;}
+.stv{font-family:var(--mono);font-size:17px;font-weight:700;}
+details.xd{background:var(--card);border:1px solid var(--border);border-radius:var(--rs);padding:12px 14px;margin:8px 0;box-shadow:var(--sh);}
+details.xd summary{font-weight:600;font-size:13px;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;color:var(--tx);}
+details.xd summary::-webkit-details-marker{display:none;}
+details.xd summary::after{content:'▼';font-size:9px;color:var(--tx3);}
+details.xd[open] summary::after{content:'▲';}
+details.xd .xb{margin-top:11px;font-size:13.5px;line-height:1.78;color:var(--tx2);}
+details.xd .xb p+p{margin-top:7px;}
+details.xd .xb strong{color:var(--tx);}
+.test-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0;}
+.tc{padding:13px;border-radius:var(--rs);border:1px solid var(--border2);background:var(--card);box-shadow:var(--sh);border-top:3px solid;}
+.tc.az{border-top-color:var(--az);}
+.tc.gn{border-top-color:var(--gn);}
+.tc.am{border-top-color:var(--am);}
+.tc.pu{border-top-color:var(--pu);}
+.tc.cy{border-top-color:var(--cy);}
+.tc.rd{border-top-color:var(--rd);}
+.tc h4{font-size:12.5px;font-weight:700;margin-bottom:3px;}
+.tc .tcsub{font-size:10px;font-family:var(--mono);color:var(--tx3);margin-bottom:5px;}
+.tc p{font-size:12px;color:var(--tx2);line-height:1.6;}
+.dtree-step{background:var(--card);border:1px solid var(--border2);border-radius:var(--r);padding:14px;margin-bottom:8px;box-shadow:var(--sh);}
+.dtree-step .dql{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--az);margin-bottom:7px;}
+.dtree-step .dqp{font-size:14px;font-weight:500;color:var(--tx);margin-bottom:10px;line-height:1.6;}
+.dopts{display:flex;gap:7px;flex-wrap:wrap;}
+.dopt{padding:7px 13px;border:1px solid var(--azb);border-radius:var(--rs);background:var(--card);color:var(--az);font-size:13px;font-weight:600;cursor:pointer;transition:all .13s;}
+.dopt:hover,.dopt.on{background:var(--az);color:#fff;border-color:var(--az);}
+.dres{background:var(--gnd);border:1px solid var(--gnb);border-radius:var(--r);padding:13px;margin-top:8px;display:none;}
+.dres.on{display:block;}
+.dres h4{font-size:14px;font-weight:700;color:var(--gn);margin-bottom:5px;}
+.dres p{font-size:13px;color:var(--tx2);line-height:1.7;}
+.pvizrow{display:flex;align-items:center;gap:10px;padding:10px;background:var(--card);border:1px solid var(--border);border-radius:var(--rs);box-shadow:var(--sh);margin-bottom:6px;}
+.pviz-bar-wrap{flex:1;height:10px;background:var(--bg3);border-radius:5px;overflow:hidden;}
+.pviz-bar{height:100%;border-radius:5px;}
+.pviz-label{font-size:12px;padding:3px 8px;border-radius:20px;font-weight:700;font-family:var(--mono);white-space:nowrap;}
+@media(max-width:660px){
+  #nav{display:none;}
+  #main{margin-left:0;padding:14px 13px 88px;}
+  #navmob{display:block;}
+  .sc-grid,.test-grid,.scen-grid{grid-template-columns:1fr;}
+  .stat3{grid-template-columns:1fr 1fr;}
+}
 
+
+/* =========================================================
+   ESTADÍSTICALAB PRO — CAPA DE DISEÑO, UX Y PEDAGOGÍA
+   Conserva íntegramente el contenido original. Solo añade
+   navegación, progreso, persistencia, accesibilidad y pulido visual.
+   ========================================================= */
+:root{
+  --pro-bg:#f5f5f7;
+  --pro-surface:rgba(255,255,255,.82);
+  --pro-surface-solid:#ffffff;
+  --pro-ink:#111827;
+  --pro-muted:#667085;
+  --pro-line:rgba(17,24,39,.10);
+  --pro-line-strong:rgba(17,24,39,.18);
+  --pro-blue:#0a84ff;
+  --pro-blue-soft:#edf5ff;
+  --pro-green:#12b76a;
+  --pro-amber:#f79009;
+  --pro-red:#f04438;
+  --pro-purple:#7c3aed;
+  --pro-shadow:0 18px 50px rgba(15,23,42,.08),0 2px 10px rgba(15,23,42,.04);
+  --pro-shadow-soft:0 10px 28px rgba(15,23,42,.06);
+  --pro-radius:24px;
+  --pro-radius-sm:16px;
+}
+html{scroll-behavior:smooth;background:var(--pro-bg);} 
+body{
+  background:
+    radial-gradient(circle at 15% 0%, rgba(10,132,255,.12), transparent 26rem),
+    radial-gradient(circle at 82% 10%, rgba(124,58,237,.10), transparent 28rem),
+    linear-gradient(180deg,#fbfbfd 0%,#f5f5f7 34%,#f7f8fb 100%) !important;
+  color:var(--pro-ink);
+  letter-spacing:-.011em;
+}
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;
+  background-image:linear-gradient(rgba(17,24,39,.025) 1px, transparent 1px),linear-gradient(90deg, rgba(17,24,39,.025) 1px, transparent 1px);
+  background-size:42px 42px;mask-image:linear-gradient(to bottom,rgba(0,0,0,.28),transparent 72%);
+}
+#nav{
+  width:288px !important;padding:22px 18px !important;border-right:1px solid var(--pro-line)!important;
+  background:rgba(255,255,255,.78)!important;backdrop-filter:saturate(160%) blur(22px);
+  box-shadow:1px 0 0 rgba(255,255,255,.55) inset;
+}
+#nav .logo{border-bottom:0!important;margin-bottom:12px!important;padding:4px 8px 18px!important;position:relative;}
+#nav .logo::before{content:"";display:block;width:40px;height:40px;border-radius:14px;margin-bottom:12px;background:linear-gradient(135deg,#111827,#3b82f6);box-shadow:0 14px 26px rgba(37,99,235,.24);} 
+#nav .logo h1{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif!important;font-size:20px!important;letter-spacing:-.04em!important;font-weight:760!important;}
+#nav .logo p{font-size:10px!important;letter-spacing:.11em!important;text-transform:uppercase;color:var(--pro-muted)!important;}
+.ng{font-size:10px!important;letter-spacing:.16em!important;color:#98a2b3!important;padding:18px 10px 8px!important;}
+.ni{border-left:0!important;border-radius:12px!important;padding:10px 12px!important;margin:2px 0!important;font-size:13.5px!important;font-weight:620!important;color:#475467!important;}
+.ni .ico{font-size:14px!important;width:21px!important;filter:saturate(.9);} 
+.ni:hover{background:rgba(17,24,39,.045)!important;color:#111827!important;transform:translateX(2px);} 
+.ni.on{background:linear-gradient(135deg,rgba(10,132,255,.13),rgba(10,132,255,.06))!important;color:#0a5fd3!important;box-shadow:inset 0 0 0 1px rgba(10,132,255,.12);font-weight:760!important;}
+#main{margin-left:288px!important;padding:88px 44px 110px!important;}
+.scr{max-width:980px!important;}
+.scr.on{animation:proEnter .34s cubic-bezier(.2,.8,.2,1)!important;}
+@keyframes proEnter{from{opacity:0;transform:translateY(14px) scale(.997);}to{opacity:1;transform:translateY(0) scale(1);}}
+.pro-topbar{position:fixed;top:0;left:288px;right:0;height:64px;z-index:45;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:0 34px;background:rgba(255,255,255,.70);backdrop-filter:saturate(160%) blur(18px);border-bottom:1px solid var(--pro-line);} 
+.pro-topbar-title{display:flex;align-items:center;gap:12px;font-size:13px;color:var(--pro-muted);font-weight:650;white-space:nowrap;}
+.pro-topbar-title strong{color:var(--pro-ink);font-weight:760;}
+.pro-progress-wrap{flex:1;max-width:520px;height:8px;border-radius:999px;background:rgba(17,24,39,.08);overflow:hidden;box-shadow:inset 0 1px 2px rgba(17,24,39,.06);} 
+.pro-progress-bar{height:100%;width:0%;border-radius:999px;background:linear-gradient(90deg,#0a84ff,#7c3aed);transition:width .32s ease;}
+.pro-topbar-actions{display:flex;gap:8px;align-items:center;}
+.pro-icon-btn{border:1px solid var(--pro-line);background:rgba(255,255,255,.75);color:#344054;border-radius:999px;padding:8px 12px;font-size:12.5px;font-weight:700;cursor:pointer;transition:all .18s ease;}
+.pro-icon-btn:hover{transform:translateY(-1px);box-shadow:var(--pro-shadow-soft);background:#fff;color:#111827;}
+h1,h2{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif!important;font-weight:780!important;letter-spacing:-.055em!important;color:#0b1220!important;}
+h1{font-size:clamp(34px,5vw,68px)!important;line-height:.98!important;margin-bottom:18px!important;}
+h2{font-size:clamp(28px,4vw,48px)!important;line-height:1.02!important;margin-bottom:16px!important;}
+h3{font-size:17px!important;letter-spacing:-.02em!important;}
+.lead{font-size:18px!important;line-height:1.72!important;color:#475467!important;max-width:840px;margin-bottom:28px!important;}
+.body{font-size:15.5px!important;line-height:1.84!important;color:#475467!important;}
+.card,.qbox,details.xd,.chart-wrap,.tbl-wrap,.vvrow,.dtree-step,.warn{
+  border:1px solid var(--pro-line)!important;border-radius:var(--pro-radius-sm)!important;background:var(--pro-surface)!important;
+  box-shadow:var(--pro-shadow-soft)!important;backdrop-filter:saturate(125%) blur(12px);
+}
+.card{padding:26px!important;margin-bottom:18px!important;}
+.card:hover{box-shadow:var(--pro-shadow)!important;border-color:var(--pro-line-strong)!important;}
+.ctit,.qlabel{font-size:11px!important;letter-spacing:.14em!important;color:#667085!important;}
+.badge{border-radius:999px!important;padding:6px 11px!important;letter-spacing:.12em!important;font-size:10px!important;}
+.ins{border-left-width:4px!important;border-radius:0 16px 16px 0!important;padding:15px 18px!important;font-size:15px!important;line-height:1.75!important;}
+.formula{border-radius:16px!important;background:#f8fafc!important;border:1px solid rgba(15,23,42,.10)!important;padding:17px 18px!important;}
+.tbl-wrap{overflow:hidden!important;}
+table.tbl th{background:rgba(248,250,252,.92)!important;color:#667085!important;padding:12px 14px!important;}
+table.tbl td{padding:13px 14px!important;color:#475467!important;}
+table.tbl tr:hover td{background:rgba(10,132,255,.035)!important;}
+.btn,.qo,.vvb,.clb,.dopt,.sb{transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease, background .18s ease!important;}
+.btn{border-radius:16px!important;min-height:50px!important;font-size:15px!important;letter-spacing:-.01em!important;}
+.btn:hover,.qo:hover,.vvb:hover,.clb:hover,.dopt:hover,.sb:hover{transform:translateY(-2px)!important;box-shadow:var(--pro-shadow-soft)!important;}
+.qbox{background:linear-gradient(180deg,rgba(10,132,255,.08),rgba(255,255,255,.82))!important;padding:22px!important;}
+.qo{border-radius:14px!important;padding:14px 16px!important;font-size:14.5px!important;}
+.sc-grid,.test-grid,.scen-grid{gap:14px!important;}
+.sc,.tc,.sb{border-radius:18px!important;padding:18px!important;box-shadow:var(--pro-shadow-soft)!important;background:rgba(255,255,255,.86)!important;}
+.stat3{gap:12px!important;}
+.stc{border-radius:18px!important;padding:18px 10px!important;background:rgba(255,255,255,.86)!important;box-shadow:var(--pro-shadow-soft)!important;}
+.pro-learning-card{margin:22px 0 22px;padding:18px 20px;border-radius:20px;background:linear-gradient(135deg,rgba(10,132,255,.10),rgba(124,58,237,.075));border:1px solid rgba(10,132,255,.16);box-shadow:var(--pro-shadow-soft);} 
+.pro-learning-card .k{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.15em;color:#0a5fd3;font-weight:800;margin-bottom:8px;}
+.pro-learning-card p{font-size:15px;line-height:1.72;color:#344054;margin:0;}
+.pro-flow-footer{margin-top:34px;padding:22px;border:1px solid var(--pro-line);border-radius:24px;background:rgba(255,255,255,.78);box-shadow:var(--pro-shadow-soft);display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:center;}
+.pro-flow-meta{font-size:13px;color:#667085;line-height:1.5;}
+.pro-flow-meta strong{color:#111827;}
+.pro-flow-btn{border:0;border-radius:999px;padding:13px 18px;font-size:14px;font-weight:760;cursor:pointer;transition:all .18s ease;white-space:nowrap;}
+.pro-flow-btn.secondary{background:#f2f4f7;color:#344054;border:1px solid var(--pro-line);} 
+.pro-flow-btn.primary{background:linear-gradient(135deg,#111827,#0a84ff);color:#fff;box-shadow:0 12px 28px rgba(10,132,255,.20);} 
+.pro-flow-btn:hover{transform:translateY(-2px);box-shadow:var(--pro-shadow);} 
+.pro-dashboard{position:fixed;right:24px;bottom:24px;z-index:55;width:320px;max-width:calc(100vw - 48px);border-radius:24px;background:rgba(255,255,255,.82);backdrop-filter:saturate(160%) blur(20px);border:1px solid var(--pro-line);box-shadow:var(--pro-shadow);padding:18px;display:none;}
+.pro-dashboard.on{display:block;animation:proEnter .24s ease;}
+.pro-dashboard h4{font-size:14px;margin-bottom:10px;}
+.pro-stat-row{display:flex;justify-content:space-between;border-top:1px solid var(--pro-line);padding:9px 0;font-size:13px;color:#667085;}
+.pro-stat-row strong{color:#111827;}
+.pro-toast{position:fixed;right:24px;top:80px;z-index:80;max-width:360px;padding:14px 16px;border-radius:18px;background:#111827;color:#fff;box-shadow:var(--pro-shadow);font-size:13.5px;line-height:1.5;display:none;}
+.pro-toast.on{display:block;animation:proEnter .22s ease;}
+.pro-skip{position:fixed;left:306px;top:12px;z-index:120;background:#111827;color:#fff;padding:10px 14px;border-radius:999px;transform:translateY(-80px);transition:transform .16s ease;font-size:13px;font-weight:700;text-decoration:none;}
+.pro-skip:focus{transform:translateY(0);}
+@media(max-width:900px){
+  #nav{display:none!important;}#main{margin-left:0!important;padding:78px 16px 110px!important;}.pro-topbar{left:0;height:58px;padding:0 14px;}.pro-topbar-title{display:none;}.pro-topbar-actions .pro-icon-btn{padding:7px 10px;font-size:11px;}.pro-flow-footer{grid-template-columns:1fr;}.pro-flow-btn{width:100%;}.pro-skip{left:14px;}#navmob{display:block!important;background:rgba(255,255,255,.86)!important;backdrop-filter:blur(18px);}
+  .lead{font-size:16px!important;} .body{font-size:14.5px!important;} .card{padding:20px!important;}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important;}}
+
+</style>
+</head>
+<body>
+<nav id="nav">
+  <div class="logo"><h1>EstadísticaLab</h1><p>Cap. 10 · Sampieri</p></div>
+  <span class="ng">Fundamentos</span>
+  <div class="ni on" onclick="show('s0')"><span class="ico">🎯</span>Inicio</div>
+  <div class="ni" onclick="show('s1')"><span class="ico">📊</span>Variables</div>
+  <div class="ni" onclick="show('s2')"><span class="ico">📐</span>Tendencia central</div>
+  <div class="ni" onclick="show('s3')"><span class="ico">🔀</span>Dispersión</div>
+  <div class="ni" onclick="show('s4')"><span class="ico">🔔</span>Distribución normal</div>
+  <div class="ni" onclick="show('s5')"><span class="ico">🔍</span>Outliers</div>
+  <span class="ng">Inferencia</span>
+  <div class="ni" onclick="show('s6')"><span class="ico">🌐</span>Población y muestra</div>
+  <div class="ni" onclick="show('s7')"><span class="ico">⚖️</span>Hipótesis H₀ / H₁</div>
+  <div class="ni" onclick="show('s8')"><span class="ico">📉</span>Valor p y α</div>
+  <div class="ni" onclick="show('s9')"><span class="ico">🎯</span>Significancia</div>
+  <span class="ng">Pruebas estadísticas</span>
+  <div class="ni" onclick="show('s10')"><span class="ico">🗺️</span>Selección de prueba</div>
+  <div class="ni" onclick="show('s11')"><span class="ico">🔗</span>Correlación</div>
+  <div class="ni" onclick="show('s12')"><span class="ico">χ²</span>Chi-cuadrado</div>
+  <div class="ni" onclick="show('s13')"><span class="ico">t</span>Prueba t</div>
+  <div class="ni" onclick="show('s14')"><span class="ico">F</span>ANOVA 1 factor</div>
+  <div class="ni" onclick="show('s15')"><span class="ico">F²</span>ANOVA 2 factores</div>
+  <div class="ni" onclick="show('s16')"><span class="ico">📈</span>Regresión logística</div>
+  <span class="ng">Aplicación</span>
+  <div class="ni" onclick="show('s17')"><span class="ico">🧩</span>Hacia el PI</div>
+</nav>
+<div id="navmob">
+  <div class="nm on" onclick="show('s0')"><span class="i">🎯</span>Inicio</div>
+  <div class="nm" onclick="show('s1')"><span class="i">📊</span>Var.</div>
+  <div class="nm" onclick="show('s2')"><span class="i">📐</span>Central</div>
+  <div class="nm" onclick="show('s3')"><span class="i">🔀</span>Dispers.</div>
+  <div class="nm" onclick="show('s4')"><span class="i">🔔</span>Normal</div>
+  <div class="nm" onclick="show('s5')"><span class="i">🔍</span>Outliers</div>
+  <div class="nm" onclick="show('s6')"><span class="i">🌐</span>Muestra</div>
+  <div class="nm" onclick="show('s7')"><span class="i">⚖️</span>H₀H₁</div>
+  <div class="nm" onclick="show('s8')"><span class="i">📉</span>Valor p</div>
+  <div class="nm" onclick="show('s9')"><span class="i">🎯</span>Signif.</div>
+  <div class="nm" onclick="show('s10')"><span class="i">🗺️</span>Prueba</div>
+  <div class="nm" onclick="show('s11')"><span class="i">🔗</span>Correl.</div>
+  <div class="nm" onclick="show('s12')"><span class="i">χ²</span>Chi²</div>
+  <div class="nm" onclick="show('s13')"><span class="i">t</span>t-test</div>
+  <div class="nm" onclick="show('s14')"><span class="i">F</span>ANOVA1</div>
+  <div class="nm" onclick="show('s15')"><span class="i">F²</span>ANOVA2</div>
+  <div class="nm" onclick="show('s16')"><span class="i">📈</span>LogReg</div>
+  <div class="nm" onclick="show('s17')"><span class="i">🧩</span>PI</div>
+</div>
+<div id="main">
+
+<!-- S0 INICIO -->
+<div id="s0" class="scr on">
+  <h1>Estadística para Investigación</h1>
+  <p class="lead">Esta herramienta cubre el Capítulo 10 de Sampieri progresivamente. Cada concepto se explica desde cero, con ejemplos del escenario que eliges. El Proyecto Integrador aparece al final, cuando ya tienes todas las herramientas para entenderlo.</p>
+  <div class="ins az"><strong>Cómo usar esto:</strong> navega en orden. Cada sección construye sobre la anterior. Los ejercicios tienen retroalimentación inmediata. No avances sin entender la sección actual.</div>
+  <div class="card">
+    <div class="ctit">Elige tu escenario — todos los ejemplos usarán este contexto</div>
+    <div class="scen-grid">
+      <button class="sb" onclick="pickScen('stress',this)"><span class="si">🧠</span><span class="stit">Estrés y rendimiento</span><span class="ssub">Universitarios bogotanos</span></button>
+      <button class="sb" onclick="pickScen('sleep',this)"><span class="si">😴</span><span class="stit">Sueño y atención</span><span class="ssub">Adolescentes 14–18 años</span></button>
+      <button class="sb" onclick="pickScen('mindful',this)"><span class="si">🌿</span><span class="stit">Mindfulness y bienestar</span><span class="ssub">Intervención grupal 8 semanas</span></button>
+      <button class="sb" onclick="pickScen('anxiety',this)"><span class="si">🏙️</span><span class="stit">Ansiedad rural vs urbano</span><span class="ssub">Comparación en Colombia</span></button>
+    </div>
+    <div id="scen-chosen" style="display:none;background:var(--gnd);border:1px solid var(--gnb);border-radius:var(--rs);padding:10px 13px;margin-top:4px;font-size:13px;color:var(--tx)"></div>
+    <button class="btn btn-gn" id="btn-start" style="display:none" onclick="show('s1')">Comenzar con Variables →</button>
+  </div>
+</div>
+
+<!-- S1 VARIABLES -->
+<div id="s1" class="scr">
+  <span class="badge b-az">Sección 1</span>
+  <h2 style="margin-top:7px">Variables y escalas de medición</h2>
+  <p class="lead">El tipo de variable determina qué operaciones matemáticas tienen sentido y, en consecuencia, qué estadísticos puedes usar.</p>
+  <div class="card">
+    <div class="ctit">¿Qué es una variable?</div>
+    <p class="body">Una <strong>variable</strong> es cualquier característica que puede tomar valores diferentes entre individuos, grupos o momentos. Si algo varía, es una variable. La edad varía entre personas; el diagnóstico varía entre pacientes; el tiempo de reacción varía entre ensayos.</p>
+    <p class="body" style="margin-top:7px">Si en tu estudio todos los participantes tienen el mismo valor en una característica (por ejemplo, todos son mujeres), esa característica no es una variable — es una constante. Solo las variables se analizan estadísticamente.</p>
+    <div id="s1-scen" class="ins az" style="margin-top:9px"></div>
+  </div>
+  <div class="card">
+    <div class="ctit">Las cuatro escalas de medición (Sampieri Cap. 10)</div>
+    <p class="body" style="margin-bottom:11px">Las cuatro escalas no son una clasificación arbitraria — determinan qué operaciones matemáticas son válidas. Ir de abajo hacia arriba agrega propiedades:</p>
+    <div class="sc-grid">
+      <div class="sc nom"><h4 style="color:var(--az)">Nominal</h4><p><strong>Solo nombra.</strong> Categorías sin orden, sin valor numérico. Solo puedes contar cuántos hay en cada categoría.<br><strong>Ejemplos:</strong> tipo de terapia (cognitiva/humanista/farmacológica), diagnóstico, sexo, etnia, región.</p></div>
+      <div class="sc ord"><h4 style="color:var(--gn)">Ordinal</h4><p><strong>Nombra Y ordena.</strong> Las categorías tienen un orden claro, pero la distancia entre ellas no es necesariamente igual.<br><strong>Ejemplos:</strong> nivel socioeconómico (bajo/medio/alto), grado de satisfacción (nada/poco/mucho), posición en un ranking.</p></div>
+      <div class="sc int"><h4 style="color:var(--am)">Intervalo</h4><p><strong>Nombra, ordena e intervalos iguales.</strong> Pero el cero es arbitrario — no significa ausencia total.<br><strong>Ejemplos:</strong> temperatura en Celsius (0°C no es "sin temperatura"), escala de años del calendario.</p></div>
+      <div class="sc rat"><h4 style="color:var(--pu)">Razón</h4><p><strong>Todo lo anterior más cero verdadero.</strong> Cero significa ausencia total de la variable. Permite proporciones y razones.<br><strong>Ejemplos:</strong> tiempo en milisegundos, número de errores, calificación 0–5, d' de TDS, puntaje GAD-7.</p></div>
+    </div>
+    <div class="ins am" style="margin-top:6px"><strong>Regla rápida:</strong> ¿Tiene sentido decir que un valor es "el doble" de otro? → Razón. ¿Intervalos iguales pero cero arbitrario? → Intervalo. ¿Solo ordena sin distancias iguales? → Ordinal. ¿Solo etiqueta sin orden? → Nominal.</div>
+  </div>
+  <div class="card">
+    <div class="ctit">¿Qué medidas estadísticas son válidas para cada escala?</div>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr><th>Escala</th><th>Moda</th><th>Mediana</th><th>Media</th><th>¿Por qué?</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Nominal</strong></td><td class="ok">✓ Sí</td><td class="no">✗ No</td><td class="no">✗ No</td><td>Las categorías no son números. No puedes sumar "cognitiva" + "humanista". Solo puedes contar frecuencias.</td></tr>
+          <tr><td><strong>Ordinal</strong></td><td class="ok">✓ Sí</td><td class="ok">✓ Sí</td><td class="no">✗ No</td><td>Hay orden, pero las distancias no son iguales. La media asume distancias iguales — con datos ordinales eso es incorrecto.</td></tr>
+          <tr><td><strong>Intervalo</strong></td><td class="ok">✓ Sí</td><td class="ok">✓ Sí</td><td class="ok">✓ Sí</td><td>Los intervalos son iguales, la suma y el promedio tienen sentido. El cero arbitrario no impide calcular diferencias.</td></tr>
+          <tr><td><strong>Razón</strong></td><td class="ok">✓ Sí</td><td class="ok">✓ Sí</td><td class="ok">✓ Sí</td><td>Todas las operaciones válidas. El cero verdadero permite además proporciones: "el doble de tiempo de reacción."</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ctit">Ejercicio 1A — Clasifica estas variables (retroalimentación inmediata)</div>
+    <div class="clf" id="clf-s1"></div>
+  </div>
+  <div class="card">
+    <div class="ctit">Variable independiente (VI) y variable dependiente (VD)</div>
+    <p class="body">La <strong>VI</strong> es la que el investigador manipula o selecciona como posible "causa." La <strong>VD</strong> es la que se mide para ver si cambió — el "efecto." La VD <em>depende</em> de la VI.</p>
+    <p class="body" style="margin-top:7px">Truco: pregúntate "¿X afecta Y, o Y afecta X?" Si la hipótesis es que el estrés afecta las calificaciones → estrés es VI, calificaciones son VD.</p>
+    <p class="body" style="margin-top:7px">En diseños cuasiexperimentales (como el PI), la VI puede ser una característica preexistente (cultura, sexo) que el investigador no manipula. El análisis es el mismo, pero las conclusiones causales son más limitadas.</p>
+  </div>
+  <div class="card">
+    <div class="ctit">Ejercicio 1B — ¿Cuál es la VI y cuál la VD en tu escenario?</div>
+    <p class="body" style="margin-bottom:10px">Para cada variable de tu escenario, decide si es VI o VD. Recibirás retroalimentación.</p>
+    <div id="vivd-s1"></div>
+  </div>
+  <div class="qbox">
+    <div class="qlabel">Pregunta 1</div>
+    <p class="qp" id="q1p"></p>
+    <div class="qch" id="q1ch"></div>
+    <div class="qfb" id="q1fb"></div>
+  </div>
+  <button class="btn btn-gn" id="btn-s1" onclick="show('s2')" disabled>Siguiente: Tendencia central →</button>
+</div>
+
+<!-- S2 TENDENCIA CENTRAL -->
+<div id="s2" class="scr">
+  <span class="badge b-gn">Sección 2</span>
+  <h2 style="margin-top:7px">Estadística descriptiva: tendencia central</h2>
+  <p class="lead">La estadística descriptiva describe y resume los datos que tienes, sin ir más allá de tu muestra. No hace generalizaciones — eso viene después, con la estadística inferencial.</p>
+  <div class="ins az"><strong>Descriptiva vs. inferencial:</strong> la estadística <em>descriptiva</em> dice cómo es tu muestra (promedio, dispersión, distribución). La estadística <em>inferencial</em> usa esa información para hacer generalizaciones sobre la población. Siempre va primero la descriptiva — no puedes inferir si no describes primero.</div>
+  <div class="card">
+    <div class="ctit">Media (promedio)</div>
+    <p class="body">Suma todos los valores y divide entre cuántos hay. Es la medida más común y la que usa toda la información disponible.</p>
+    <div class="formula"><span class="fc">Media = (suma de todos los valores) ÷ (número de datos)</span></div>
+    <p class="body" style="margin-top:8px"><strong>Cuándo usarla:</strong> datos de escala intervalo o razón, sin valores extremos. <strong>Cuándo no:</strong> con datos nominales u ordinales (no tiene sentido), o cuando hay outliers que la distorsionan.</p>
+    <p class="body" style="margin-top:7px"><strong>Problema real:</strong> 9 familias de Bogotá ganan $1.000.000 mensuales y una familia gana $30.000.000. La media sería $3.900.000 — un valor que nadie en el grupo gana. La mediana ($1.000.000) representa mucho mejor a la mayoría.</p>
+  </div>
+  <div class="card">
+    <div class="ctit">Mediana</div>
+    <p class="body">El valor que queda en el centro cuando ordenas los datos de menor a mayor. La mitad de los datos está por encima y la mitad por debajo.</p>
+    <div class="formula"><span class="fc">Ordena todos los valores de menor a mayor → el valor del centro es la mediana</span></div>
+    <p class="body" style="margin-top:8px"><strong>Ventaja clave:</strong> los outliers no la afectan. Un valor extremo puede cambiar dramáticamente la media, pero la mediana apenas se mueve.</p>
+    <p class="body" style="margin-top:7px"><strong>Cuándo usarla:</strong> datos ordinales, o datos de razón/intervalo con valores extremos o distribución asimétrica.</p>
+    <div id="s2-scen" class="ins" style="margin-top:9px;border-color:var(--gn);background:var(--gnd)"></div>
+  </div>
+  <div class="card">
+    <div class="ctit">Moda</div>
+    <p class="body">El valor que aparece con mayor frecuencia en el conjunto de datos.</p>
+    <div class="formula"><span class="fc">Moda = el valor que más veces aparece</span></div>
+    <p class="body" style="margin-top:8px"><strong>¿Por qué es la única medida válida para datos nominales?</strong> Las etiquetas nominales (cognitiva, humanista, farmacológica) no son números — no puedes sumarlas ni dividirlas. Solo puedes contar cuántos hay en cada categoría. La moda dice cuál categoría tiene más frecuencia. Calcular la "media del tipo de terapia" no tiene ningún sentido matemático.</p>
+    <p class="body" style="margin-top:7px"><strong>Cuándo usarla:</strong> datos nominales (única medida válida), o cuando quieres identificar el valor más típico en cualquier distribución.</p>
+  </div>
+  <div class="card">
+    <div class="ctit">El problema de la media cuando hay outliers — ejemplo visual</div>
+    <p class="body" style="margin-bottom:9px">10 estudiantes en un parcial (notas 0–5). Nueve rindieron bien, uno no entregó:</p>
+    <div style="font-family:var(--mono);font-size:12.5px;background:var(--bg2);border-radius:var(--rs);padding:10px;margin-bottom:9px">3.2 · 3.4 · 3.6 · 3.7 · 3.8 · 3.9 · 4.0 · 4.1 · 4.2 · <span style="color:var(--rd);font-weight:700">0.5 ← outlier</span></div>
+    <div class="stat3">
+      <div class="stc"><div class="stl" style="color:var(--rd)">Media</div><div class="stv" style="color:var(--rd)">3.44</div><div style="font-size:10px;color:var(--tx3)">distorsionada</div></div>
+      <div class="stc"><div class="stl" style="color:var(--gn)">Mediana</div><div class="stv" style="color:var(--gn)">3.85</div><div style="font-size:10px;color:var(--tx3)">representativa</div></div>
+      <div class="stc"><div class="stl" style="color:var(--am)">Media sin outlier</div><div class="stv" style="color:var(--am)">3.88</div><div style="font-size:10px;color:var(--tx3)">media real del grupo</div></div>
+    </div>
+    <p class="body" style="margin-top:7px">La mediana (3.85) representa mejor al grupo. La media (3.44) fue jalada hacia abajo por ese único valor de 0.5. Cuando reportas estadísticas descriptivas, siempre debes indicar qué medida usaste y por qué.</p>
+  </div>
+  <div class="qbox">
+    <div class="qlabel">Pregunta 2</div>
+    <p class="qp" id="q2p"></p>
+    <div class="qch" id="q2ch"></div>
+    <div class="qfb" id="q2fb"></div>
+  </div>
+  <button class="btn btn-gn" id="btn-s2" onclick="show('s3')" disabled>Siguiente: Dispersión →</button>
+</div>
+
+<!-- S3 DISPERSIÓN -->
+<div id="s3" class="scr">
+  <span class="badge b-gn">Sección 3</span>
+  <h2 style="margin-top:7px">Estadística descriptiva: dispersión</h2>
+  <p class="lead">Dos grupos con la misma media pueden ser completamente diferentes. Las medidas de dispersión dicen qué tan alejados están los datos del centro.</p>
+  <div class="card">
+    <div class="ctit">El problema — dos salones, la misma media</div>
+    <p class="body" style="margin-bottom:9px">Dos salones de 8 estudiantes en Bogotá, ambos con nota promedio de 3.5:</p>
+    <div class="chart-wrap"><canvas id="cvSalones" width="680" height="170" style="max-width:100%"></canvas></div>
+    <p class="body" style="margin-top:9px"><strong>Salón A:</strong> todos entre 3.3 y 3.7 — grupo homogéneo.<br><strong>Salón B:</strong> desde 1.5 hasta 5.0 — estudiantes en riesgo y estudiantes excelentes coexisten. El promedio de 3.5 oculta completamente esta realidad.</p>
+    <p class="body" style="margin-top:7px">Sin una medida de dispersión, no puedes distinguir estos dos salones. El promedio solo no cuenta la historia completa.</p>
+  </div>
+  <div class="card">
+    <div class="ctit">Varianza — por qué se eleva al cuadrado</div>
+    <p class="body" style="margin-bottom:9px">La idea es medir qué tan lejos está cada dato de la media. El problema: si sumas las distancias directamente, siempre dan cero — las distancias positivas y negativas se cancelan.</p>
+    <p class="body"><strong>Ejemplo concreto — 5 estudiantes:</strong></p>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr><th>Nota</th><th>Diferencia (nota − 4.0)</th><th>Por qué se cancela</th><th>Diferencia al cuadrado</th></tr></thead>
+        <tbody>
+          <tr><td>3.0</td><td>−1.0</td><td rowspan="5" style="color:var(--rd);font-weight:700;text-align:center;vertical-align:middle">−1.0−0.5+0+0.5+1.0 = 0 siempre</td><td>1.00</td></tr>
+          <tr><td>3.5</td><td>−0.5</td><td>0.25</td></tr>
+          <tr><td>4.0</td><td>0.0</td><td>0.00</td></tr>
+          <tr><td>4.5</td><td>+0.5</td><td>0.25</td></tr>
+          <tr><td>5.0</td><td>+1.0</td><td>1.00</td></tr>
+          <tr><td><strong>Media = 4.0</strong></td><td><strong>Suma = 0</strong></td><td></td><td><strong>Suma = 2.50</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="formula" style="margin-top:9px"><span class="fc">Varianza = Σ(valor − media)² ÷ (n − 1) = 2.50 ÷ 4 = 0.625</span></div>
+    <p class="body" style="margin-top:8px"><strong>El problema de la varianza:</strong> está en unidades al cuadrado. Si tus notas van de 0 a 5, la varianza es en "notas²" — una unidad que no existe en la realidad. Por eso se inventó la desviación estándar.</p>
+  </div>
+  <div class="card">
+    <div class="ctit">Desviación estándar — la dispersión en tus propias unidades</div>
+    <p class="body">La desviación estándar es la raíz cuadrada de la varianza. Devuelve el resultado a las mismas unidades que los datos originales.</p>
+    <div class="formula"><span class="fc">Desviación estándar = √Varianza = √0.625 ≈ 0.79 notas</span></div>
+    <p class="body" style="margin-top:8px"><strong>¿Cómo se interpreta?</strong> En promedio, las notas se alejan 0.79 puntos del promedio de 4.0. Eso está en la misma escala que los datos — fácil de entender y comunicar.</p>
+    <p class="body" style="margin-top:7px"><strong>Regla de interpretación:</strong> desviación estándar pequeña = datos concentrados cerca de la media (grupo homogéneo). Desviación estándar grande = datos muy dispersos (grupo heterogéneo).</p>
+    <div class="warn"><div class="wt">En reportes APA siempre se escribe así</div>
+      <p>M = 4.0 (DE = 0.79) → <strong>M</strong> es la media y <strong>DE</strong> es la abreviatura de <em>desviación estándar</em>. Nunca uses solo la media sin la DE en una tabla de resultados.</p>
+    </div>
+    <div id="s3-scen" class="ins" style="border-color:var(--gn);background:var(--gnd)"></div>
+  </div>
+  <div class="qbox">
+    <div class="qlabel">Pregunta 3</div>
+    <p class="qp" id="q3p"></p>
+    <div class="qch" id="q3ch"></div>
+    <div class="qfb" id="q3fb"></div>
+  </div>
+  <button class="btn btn-gn" id="btn-s3" onclick="show('s4')" disabled>Siguiente: Distribución normal →</button>
+</div>
+
+<!-- S4 NORMAL -->
+<div id="s4" class="scr">
+  <span class="badge b-az">Sección 4</span>
+  <h2 style="margin-top:7px">La distribución normal</h2>
+  <p class="lead">La distribución normal es el patrón más importante de la estadística. Entender su forma es clave para saber cuándo un dato es "normal" y cuándo es inusualmente extremo.</p>
+  <div class="card">
+    <div class="ctit">¿Qué es una distribución?</div>
+    <p class="body">La <strong>distribución</strong> de una variable describe qué valores son más comunes y cuáles son raros. Si mides la talla de 1.000 colombianos adultos, la mayoría mide entre 1.60 y 1.75 m, pocos miden menos de 1.50 m o más de 1.85 m. Ese patrón es la distribución de "talla".</p>
+    <p class="body" style="margin-top:7px">La distribución se puede graficar: el eje horizontal son los posibles valores, el eje vertical dice cuán frecuente es cada valor. La forma del gráfico revela la estructura de los datos.</p>
+  </div>
+  <div class="card">
+    <div class="ctit">La distribución normal — la "campana de Gauss"</div>
+    <p class="body" style="margin-bottom:9px">Cuando los datos se distribuyen en forma de campana simétrica, se dice que siguen una <strong>distribución normal</strong> (también llamada distribución gaussiana, por el matemático Carl Friedrich Gauss). Es el patrón más estudiado porque muchas variables psicológicas y físicas lo siguen aproximadamente: tallas, pesos, puntajes de pruebas, errores de medición, tiempo de reacción.</p>
+    <div class="chart-wrap"><canvas id="cvBell" width="680" height="180" style="max-width:100%"></canvas></div>
+    <p class="body" style="margin-top:9px"><strong>Características:</strong> es simétrica alrededor de la media. El punto más alto de la campana está en la media. La mayor parte de los datos está cerca del centro, y cada vez hay menos datos a medida que te alejas.</p>
+  </div>
+  <div class="card">
+    <div class="ctit">La regla empírica 68–95–99.7</div>
+    <p class="body" style="margin-bottom:10px">En una distribución normal existe una regularidad precisa sobre dónde caen los datos:</p>
+    <div style="display:flex;flex-direction:column;gap:7px">
+      <div style="display:flex;gap:11px;align-items:center;padding:10px 13px;background:var(--gnd);border-radius:var(--rs);border-left:3px solid var(--gn)">
+        <span style="font-family:var(--mono);font-weight:700;font-size:17px;color:var(--gn);flex-shrink:0">68%</span>
+        <p class="body">de los datos cae dentro de ±1 desviación estándar de la media.<br><strong>Ejemplo:</strong> si el puntaje medio de atención es 50 y la desviación estándar es 10, el 68% de los estudiantes obtiene entre 40 y 60.</p>
+      </div>
+      <div style="display:flex;gap:11px;align-items:center;padding:10px 13px;background:var(--azd);border-radius:var(--rs);border-left:3px solid var(--az)">
+        <span style="font-family:var(--mono);font-weight:700;font-size:17px;color:var(--az);flex-shrink:0">95%</span>
+        <p class="body">de los datos cae dentro de ±2 desviaciones estándar de la media. Solo el 5% queda más allá de ese rango — 2.5% por encima y 2.5% por debajo.<br>Este 5% es el umbral que usamos para identificar datos inusualmente extremos.</p>
+      </div>
+      <div style="display:flex;gap:11px;align-items:center;padding:10px 13px;background:var(--pud);border-radius:var(--rs);border-left:3px solid var(--pu)">
+        <span style="font-family:var(--mono);font-weight:700;font-size:17px;color:var(--pu);flex-shrink:0">99.7%</span>
+        <p class="body">de los datos cae dentro de ±3 desviaciones estándar. Datos más allá de ±3 son extremadamente raros — ocurren menos del 0.3% de las veces en una distribución normal.</p>
+      </div>
+    </div>
+    <p class="body" style="margin-top:9px">Esta regla conecta directamente con la detección de outliers (valores atípicos) y con el valor p en inferencia estadística — lo verás en las siguientes secciones.</p>
+  </div>
+  <div class="card">
+    <div class="ctit">¿Y si los datos no son normales?</div>
+    <p class="body">No todos los datos siguen una distribución normal. Los tiempos de reacción suelen ser asimétricos (hay pocos ensayos muy lentos que alargan la cola derecha). Los ingresos también. En esos casos:</p>
+    <p class="body" style="margin-top:7px">• La mediana es más representativa que la media.<br>• Las pruebas estadísticas llamadas "no paramétricas" no asumen normalidad. Ejemplos: Wilcoxon (alternativa a la prueba t pareada), Mann-Whitney (alternativa a la t independiente), Kruskal-Wallis (alternativa al ANOVA).<br>• Con muestras grandes (n mayor de 30), el Teorema Central del Límite garantiza que las medias muestrales se aproximan a la normal aunque los datos individuales no lo sean. Eso permite usar t y ANOVA con muestras razonables.</p>
+  </div>
+  <div class="qbox">
+    <div class="qlabel">Pregunta 4</div>
+    <p class="qp">Una prueba de atención tiene media = 50 y desviación estándar = 10. Un estudiante obtiene 72. ¿Qué puedes concluir?</p>
+    <div class="qch" id="q4ch"></div>
+    <div class="qfb" id="q4fb"></div>
+  </div>
+  <button class="btn btn-gn" id="btn-s4" onclick="show('s5')" disabled>Siguiente: Outliers →</button>
+</div>
+
+<!-- S5 OUTLIERS -->
+<div id="s5" class="scr">
+  <span class="badge b-az">Sección 5</span>
+  <h2 style="margin-top:7px">Valores atípicos (outliers)</h2>
+  <p class="lead">Un outlier es un dato que se aleja mucho del resto de los datos de su grupo. No basta con que sea "alto" o "bajo" — tiene que ser <em>inusualmente</em> extremo para ese grupo específico.</p>
+  <div class="card">
+    <div class="ctit">¿Por qué detectarlos?</div>
+    <p class="body">Un outlier puede distorsionar la media y la desviación estándar, lo que afecta toda la cadena de análisis posterior. Las pruebas inferenciales como el ANOVA son especialmente sensibles.</p>
+    <p class="body" style="margin-top:7px">Hay dos tipos de situaciones: <strong>(1) Error de registro</strong> — alguien escribió 220 en lugar de 22 en el GAD-7. Se corrige o elimina, siempre con reporte en el Método. <strong>(2) Caso genuinamente extremo</strong> — una persona con ansiedad inusualmente alta. La decisión de incluir o excluir requiere justificación teórica, no solo estadística.</p>
+  </div>
+  <div class="card">
+    <div class="ctit">La puntuación z — la fórmula explicada paso a paso</div>
+    <p class="body" style="margin-bottom:9px">El criterio estándar en psicología se basa en la <strong>puntuación z</strong>, que mide cuántas desviaciones estándar está alejado un dato de la media de su grupo:</p>
+    <div class="formula"><span class="fc">Puntuación z = (valor − media del grupo) ÷ desviación estándar del grupo</span><br><span style="font-size:11.5px;color:var(--tx2);display:block;margin-top:4px">Si el valor absoluto de la puntuación z es mayor que 2 → el dato merece investigarse</span></div>
+    <p class="body" style="margin-top:9px"><strong>¿Qué significa la puntuación z?</strong> Es una medida universal: independientemente de la escala original, la puntuación z dice "este dato está X desviaciones estándar por encima/debajo de la media." z = 0 significa que el dato ES la media. z = +2 significa que está 2 desviaciones estándar por encima.</p>
+    <p class="body" style="margin-top:7px"><strong>¿Por qué el umbral de ±2?</strong> Por la regla empírica del 95%: en una distribución normal, el 95% de los datos tiene puntuación z entre −2 y +2. Si un dato tiene |z| mayor que 2, está en el 5% más extremo — tiene menos del 5% de probabilidad de ocurrir por azar en ese grupo. Eso lo hace sospechoso.</p>
+    <div class="warn">
+      <div class="wt">Ejemplo resuelto paso a paso</div>
+      <p><strong>Escenario:</strong> puntaje de atención (0–100 puntos), grupo con menos de 6 horas de sueño, media = 50.8, desviación estándar = 2.93. Un adolescente obtuvo 44 puntos.</p>
+      <p><strong>Paso 1 — distancia a la media:</strong> 44 − 50.8 = −6.8 puntos (debajo de la media)</p>
+      <p><strong>Paso 2 — dividir entre la desviación estándar:</strong> −6.8 ÷ 2.93 = −2.32</p>
+      <p><strong>Paso 3 — evaluar:</strong> |−2.32| = 2.32, que es mayor que 2. El criterio se supera.</p>
+      <p><strong>Paso 4 — decidir:</strong> ¿error de registro? ¿ese estudiante estaba enfermo? ¿es genuinamente extremo? La respuesta determina qué hacer — y se documenta en el Método.</p>
+    </div>
+  </div>
+  <div class="qbox">
+    <div class="qlabel">Pregunta 5 — Detective de outliers</div>
+    <p class="qp" id="q5p"></p>
+    <div class="qch" id="q5ch"></div>
+    <div class="qfb" id="q5fb"></div>
+  </div>
+  <button class="btn btn-gn" id="btn-s5" onclick="show('s6')" disabled>Siguiente: Población y muestra →</button>
+</div>
+
+<!-- S6 POBLACIÓN -->
+<div id="s6" class="scr">
+  <span class="badge b-pu">Sección 6</span>
+  <h2 style="margin-top:7px">Población y muestra</h2>
+  <p class="lead">Para que la estadística inferencial tenga sentido, debes entender la diferencia entre la población a la que quieres generalizar y la muestra que realmente mides.</p>
+  <div class="card">
+    <div class="ctit">Definición — no siempre es "toda Colombia"</div>
+    <p class="body">La <strong>población</strong> no es necesariamente "todos los colombianos." Es el conjunto de individuos <em>sobre quienes quieres decir algo</em> — el grupo al que aspiras a generalizar tus conclusiones. Puede ser grande o muy específico.</p>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr><th>Pregunta de investigación</th><th>Población</th><th>Muestra posible</th></tr></thead>
+        <tbody>
+          <tr><td>¿El estrés afecta el rendimiento universitario?</td><td>Estudiantes universitarios colombianos</td><td>90 estudiantes de la Universidad de Cundinamarca, Facatativá</td></tr>
+          <tr><td>¿Funciona este programa de mindfulness en esta institución?</td><td>Los estudiantes actuales de esa institución específica</td><td>45 estudiantes inscritos al programa</td></tr>
+          <tr><td>¿Los adolescentes bogotanos tienen más ansiedad que los rurales?</td><td>Adolescentes colombianos 14–18 años, urbano vs rural</td><td>80 de Bogotá y 80 de municipios de Cundinamarca</td></tr>
+          <tr><td>¿La intervención redujo el ausentismo en ESA empresa?</td><td>Los empleados de esa empresa</td><td>Los 30 empleados del piloto (= toda la población)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="body" style="margin-top:9px">En el último ejemplo, la muestra ES la población — no se necesita inferencia para generalizar. La estadística inferencial solo tiene sentido cuando la muestra es una <em>parte</em> de una población más grande.</p>
+  </div>
+  <div class="card">
+    <div class="ctit">¿Siempre se generaliza a una población más grande?</div>
+    <p class="body">No siempre. Algunas investigaciones describen a un grupo específico sin pretender generalizar. Un estudio de caso de una clínica particular puede tener valor en sí mismo. Lo importante es ser honesto sobre el alcance: el investigador debe declarar explícitamente cuál es su población objetivo y qué tan representativa es su muestra.</p>
+    <p class="body" style="margin-top:7px">La calidad de la generalización depende del <strong>muestreo</strong>: muestras aleatorias permiten mejores generalizaciones que muestras de conveniencia (como estudiantes de la propia universidad del investigador).</p>
+  </div>
+  <div class="qbox">
+    <div class="qlabel">Pregunta 6</div>
+    <p class="qp" id="q6p"></p>
+    <div class="qch" id="q6ch"></div>
+    <div class="qfb" id="q6fb"></div>
+  </div>
+  <button class="btn btn-gn" id="btn-s6" onclick="show('s7')" disabled>Siguiente: Hipótesis →</button>
+</div>
+
+<!-- S7 HIPÓTESIS -->
+<div id="s7" class="scr">
+  <span class="badge b-pu">Sección 7</span>
+  <h2 style="margin-top:7px">Hipótesis: H₀ y H₁</h2>
+  <p class="lead">Antes de hacer cualquier prueba inferencial, formulas dos hipótesis opuestas. El análisis decide cuál tiene más soporte en los datos.</p>
+  <div class="card">
+    <div class="ctit">¿Qué significa "inferir"?</div>
+    <p class="body">Inferir estadísticamente es responder: "Lo que encontré en mi muestra, ¿también ocurre en la población? ¿O es una coincidencia aleatoria de esta muestra particular?"</p>
+    <p class="body" style="margin-top:7px">Ejemplo cotidiano: lanzas una moneda 10 veces y salen 8 caras. ¿Evidencia de que la moneda está trucada? ¿O puede ocurrir por azar con una moneda normal? La estadística inferencial calcula qué tan probable es ese resultado si la moneda fuera justa — y en base a eso decides.</p>
+  </div>
+  <div class="card">
+    <div class="ctit">Hipótesis nula (H₀) — el escepticismo de partida</div>
+    <p class="body">La H₀ dice: <em>"No hay efecto real. No hay diferencia. Lo que observaste se debe al azar del muestreo."</em></p>
+    <p class="body" style="margin-top:7px">En estadística siempre se parte de H₀ como si fuera verdadera, hasta que la evidencia sea suficientemente fuerte para rechazarla. Es como el principio jurídico de "inocente hasta demostrar lo contrario" — el efecto es "inocente" (inexistente) hasta que los datos demuestren lo contrario.</p>
+    <div id="s7-h0" class="ins az" style="margin-top:9px"></div>
+  </div>
+  <div class="card">
+    <div class="ctit">Hipótesis alterna (H₁) — lo que el investigador hipotetiza</div>
+    <p class="body">La H₁ dice lo contrario de H₀: <em>"Hay un efecto real. Las diferencias observadas son mayores de lo que explicaría el azar."</em></p>
+    <p class="body" style="margin-top:7px"><strong>Clave:</strong> el proceso estadístico no "prueba" H₁. Lo que hace es intentar rechazar H₀. Si la evidencia contra H₀ es suficientemente fuerte (medida por el valor p), se concluye a favor de H₁. Pero H₁ nunca se prueba con certeza absoluta.</p>
+    <div id="s7-h1" class="ins" style="margin-top:9px;border-color:var(--gn);background:var(--gnd)"></div>
+  </div>
+  <div class="qbox">
+    <div class="qlabel">Pregunta 7</div>
+    <p class="qp" id="q7p"></p>
+    <div class="qch" id="q7ch"></div>
+    <div class="qfb" id="q7fb"></div>
+  </div>
+  <button class="btn btn-gn" id="btn-s7" onclick="show('s8')" disabled>Siguiente: Valor p y α →</button>
+</div>
+
+<!-- S8 VALOR P -->
+<div id="s8" class="scr">
+  <span class="badge b-pu">Sección 8</span>
+  <h2 style="margin-top:7px">El valor p y el nivel de significancia α</h2>
+  <p class="lead">El valor p es el concepto más malentendido de la estadística. Aquí aprenderás qué es exactamente, qué errores evitar, y cómo se relaciona con el α.</p>
+  <div class="card">
+    <div class="ctit">El valor p — definición correcta con analogía concreta</div>
+    <p class="body"><strong>Analogía antes de la definición:</strong> el ICFES afirma que el puntaje promedio en matemáticas de los bachilleres colombianos es 50 puntos. Tú estudias 80 bachilleres y obtienes un promedio de 54. La pregunta estadística exacta es:</p>
+    <div style="background:var(--bg2);border:1px solid var(--border2);border-radius:var(--rs);padding:13px;margin:9px 0;font-size:13.5px;font-style:italic;color:var(--tx);line-height:1.7">"Si el promedio real de TODOS los bachilleres colombianos fuera exactamente 50, ¿qué tan frecuente sería obtener una muestra de 80 personas con promedio de 54 o más, solo por azar aleatorio del muestreo?"</div>
+    <p class="body"><strong>Esa probabilidad es el valor p.</strong></p>
+    <p class="body" style="margin-top:8px">Si p = 0.03: eso ocurriría solo el 3% de las veces por azar. Es poco probable que sea solo azar — rechazas H₀.<br>Si p = 0.28: eso ocurriría el 28% de las veces por azar. Es perfectamente plausible como variación aleatoria — no hay evidencia para rechazar H₀.</p>
+  </div>
+  <div class="card">
+    <div class="ctit">Visualización del valor p</div>
+    <div class="chart-wrap"><canvas id="cvPval" width="680" height="180" style="max-width:100%"></canvas></div>
+    <p class="body" style="margin-top:9px">La curva representa todos los resultados posibles si H₀ fuera verdadera. La zona sombreada (p) es la probabilidad de obtener un resultado tan extremo como el tuyo (o más extremo) si H₀ fuera cierta. Cuanto más pequeña esa zona, más inusual es tu resultado bajo H₀.</p>
+  </div>
+  <div class="card">
+    <div class="ctit">Los errores más comunes sobre el valor p</div>
+    <div style="display:flex;flex-direction:column;gap:7px">
+      <div style="padding:10px 12px;background:var(--rdd);border-radius:var(--rs);border-left:3px solid var(--rd)"><p class="body"><strong>❌ Error:</strong> "p = 0.03 significa que hay 97% de probabilidad de que el efecto sea real."<br><strong>✓ Correcto:</strong> p es la probabilidad del resultado DADO QUE H₀ ES VERDADERA — no la probabilidad de que H₀ sea verdadera o falsa.</p></div>
+      <div style="padding:10px 12px;background:var(--rdd);border-radius:var(--rs);border-left:3px solid var(--rd)"><p class="body"><strong>❌ Error:</strong> "p mayor a 0.05 prueba que no hay efecto."<br><strong>✓ Correcto:</strong> p mayor a 0.05 solo dice que no tienes suficiente evidencia para rechazar H₀. El efecto puede existir pero tu muestra es demasiado pequeña para detectarlo.</p></div>
+      <div style="padding:10px 12px;background:var(--rdd);border-radius:var(--rs);border-left:3px solid var(--rd)"><p class="body"><strong>❌ Error:</strong> "p más pequeño = efecto más grande."<br><strong>✓ Correcto:</strong> p depende del tamaño de la muestra. Con 100.000 participantes, una diferencia de 0.04 puntos en notas puede dar p menor a 0.001.</p></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ctit">El nivel de significancia α (alfa) — su relación con el valor p</div>
+    <p class="body"><strong>α</strong> es el umbral que estableces ANTES de recoger datos. Responde: "¿Qué tan bajo debe ser el valor p para que concluya que el efecto es real y no azar?"</p>
+    <p class="body" style="margin-top:7px">La relación entre α y p:</p>
+    <div class="formula" style="text-align:left;line-height:2">
+      Si p menor que α (ej. p = 0.03, α = 0.05) → <span style="color:var(--gn);font-weight:700">rechaza H₀</span> → resultado "estadísticamente significativo"<br>
+      Si p mayor o igual a α (ej. p = 0.08, α = 0.05) → <span style="color:var(--rd);font-weight:700">no rechaza H₀</span> → "no hay evidencia suficiente"
+    </div>
+    <p class="body" style="margin-top:8px"><strong>¿Por qué α = 0.05 en psicología?</strong> Es una convención histórica que balancea dos riesgos: ser demasiado estricto (perderse efectos reales) vs. demasiado permisivo (reportar efectos falsos). En investigaciones donde equivocarse tiene consecuencias graves — como aprobar un medicamento o tomar una decisión clínica— se usa α = 0.01 o menor, para exigir evidencia más contundente antes de actuar. No es que 0.05 sea el único valor posible: es la decisión más razonable para investigación básica en psicología.</p>
+    <p class="body" style="margin-top:7px">α se fija ANTES de ver los datos. Si lo fijases después de ver los datos, podrías manipularlo para "lograr significancia" — una práctica científica deshonesta conocida como p-hacking.</p>
+  </div>
+  <div class="qbox">
+    <div class="qlabel">Pregunta 8</div>
+    <p class="qp">Un investigador obtiene p = 0.07 con α = 0.05. ¿Cuál es la interpretación correcta?</p>
+    <div class="qch" id="q8ch"></div>
+    <div class="qfb" id="q8fb"></div>
+  </div>
+  <button class="btn btn-gn" id="btn-s8" onclick="show('s9')" disabled>Siguiente: Significancia →</button>
+</div>
+
+<!-- S9 SIGNIFICANCIA -->
+<div id="s9" class="scr">
+  <span class="badge b-pu">Sección 9</span>
+  <h2 style="margin-top:7px">Significancia estadística vs. significancia práctica</h2>
+  <p class="lead">Un resultado puede ser estadísticamente significativo sin ser prácticamente importante — y viceversa. Esta distinción es fundamental para interpretar correctamente los resultados.</p>
+  <div class="card">
+    <div class="ctit">¿Qué significa "estadísticamente significativo"?</div>
+    <p class="body">"Estadísticamente significativo" tiene un significado técnico muy preciso: simplemente significa que <strong>p menor que α</strong>. Nada más.</p>
+    <p class="body" style="margin-top:7px">NO significa que el efecto sea grande, importante, útil o relevante en la práctica. Solo significa que la diferencia observada es suficientemente improbable bajo H₀ como para rechazarla.</p>
+    <p class="body" style="margin-top:7px"><strong>Ejemplo:</strong> 80.000 estudiantes colombianos. Los que escuchan música mientras estudian obtienen promedio de 3.52/5.0 vs. 3.48/5.0 los que estudian en silencio. p menor a 0.001 — estadísticamente significativo. Pero ¿vale la pena cambiar todos los salones por una diferencia de 0.04 puntos? Probablemente no.</p>
+  </div>
+  <div class="card">
+    <div class="ctit">Tamaño del efecto — cómo medir la importancia real</div>
+    <p class="body" style="margin-bottom:9px">El tamaño del efecto cuantifica <em>qué tan grande</em> es el efecto, independientemente del tamaño de la muestra:</p>
+    <div style="display:flex;flex-direction:column;gap:7px">
+      <div style="padding:12px;background:var(--azd);border-radius:var(--rs);border-left:3px solid var(--az)">
+        <p class="body"><strong style="color:var(--az)">d de Cohen (para prueba t):</strong> diferencia entre medias en unidades de desviación estándar. d menor a 0.2 trivial, 0.2–0.5 pequeño, 0.5–0.8 mediano, mayor a 0.8 grande.</p>
+        <div class="formula" style="margin-top:6px"><span class="fc">d = (media grupo 1 − media grupo 2) ÷ desviación estándar combinada</span></div>
+      </div>
+      <div style="padding:12px;background:var(--pud);border-radius:var(--rs);border-left:3px solid var(--pu)">
+        <p class="body"><strong style="color:var(--pu)">η² — eta cuadrado (para ANOVA):</strong> proporción de la varianza total explicada por el factor. η² menor a 0.01 trivial, 0.01–0.06 pequeño, 0.06–0.14 mediano, mayor a 0.14 grande.</p>
+        <div class="formula" style="margin-top:6px"><span class="fc">η² = varianza atribuida al factor ÷ varianza total</span></div>
+      </div>
+      <div style="padding:12px;background:var(--gnd);border-radius:var(--rs);border-left:3px solid var(--gn)">
+        <p class="body"><strong style="color:var(--gn)">r de Pearson (para correlación):</strong> ya es por sí mismo una medida de efecto. r menor a 0.10 pequeño, 0.30 mediano, 0.50 grande.</p>
+      </div>
+    </div>
+    <div class="ins am" style="margin-top:8px">En APA SIEMPRE se reporta el estadístico + p-valor + tamaño del efecto. Ejemplo correcto: F(2,87) = 8.34, p = .001, η² = .16. Reportar solo p es una práctica incompleta.</div>
+  </div>
+  <div class="card">
+    <div class="ctit">Error Tipo I y Error Tipo II</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:9px 0">
+      <div style="padding:12px;background:var(--rdd);border-radius:var(--rs);border:1px solid var(--rdb)">
+        <p style="font-size:12.5px;font-weight:700;color:var(--rd);margin-bottom:4px">Error Tipo I — Falso positivo</p>
+        <p class="body">Rechazas H₀ cuando en realidad es verdadera. Afirmas que hay efecto cuando no lo hay. Probabilidad = α (5%). Con α = 0.05, estás aceptando un 5% de riesgo de cometer este error.</p>
+      </div>
+      <div style="padding:12px;background:var(--azd);border-radius:var(--rs);border:1px solid var(--azb)">
+        <p style="font-size:12.5px;font-weight:700;color:var(--az);margin-bottom:4px">Error Tipo II — Falso negativo</p>
+        <p class="body">No rechazas H₀ cuando en realidad es falsa. Dices que no hay efecto cuando sí lo hay. Aumenta cuando la muestra es pequeña o el efecto es sutil.</p>
+      </div>
+    </div>
+    <p class="body">Reducir el riesgo de Error Tipo I (usar α = 0.01) aumenta el riesgo de Error Tipo II — necesitarás una muestra más grande para detectar efectos reales con ese umbral más estricto. Hay un tradeoff inevitable.</p>
+  </div>
+  <div class="qbox">
+    <div class="qlabel">Pregunta 9</div>
+    <p class="qp" id="q9p"></p>
+    <div class="qch" id="q9ch"></div>
+    <div class="qfb" id="q9fb"></div>
+  </div>
+  <button class="btn btn-gn" id="btn-s9" onclick="show('s10')" disabled>Siguiente: Selección de prueba →</button>
+</div>
+
+<!-- S10 SELECCIÓN -->
+<div id="s10" class="scr">
+  <span class="badge b-am">Sección 10 — La más importante</span>
+  <h2 style="margin-top:7px">¿Qué prueba estadística usar?</h2>
+  <p class="lead">Esta es la decisión más crítica del análisis cuantitativo. Depende de tres preguntas: ¿qué tipo de variable dependiente tengo? ¿cuántos grupos o variables independientes tengo? ¿las muestras son independientes o relacionadas?</p>
+  <div class="card">
+    <div class="ctit">Muestras independientes vs. relacionadas — distinción fundamental</div>
+    <p class="body" style="margin-bottom:9px">Antes de elegir cualquier prueba, debes saber si tus observaciones son independientes entre sí o están emparejadas.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div style="padding:12px;background:var(--azd);border-radius:var(--rs);border:1px solid var(--azb)">
+        <p style="font-size:12.5px;font-weight:700;color:var(--az);margin-bottom:4px">Muestras independientes</p>
+        <p class="body">Cada participante está en un solo grupo. No hay relación entre quién está en el Grupo A y quién en el B. Los grupos son completamente separados.<br><strong>Ejemplo:</strong> comparar ansiedad en 80 rurales vs 80 urbanos — personas diferentes en cada grupo, sin relación entre ellas.</p>
+      </div>
+      <div style="padding:12px;background:var(--gnd);border-radius:var(--rs);border:1px solid var(--gnb)">
+        <p style="font-size:12.5px;font-weight:700;color:var(--gn);margin-bottom:4px">Muestras relacionadas (pareadas)</p>
+        <p class="body">Las observaciones están emparejadas. Puede ser las mismas personas medidas dos veces (antes/después), o pares formados por características similares.<br><strong>Ejemplo:</strong> medir bienestar antes y después de mindfulness en los mismos 30 estudiantes. El "antes" de cada persona está vinculado a su "después."</p>
+      </div>
+    </div>
+    <p class="body" style="margin-top:9px"><strong>¿Por qué importa?</strong> La prueba para muestras relacionadas cancela la variabilidad entre personas. Si María siempre tiene bienestar alto y Pedro siempre bajo, esa diferencia individual no distorsiona el análisis — solo se analiza el <em>cambio</em> dentro de cada persona. Eso hace la prueba más sensible para detectar el efecto real.</p>
+  </div>
+  <div class="card">
+    <div class="ctit">Árbol de decisión interactivo</div>
+    <div id="dtree"></div>
+    <div id="dres" class="dres"></div>
+    <button class="btn btn-az" onclick="resetTree()" style="width:auto;display:inline-block;padding:8px 14px;font-size:12.5px;margin-top:8px">↩ Reiniciar árbol</button>
+  </div>
+  <div class="card">
+    <div class="ctit">Todas las pruebas disponibles — resumen</div>
+    <div class="test-grid">
+      <div class="tc az"><h4>Correlación de Pearson</h4><div class="tcsub">2 variables continuas · sin grupos</div><p>Relación lineal entre dos variables cuantitativas. Ejemplo: ¿A más sueño, mayor atención?</p></div>
+      <div class="tc gn"><h4>Correlación de Spearman (ρ)</h4><div class="tcsub">datos ordinales o no normales</div><p>Versión no paramétrica de Pearson. Mide relación monotónica. Ejemplo: ranking de estrés vs ranking de rendimiento.</p></div>
+      <div class="tc am"><h4>Chi-cuadrado (χ²)</h4><div class="tcsub">VD nominal o categórica</div><p>Compara frecuencias. Ninguna variable es continua. Ejemplo: ¿sexo se asocia con tipo de terapia preferida?</p></div>
+      <div class="tc rd"><h4>Regresión logística</h4><div class="tcsub">VD binaria (sí/no)</div><p>Predice probabilidad de un resultado dicotómico. Ejemplo: ¿estrés predice si un estudiante abandona?</p></div>
+      <div class="tc pu"><h4>Prueba t independiente</h4><div class="tcsub">2 grupos diferentes · VD continua</div><p>Compara medias de 2 grupos separados. Ejemplo: rural vs urbano en ansiedad GAD-7.</p></div>
+      <div class="tc cy"><h4>Prueba t pareada</h4><div class="tcsub">Mismas personas 2 veces · VD continua</div><p>Antes vs después en los mismos participantes. Más sensible que t independiente.</p></div>
+      <div class="tc am"><h4>ANOVA 1 factor</h4><div class="tcsub">3+ grupos · 1 VI · VD continua</div><p>Compara medias de 3+ grupos. Evita inflar error Tipo I de múltiples pruebas t.</p></div>
+      <div class="tc pu"><h4>ANOVA 2 factores</h4><div class="tcsub">2 VI · VD continua</div><p>Evalúa dos VI y su interacción. El más completo para preguntas complejas.</p></div>
+    </div>
+  </div>
+  <button class="btn btn-gn" onclick="show('s11')">Siguiente: Correlación en profundidad →</button>
+</div>
+
+<!-- S11 CORRELACIÓN -->
+<div id="s11" class="scr">
+  <span class="badge b-az">Sección 11</span>
+  <h2 style="margin-top:7px">Correlación</h2>
+  <p class="lead">La correlación mide la fuerza y dirección de la relación entre dos variables. Se usa cuando ninguna de las variables se manipula — solo se miden juntas en los mismos participantes.</p>
+  <div class="card">
+    <div class="ctit">El nombre "Pearson" — origen histórico</div>
+    <p class="body"><strong>Karl Pearson</strong> (1857–1936), matemático y estadístico británico, formalizó el coeficiente de correlación en 1895. Fue uno de los fundadores de la estadística moderna como disciplina científica y además creó el chi-cuadrado. El coeficiente lleva su nombre en su honor.</p>
+  </div>
+  <div class="card">
+    <div class="ctit">El coeficiente r — cómo se interpreta</div>
+    <p class="body" style="margin-bottom:9px">El coeficiente r de Pearson varía siempre entre −1 y +1:</p>
+    <div style="display:flex;flex-direction:column;gap:5px">
+      <div class="pvizrow"><span style="font-family:var(--mono);font-weight:700;color:var(--rd);min-width:80px;font-size:13px">r = −1</span><div class="pviz-bar-wrap"><div class="pviz-bar" style="width:0%;background:var(--rd)"></div></div><span class="pviz-label" style="background:var(--rdd);color:var(--rd)">Perfecta negativa</span></div>
+      <div class="pvizrow"><span style="font-family:var(--mono);font-weight:700;color:var(--am);min-width:80px;font-size:13px">r = −0.5</span><div class="pviz-bar-wrap"><div class="pviz-bar" style="width:25%;background:var(--am)"></div></div><span class="pviz-label" style="background:var(--amd);color:var(--am)">Moderada negativa</span></div>
+      <div class="pvizrow"><span style="font-family:var(--mono);font-weight:700;color:var(--tx3);min-width:80px;font-size:13px">r = 0</span><div class="pviz-bar-wrap"><div class="pviz-bar" style="width:50%;background:var(--tx3)"></div></div><span class="pviz-label" style="background:var(--bg3);color:var(--tx3)">Sin relación lineal</span></div>
+      <div class="pvizrow"><span style="font-family:var(--mono);font-weight:700;color:var(--az);min-width:80px;font-size:13px">r = +0.5</span><div class="pviz-bar-wrap"><div class="pviz-bar" style="width:75%;background:var(--az)"></div></div><span class="pviz-label" style="background:var(--azd);color:var(--az)">Moderada positiva</span></div>
+      <div class="pvizrow"><span style="font-family:var(--mono);font-weight:700;color:var(--gn);min-width:80px;font-size:13px">r = +1</span><div class="pviz-bar-wrap"><div class="pviz-bar" style="width:100%;background:var(--gn)"></div></div><span class="pviz-label" style="background:var(--gnd);color:var(--gn)">Perfecta positiva</span></div>
+    </div>
+    <p class="body" style="margin-top:9px">Convenciones de Cohen: r menor a 0.10 trivial, 0.10–0.30 pequeño, 0.30–0.50 mediano, mayor a 0.50 grande. El r al cuadrado (r²) indica la proporción de la varianza de una variable explicada por la otra.</p>
+  </div>
+  <div class="card">
+    <div class="ctit">Pearson vs Spearman — cuándo usar cada uno</div>
+    <p class="body"><strong>Pearson:</strong> ambas variables son continuas (razón o intervalo), la relación es lineal, distribución aproximadamente normal.</p>
+    <p class="body" style="margin-top:7px"><strong>Spearman (ρ — rho):</strong> una o ambas variables son ordinales, o los datos continuos no son normales, o la relación puede ser no-lineal pero sí monotónica (cuando una sube, la otra también sube aunque no en proporción constante). Es la versión "no paramétrica" de Pearson.</p>
+    <div class="ins rd"><strong>Advertencia fundamental:</strong> correlación NO implica causalidad. Que dos variables estén correlacionadas no significa que una cause la otra. Ejemplo clásico: hay alta correlación entre ventas de helado y ahogamientos en piscinas — el calor (tercera variable) causa ambas. En cualquier correlación puede haber variables de confusión.</div>
+  </div>
+  <div class="qbox">
+    <div class="qlabel">Pregunta 11</div>
+    <p class="qp" id="q11p"></p>
+    <div class="qch" id="q11ch"></div>
+    <div class="qfb" id="q11fb"></div>
+  </div>
+  <button class="btn btn-gn" onclick="show('s12')">Siguiente: Chi-cuadrado →</button>
+</div>
+
+<!-- S12 CHI-CUADRADO -->
+<div id="s12" class="scr">
+  <span class="badge b-am">Sección 12</span>
+  <h2 style="margin-top:7px">Chi-cuadrado (χ²)</h2>
+  <p class="lead">Cuando tu variable dependiente es categórica (nominal), no puedes calcular medias ni usar t o ANOVA. El chi-cuadrado compara lo que observaste con lo que esperarías si no hubiera ninguna relación entre las variables.</p>
+  <div class="card">
+    <div class="ctit">El nombre χ² — origen histórico</div>
+    <p class="body"><strong>Karl Pearson</strong> también desarrolló esta prueba en 1900 (el mismo que la correlación de Pearson). Usó la letra griega <em>chi</em> (χ) porque el estadístico sigue una distribución chi. El cuadrado viene de que los cálculos involucran elevar diferencias al cuadrado — por la misma razón que la varianza: para eliminar el efecto del signo y ponderar más las diferencias grandes. Se pronuncia "ji cuadrado."</p>
+  </div>
+  <div class="card">
+    <div class="ctit">¿Qué compara el chi-cuadrado?</div>
+    <p class="body" style="margin-bottom:9px">Compara las <strong>frecuencias observadas</strong> (lo que encontraste) con las <strong>frecuencias esperadas</strong> (lo que esperarías si no hubiera ninguna relación entre las variables).</p>
+    <p class="body"><strong>Ejemplo:</strong> ¿El tipo de terapia preferida (cognitiva/humanista/farmacológica) se asocia con el sexo del paciente?</p>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr><th>Observado</th><th>Cognitiva</th><th>Humanista</th><th>Farmacológica</th><th>Total</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Mujeres</strong></td><td>28</td><td>18</td><td>9</td><td>55</td></tr>
+          <tr><td><strong>Hombres</strong></td><td>12</td><td>12</td><td>11</td><td>35</td></tr>
+          <tr><td><strong>Total</strong></td><td>40</td><td>30</td><td>20</td><td>90</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="body" style="margin-top:9px">Si no hubiera ninguna relación, esperaríamos la misma distribución proporcional en mujeres y hombres. La frecuencia esperada para "mujeres + cognitiva" sería: (55 × 40) ÷ 90 = 24.4. El chi-cuadrado mide qué tan lejos están los valores observados de estos esperados.</p>
+    <div class="formula"><span class="fc">χ² = Σ (frecuencia observada − frecuencia esperada)² ÷ frecuencia esperada</span></div>
+    <p class="body" style="margin-top:8px">Un χ² grande indica mucha diferencia entre lo observado y lo esperado → probablemente hay una relación real entre las variables.</p>
+  </div>
+  <div class="card">
+    <div class="ctit">Cuándo usar chi-cuadrado</div>
+    <p class="body"><strong>Cuándo sí:</strong> ambas variables son nominales u ordinales. Quieres saber si hay asociación entre dos características categóricas.</p>
+    <p class="body" style="margin-top:7px"><strong>Cuándo no:</strong> cuando la VD es continua (usa t o ANOVA). Cuando las frecuencias esperadas son menores de 5 en alguna celda (usa la prueba exacta de Fisher para tablas 2×2).</p>
+    <p class="body" style="margin-top:7px"><strong>Tamaño del efecto:</strong> V de Cramér. Varía entre 0 y 1. Interpretación similar a r de Pearson: menor a 0.10 trivial, 0.10–0.30 pequeño, 0.30–0.50 mediano, mayor a 0.50 grande.</p>
+  </div>
+  <div class="qbox">
+    <div class="qlabel">Pregunta 12</div>
+    <p class="qp">Un investigador quiere saber si hay relación entre el diagnóstico (ansiedad / depresión / ninguno) y el abandono del tratamiento (sí / no). ¿Qué prueba es la correcta?</p>
+    <div class="qch" id="q12ch"></div>
+    <div class="qfb" id="q12fb"></div>
+  </div>
+  <button class="btn btn-gn" onclick="show('s13')">Siguiente: Prueba t →</button>
+</div>
+
+<!-- S13 PRUEBA T -->
+<div id="s13" class="scr">
+  <span class="badge b-pu">Sección 13</span>
+  <h2 style="margin-top:7px">La prueba t de Student</h2>
+  <p class="lead">La prueba t compara las medias de dos grupos cuando la variable dependiente es continua. Hay dos versiones esencialmente diferentes, y elegir la correcta cambia los resultados.</p>
+  <div class="card">
+    <div class="ctit">El nombre — una historia de cerveza</div>
+    <p class="body"><strong>William Sealy Gosset</strong> (1876–1937) era estadístico en la cervecería Guinness de Dublín. Desarrolló este método para controlar la calidad de pequeños lotes de cebada con muestras muy pequeñas. La cervecería no permitía publicaciones bajo el nombre real de empleados — así que publicó en 1908 bajo el seudónimo <em>"Student."</em> Desde entonces se llama "prueba t de Student." La t viene de la distribución t (o distribución de Student) que usó en el cálculo.</p>
+  </div>
+  <div class="card">
+    <div class="ctit">Versión 1: t para muestras independientes</div>
+    <p class="body"><strong>Cuándo:</strong> comparas medias de dos grupos separados — personas diferentes en cada grupo, sin relación entre ellas.</p>
+    <div id="s13-ind" class="ins az" style="margin-top:9px"></div>
+    <div class="formula" style="margin-top:9px"><span class="fc">t = (media grupo 1 − media grupo 2) ÷ error estándar de la diferencia</span></div>
+    <p class="body" style="margin-top:8px">Un t grande (en valor absoluto) indica que la diferencia entre medias es grande en relación con la variabilidad interna de los grupos. El p-valor se determina comparando t con una distribución t con los grados de libertad correspondientes.</p>
+    <p class="body" style="margin-top:7px"><strong>Supuesto clave:</strong> homogeneidad de varianzas — las varianzas de los dos grupos son similares. Se verifica con la prueba de Levene. Si se viola, se usa la corrección de Welch.</p>
+  </div>
+  <div class="card">
+    <div class="ctit">Versión 2: t para muestras pareadas (relacionadas)</div>
+    <p class="body"><strong>Cuándo:</strong> las mismas personas medidas dos veces (antes/después), o cada observación en el grupo A está emparejada con una observación específica en el grupo B.</p>
+    <div id="s13-par" class="ins" style="border-color:var(--pu);background:var(--pud);margin-top:9px"></div>
+    <div class="formula" style="margin-top:9px"><span class="fc">t = media de las diferencias ÷ (desviación estándar de las diferencias ÷ √n)</span></div>
+    <p class="body" style="margin-top:8px"><strong>¿Por qué es más potente?</strong> Al analizar diferencias dentro de cada par, se elimina la variabilidad entre personas. Si María siempre tiene bienestar alto y Pedro siempre bajo, esa diferencia individual "cancela" al restar antes−después de cada uno. Solo queda la señal del efecto de la intervención, sin el "ruido" de las diferencias individuales previas.</p>
+  </div>
+  <div class="card">
+    <div class="ctit">Tamaño del efecto: d de Cohen</div>
+    <p class="body">d = diferencia entre medias ÷ desviación estándar combinada. Interpretación: menor a 0.2 trivial, 0.2–0.5 pequeño, 0.5–0.8 mediano, mayor a 0.8 grande. d = 0.5 significa que las medias difieren en media desviación estándar — perceptible en la práctica.</p>
+  </div>
+  <div class="qbox">
+    <div class="qlabel">Pregunta 13</div>
+    <p class="qp" id="q13p"></p>
+    <div class="qch" id="q13ch"></div>
+    <div class="qfb" id="q13fb"></div>
+  </div>
+  <button class="btn btn-gn" onclick="show('s14')">Siguiente: ANOVA 1 factor →</button>
+</div>
+
+<!-- S14 ANOVA 1 -->
+<div id="s14" class="scr">
+  <span class="badge b-am">Sección 14</span>
+  <h2 style="margin-top:7px">ANOVA de un factor</h2>
+  <p class="lead">Con 3 o más grupos, el ANOVA reemplaza múltiples pruebas t. El motivo es estadístico: hacer varias t infla el riesgo de error de manera inaceptable.</p>
+  <div class="card">
+    <div class="ctit">El nombre — ANOVA y el estadístico F</div>
+    <p class="body">ANOVA = <strong>AN</strong>alysis <strong>O</strong>f <strong>VA</strong>riance (Análisis de Varianza). Desarrollado por <strong>Ronald Aylmer Fisher</strong> en los años 1920s. El estadístico F lleva su nombre en su honor. Aparentemente paradójico: el ANOVA compara <em>medias</em>, pero lo hace analizando <em>varianzas</em>. La lógica es brillante: si las medias son realmente diferentes, la varianza <em>entre</em> grupos será mayor que la varianza <em>dentro</em> de los grupos.</p>
+  </div>
+  <div class="card">
+    <div class="ctit">¿Por qué no hacer múltiples pruebas t? — la inflación del error</div>
+    <p class="body">Con 3 grupos (terapia cognitiva, humanista, farmacológica) necesitas hacer 3 comparaciones por pares: cognitiva vs humanista, cognitiva vs farmacológica, humanista vs farmacológica.</p>
+    <p class="body" style="margin-top:7px">Cada prueba t tiene 5% de riesgo de error Tipo I. Con 3 pruebas independientes, la probabilidad de cometer <em>al menos un</em> error Tipo I es:</p>
+    <div class="formula"><span class="fc">1 − (0.95)³ = 1 − 0.857 = 0.143 = 14.3%</span></div>
+    <p class="body" style="margin-top:8px">El ANOVA hace todo en una sola prueba y mantiene el error global en el 5%. Con 4 grupos serían 6 comparaciones → error del 26.5%. Con 5 grupos, 10 comparaciones → 40.1%. El problema crece rápidamente.</p>
+  </div>
+  <div class="card">
+    <div class="ctit">La lógica del estadístico F</div>
+    <p class="body" style="margin-bottom:9px">El ANOVA compara dos fuentes de variación:</p>
+    <div style="display:flex;flex-direction:column;gap:7px">
+      <div style="padding:11px;background:var(--gnd);border-radius:var(--rs);border-left:3px solid var(--gn)"><p class="body"><strong>Variación entre grupos:</strong> ¿Qué tan diferentes son las medias de los grupos entre sí? Si los grupos difieren mucho, esta variación es grande.</p></div>
+      <div style="padding:11px;background:var(--azd);border-radius:var(--rs);border-left:3px solid var(--az)"><p class="body"><strong>Variación dentro de los grupos (error):</strong> ¿Qué tan variable es cada individuo respecto a la media de su propio grupo? Refleja variabilidad natural y ruido de medición.</p></div>
+    </div>
+    <div class="formula" style="margin-top:10px"><span class="fc">F = Varianza entre grupos ÷ Varianza dentro de los grupos</span></div>
+    <p class="body" style="margin-top:8px">F ≈ 1: la variación entre grupos no supera la variación natural interna. No hay efecto aparente.<br>F considerablemente mayor a 1: los grupos difieren más de lo que explicaría la variabilidad individual. Posible efecto real.<br>El p-valor indica qué tan probable sería ese F (o mayor) si H₀ fuera verdadera.</p>
+    <div class="chart-wrap" style="margin-top:10px"><canvas id="cvFratio" width="680" height="180" style="max-width:100%"></canvas></div>
+  </div>
+  <div class="card">
+    <div class="ctit">Cómo leer la tabla de ANOVA — grados de libertad explicados</div>
+    <p class="body" style="margin-bottom:9px">Ejemplo: 90 participantes en 3 grupos de terapia (n = 30 cada uno):</p>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr><th>Fuente</th><th>Suma de cuadrados</th><th>Grados de libertad</th><th>Cuadrado medio</th><th>F</th><th>p</th></tr></thead>
+        <tbody>
+          <tr><td>Entre grupos (Terapia)</td><td>48.20</td><td>2</td><td>24.10</td><td style="font-weight:700;color:var(--gn)">8.34</td><td style="color:var(--gn);font-weight:700">.001</td></tr>
+          <tr><td>Dentro de grupos (Error)</td><td>249.30</td><td>87</td><td>2.86</td><td>—</td><td>—</td></tr>
+          <tr><td><strong>Total</strong></td><td>297.50</td><td>89</td><td></td><td></td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="body" style="margin-top:9px"><strong>Grados de libertad entre grupos:</strong> número de grupos − 1 = 3 − 1 = <strong>2</strong>. Representa los grados de "libertad" de la variación entre grupos: con 3 grupos, si conoces 2 medias, la tercera queda determinada por la gran media.</p>
+    <p class="body" style="margin-top:7px"><strong>Grados de libertad dentro de grupos (error):</strong> n total − número de grupos = 90 − 3 = <strong>87</strong>. Representa la variabilidad individual disponible después de "usar" una media por grupo.</p>
+    <p class="body" style="margin-top:7px"><strong>Cuadrado medio:</strong> suma de cuadrados ÷ grados de libertad. F = cuadrado medio entre ÷ cuadrado medio dentro = 24.10 ÷ 2.86 = 8.43 (≈ 8.34 por redondeo). En APA: <em>F(2, 87) = 8.34, p = .001, η² = .16</em></p>
+    <p class="body" style="margin-top:7px"><strong>Pruebas post hoc:</strong> el ANOVA significativo dice "al menos dos grupos difieren" pero no dice cuáles. Las pruebas post hoc (Tukey HSD, Bonferroni, Games-Howell) hacen comparaciones por pares controlando la inflación del error Tipo I.</p>
+  </div>
+  <div class="qbox">
+    <div class="qlabel">Pregunta 14</div>
+    <p class="qp" id="q14p"></p>
+    <div class="qch" id="q14ch"></div>
+    <div class="qfb" id="q14fb"></div>
+  </div>
+  <button class="btn btn-gn" onclick="show('s15')">Siguiente: ANOVA 2 factores →</button>
+</div>
+
+<!-- S15 ANOVA 2 -->
+<div id="s15" class="scr">
+  <span class="badge b-am">Sección 15 — Clave para el PI</span>
+  <h2 style="margin-top:7px">ANOVA de dos factores</h2>
+  <p class="lead">El ANOVA de dos factores evalúa el efecto de dos variables independientes Y su interacción simultáneamente. Es el diseño más poderoso para preguntas de investigación complejas.</p>
+  <div class="card">
+    <div class="ctit">¿Qué son los "dos factores"? — con un ejemplo concreto</div>
+    <p class="body">Imagina que quieres saber si el bienestar psicológico depende del <u>tipo de terapia</u> (cognitiva / humanista / farmacológica) y también del <u>nivel socioeconómico</u> (bajo / alto). Esos son los dos factores:</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:9px 0">
+      <div style="padding:12px;background:var(--azd);border-radius:var(--rs);border:1px solid var(--azb)"><p class="body"><strong style="color:var(--az)">Factor A: Tipo de terapia</strong><br>3 niveles: cognitiva, humanista, farmacológica</p></div>
+      <div style="padding:12px;background:var(--amd);border-radius:var(--rs);border:1px solid var(--amb)"><p class="body"><strong style="color:var(--am)">Factor B: Nivel socioeconómico</strong><br>2 niveles: bajo, alto</p></div>
+    </div>
+    <p class="body">El diseño 3×2 produce <strong>6 celdas</strong>: cognitiva/bajo, cognitiva/alto, humanista/bajo, humanista/alto, farmacológica/bajo, farmacológica/alto. Cada celda tiene su propio n de participantes.</p>
+  </div>
+  <div class="card">
+    <div class="ctit">Las tres hipótesis que prueba simultáneamente</div>
+    <div style="display:flex;flex-direction:column;gap:7px">
+      <div style="padding:12px;background:var(--azd);border-radius:var(--rs);border:1px solid var(--azb)">
+        <p class="body"><strong style="color:var(--az)">H1 — Efecto principal del Factor A (Terapia)</strong><br>¿El tipo de terapia produce diferencias en bienestar, promediando sobre todos los niveles socioeconómicos? Como si colapsaras el factor B y solo miraras A. H₀: las tres terapias producen el mismo bienestar promedio.</p>
+      </div>
+      <div style="padding:12px;background:var(--amd);border-radius:var(--rs);border:1px solid var(--amb)">
+        <p class="body"><strong style="color:var(--am)">H2 — Efecto principal del Factor B (NSE)</strong><br>¿El nivel socioeconómico produce diferencias en bienestar, promediando sobre los tres tipos de terapia? H₀: NSE bajo y NSE alto tienen el mismo bienestar promedio.</p>
+      </div>
+      <div style="padding:12px;background:var(--gnd);border-radius:var(--rs);border:1px solid var(--gnb)">
+        <p class="body"><strong style="color:var(--gn)">H3 — Interacción A × B ← la más reveladora</strong><br>¿El efecto del tipo de terapia sobre el bienestar cambia según el nivel socioeconómico? La terapia cognitiva puede ser la mejor para NSE alto pero la peor para NSE bajo. Solo el diseño factorial puede revelar esto.</p>
+      </div>
+    </div>
+    <div class="ins am" style="margin-top:8px"><strong>¿Puede haber interacción sin efectos principales significativos?</strong> Sí. Si la terapia cognitiva es mejor que la humanista en NSE alto pero peor en NSE bajo, los promedios globales de cada terapia pueden ser iguales (sin efecto principal de A), pero la interacción es real y significativa. Los efectos se "enmascaran" mutuamente.</div>
+  </div>
+  <div class="card">
+    <div class="ctit">Cómo reconocer la interacción — el gráfico de líneas</div>
+    <p class="body" style="margin-bottom:9px">En el gráfico de interacción, el eje horizontal muestra los niveles de un factor y hay una línea por cada nivel del otro factor. Si las líneas son paralelas → no hay interacción. Si las líneas se cruzan o divergen → hay interacción.</p>
+    <div class="chart-wrap"><canvas id="cvInteract" width="680" height="200" style="max-width:100%"></canvas></div>
+    <p class="body" style="margin-top:9px">Líneas que se cruzan = la terapia que es mejor en un NSE es peor en el otro. Esta información solo emerge con el diseño factorial — un diseño de un solo factor nunca la revelaría.</p>
+  </div>
+  <div class="card">
+    <div class="ctit">Leer la tabla de ANOVA de dos vías — grados de libertad y η²</div>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr><th>Fuente</th><th>F</th><th>p</th><th>η²</th><th>Interpretación</th></tr></thead>
+        <tbody>
+          <tr><td>Terapia (A)</td><td>F(2,84) = 8.34</td><td style="color:var(--gn);font-weight:700">.001</td><td>.17</td><td>Las terapias difieren en bienestar promedio. Efecto grande — la terapia explica el 17% de la varianza total.</td></tr>
+          <tr><td>NSE (B)</td><td>F(1,84) = 3.12</td><td>.081</td><td>.04</td><td>No hay evidencia de diferencia por NSE por sí solo. Efecto pequeño, no significativo.</td></tr>
+          <tr style="background:#F0FDF4"><td><strong>Terapia × NSE</strong></td><td>F(2,84) = 5.67</td><td style="color:var(--gn);font-weight:700">.005</td><td>.12</td><td><strong>La terapia más efectiva depende del NSE. Efecto mediano. Hallazgo central del estudio.</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="body" style="margin-top:9px"><strong>Grados de libertad del factor A:</strong> 3 niveles de terapia − 1 = <strong>2</strong>. Del factor B: 2 niveles de NSE − 1 = <strong>1</strong>. Del error: n total − número de celdas = 90 − 6 = <strong>84</strong>. Por eso F(2,84) para la terapia y F(1,84) para NSE.</p>
+    <p class="body" style="margin-top:7px"><strong>La interacción F(2,84) = 5.67, p = .005, η² = .12</strong> significa que la terapia más efectiva no es la misma para NSE bajo y NSE alto. El 12% de la varianza total se explica por este efecto cruzado — una contribución sustancial que justifica todo el diseño factorial.</p>
+  </div>
+  <div class="qbox">
+    <div class="qlabel">Pregunta 15 — El PI</div>
+    <p class="qp">El ANOVA del Proyecto Integrador reporta: Cultura F(1,48) = 1.24, p = .271; Condición F(2,96) = 18.47, p menor a .001; Interacción F(2,96) = 12.83, p menor a .001. El efecto principal de Cultura NO es significativo. ¿Cuál es la interpretación correcta?</p>
+    <div class="qch" id="q15ch"></div>
+    <div class="qfb" id="q15fb"></div>
+  </div>
+  <button class="btn btn-gn" onclick="show('s16')">Siguiente: Regresión logística →</button>
+</div>
+
+<!-- S16 REG LOG -->
+<div id="s16" class="scr">
+  <span class="badge b-pu">Sección 16</span>
+  <h2 style="margin-top:7px">Regresión logística</h2>
+  <p class="lead">Cuando tu variable dependiente es dicotómica (sí/no, abandona/no abandona), ni la prueba t ni el ANOVA son apropiados. La regresión logística predice la probabilidad de ese resultado binario.</p>
+  <div class="card">
+    <div class="ctit">¿Cuándo usar regresión logística?</div>
+    <p class="body">Cuando quieres predecir si algo ocurre o no ocurre, en función de una o más variables predictoras. La VD tiene solo dos valores posibles.</p>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr><th>Variable dependiente (VD)</th><th>Pregunta de investigación</th></tr></thead>
+        <tbody>
+          <tr><td>Abandona / No abandona el tratamiento</td><td>¿El nivel de ansiedad y el apoyo social predicen el abandono?</td></tr>
+          <tr><td>Aprueba / Reprueba el semestre</td><td>¿El estrés y las horas de estudio predicen si aprueba?</td></tr>
+          <tr><td>Desarrolla / No desarrolla el trastorno</td><td>¿El trauma temprano y el NSE predicen TEPT?</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ctit">El resultado clave — odds ratio</div>
+    <p class="body">La regresión logística no predice valores directamente — predice <strong>probabilidades</strong>. El resultado central es el <em>odds ratio</em> (razón de momios): cuánto cambia la probabilidad del resultado por cada unidad de aumento en la variable predictora.</p>
+    <p class="body" style="margin-top:7px"><strong>Ejemplo:</strong> odds ratio = 1.8 para el estrés → por cada punto adicional en la escala de estrés, la probabilidad de abandonar el tratamiento se multiplica por 1.8 (aumenta un 80%).</p>
+    <p class="body" style="margin-top:7px">Odds ratio = 1 → sin efecto. Mayor a 1 → aumenta la probabilidad del resultado. Menor a 1 → la disminuye.</p>
+    <div class="ins cy" style="margin-top:8px">La regresión logística es más avanzada que las pruebas anteriores. Para el Proyecto Integrador no se usa, pero completa tu panorama de las pruebas disponibles en psicología cuantitativa.</div>
+  </div>
+  <button class="btn btn-gn" onclick="show('s17')">Siguiente: Hacia el Proyecto Integrador →</button>
+</div>
+
+<!-- S17 PI -->
+<div id="s17" class="scr">
+  <span class="badge b-pu">Sección 17 — Aplicación</span>
+  <h2 style="margin-top:7px">Todo lo aprendido → Proyecto Integrador</h2>
+  <p class="lead">Con el Capítulo 10 cubierto, ya tienes las herramientas para entender por qué el PI requiere exactamente las pruebas que requiere.</p>
+  <div class="card">
+    <div class="ctit">Variables del PI — clasificación con justificación</div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div style="padding:11px;background:var(--azd);border-radius:var(--rs);border-left:3px solid var(--az)"><p class="body"><strong style="color:var(--az)">Cultura (Oriental/Occidental) → Nominal.</strong> Dos categorías de pertenencia cultural sin valor numérico ni orden inherente. VI cuasiexperimental — no se asignó aleatoriamente. Factor entre-sujetos: cada participante pertenece a un único grupo.</p></div>
+      <div style="padding:11px;background:var(--amd);border-radius:var(--rs);border-left:3px solid var(--am)"><p class="body"><strong style="color:var(--am)">Condición (Misma/Expandida/Aleatoria) → Nominal.</strong> Tres tipos de configuración espacial sin valor numérico. VI experimental — se manipuló y se aleatorizó el orden. Factor intra-sujeto: cada participante recibe las 3 condiciones.</p></div>
+      <div style="padding:11px;background:var(--pud);border-radius:var(--rs);border-left:3px solid var(--pu)"><p class="body"><strong style="color:var(--pu)">d' (d-prima) → Razón.</strong> Valor continuo con cero verdadero (d'=0 = incapacidad total de discriminar). Intervalos iguales. Se puede afirmar "d'=3 es 50% más alto que d'=2." VD principal.</p></div>
+      <div style="padding:11px;background:var(--gnd);border-radius:var(--rs);border-left:3px solid var(--gn)"><p class="body"><strong style="color:var(--gn)">TR_focal (milisegundos) → Razón.</strong> Tiempo con cero verdadero e intervalos iguales. VD secundaria.</p></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ctit">¿Por qué ANOVA de dos vías? — la decisión argumentada</div>
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div style="display:flex;gap:9px;padding:9px;background:var(--bg2);border-radius:var(--rs);align-items:flex-start"><span style="font-family:var(--mono);font-weight:700;color:var(--az);min-width:24px">1.</span><p class="body">¿VD continua? <strong>Sí</strong> — d' es de razón. → Descartamos chi-cuadrado y regresión logística.</p></div>
+      <div style="display:flex;gap:9px;padding:9px;background:var(--bg2);border-radius:var(--rs);align-items:flex-start"><span style="font-family:var(--mono);font-weight:700;color:var(--az);min-width:24px">2.</span><p class="body">¿Comparamos grupos, no relación entre continuas? <strong>Sí</strong>. → Descartamos correlación.</p></div>
+      <div style="display:flex;gap:9px;padding:9px;background:var(--bg2);border-radius:var(--rs);align-items:flex-start"><span style="font-family:var(--mono);font-weight:700;color:var(--az);min-width:24px">3.</span><p class="body">¿Cuántos factores? <strong>2</strong> — cultura y condición. → Descartamos prueba t (1 factor, 2 grupos) y ANOVA 1 factor.</p></div>
+      <div style="display:flex;gap:9px;padding:9px;background:var(--gnd);border-radius:var(--rs);border:1px solid var(--gnb);align-items:flex-start"><span style="font-family:var(--mono);font-weight:700;color:var(--gn);min-width:24px">→</span><p class="body"><strong style="color:var(--gn)">ANOVA factorial 2×3</strong>: evalúa Cultura, Condición, y la interacción Cultura×Condición — las tres hipótesis relevantes, en una sola prueba, manteniendo el error global en el 5%.</p></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ctit">Resultados del ANOVA del PI — lectura completa</div>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr><th>Fuente</th><th>F</th><th>p</th><th>η²</th><th>Interpretación</th></tr></thead>
+        <tbody>
+          <tr><td>Cultura</td><td>F(1,48) = 1.24</td><td>.271</td><td>.025</td><td>No significativo. Los dos grupos tienen d' global similar al promediar sobre las 3 condiciones. Efecto pequeño.</td></tr>
+          <tr><td>Condición</td><td>F(2,96) = 18.47</td><td style="color:var(--gn);font-weight:700">menor a .001</td><td>.278</td><td>Significativo. Las configuraciones espaciales producen diferencias reales en d'. Efecto grande — explica el 27.8% de la varianza.</td></tr>
+          <tr style="background:#F0FDF4"><td><strong>Cultura × Condición</strong></td><td>F(2,96) = 12.83</td><td style="color:var(--gn);font-weight:700">menor a .001</td><td>.211</td><td><strong>Significativo. El efecto de la condición espacial sobre d' es diferente según el grupo cultural. Hallazgo central. Efecto grande.</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="ins am" style="margin-top:9px"><strong>¿Por qué Cultura no es significativo pero la interacción sí lo es?</strong> Porque los dos grupos tienen d' global similar cuando promedias sobre las tres condiciones — pero sus patrones son opuestos. Oriental rinde mejor en expandida; Occidental en misma posición. Ese cruce de patrones — esa interacción — es lo que el diseño factorial revela y que un diseño simple nunca hubiera mostrado.</div>
+  </div>
+  <div class="ins az">El <strong>LabPsy Simulador</strong> te permite participar en una tarea cognitiva similar al experimento del PI y comparar tus propios datos con los grupos. Úsalo después de completar esta herramienta — ahora sí sabrás qué significan los resultados.</div>
+</div>
+
+</div><!-- #main -->
+<script>
+const SIDS=['s0','s1','s2','s3','s4','s5','s6','s7','s8','s9','s10','s11','s12','s13','s14','s15','s16','s17'];
+function show(id){
+  SIDS.forEach(s=>{const e=document.getElementById(s);if(e)e.classList.remove('on');});
+  const el=document.getElementById(id);if(el)el.classList.add('on');
+  document.querySelectorAll('.ni').forEach(n=>n.classList.toggle('on',n.getAttribute('onclick')?.includes("'"+id+"'")));
+  document.querySelectorAll('.nm').forEach(n=>n.classList.toggle('on',n.getAttribute('onclick')?.includes("'"+id+"'")));
+  window.scrollTo({top:0,behavior:'smooth'});
+  const draws={s3:()=>{drawSalones();if(SCEN)initS3();},s4:drawBell,s8:drawPval,
+    s14:()=>{drawFratio();if(SCEN)initS14();},s15:drawInteract,s10:initDTree};
+  if(draws[id])draws[id]();
+  const inits={s1:initS1,s2:initS2,s5:initS5,s6:initS6,s7:initS7,s9:initS9,s11:initS11,s13:initS13};
+  if(inits[id]&&SCEN)inits[id]();
+}
+let SCEN=null;
+const SCENS={
+stress:{name:'Estrés y rendimiento',intro:'En tu escenario estudias si el nivel de estrés académico afecta el promedio de calificaciones de estudiantes universitarios bogotanos.',
+scen1:'En tu escenario: el nivel de estrés (bajo/medio/alto) y el promedio de calificaciones (0–5). Una variable define los grupos; la otra se mide para ver si cambió.',
+scen2:'Grupo de estrés alto (calificaciones: 2.8, 3.1, 2.5, 2.9, 3.0, 2.7): M = 2.83, DE = 0.21. Grupo de estrés bajo: M = 4.05. Con datos de razón y sin valores extremos obvios, la media es la medida apropiada.',
+scen3:'Estrés bajo: M = 4.05, DE = 0.19. Estrés alto: M = 2.83, DE = 0.21. DEs similares: la variabilidad interna es comparable. Sin la DE no puedes calcular el estadístico F ni la d de Cohen.',
+h0:'H₀: "El nivel de estrés no tiene efecto sobre el promedio de calificaciones. Cualquier diferencia observada entre los grupos se debe al azar del muestreo."',
+h1:'H₁: "Los grupos de estrés bajo, medio y alto difieren significativamente en su promedio de calificaciones."',
+vivd:[
+  {n:'Nivel de estrés académico',d:'Clasificado en: bajo / medio / alto (Escala de Estrés Percibido).',vi:true,vifb:'✓ Correcto. El estrés es la VI — diferencia los grupos y hipotéticamente "causa" cambios en el rendimiento.',vdfb:'No — el estrés no depende del rendimiento. Al contrario: la hipótesis es que el estrés afecta el rendimiento. Es la VI.'},
+  {n:'Promedio de calificaciones (0–5)',d:'Registrado del sistema académico al final del semestre.',vi:false,vifb:'No — las calificaciones son lo que se mide para ver si cambiaron. Es la VD.',vdfb:'✓ Correcto. Las calificaciones son la VD — lo que mides para saber si el estrés lo afectó.'},
+],
+q1:{p:'El nivel de estrés tiene categorías: bajo, medio, alto. ¿Qué escala de medición es?',ch:[
+  {t:'Nominal — etiquetas sin ningún orden',ok:false,fb:'No — bajo, medio y alto tienen un orden claro: bajo < medio < alto. Sin orden sería nominal.'},
+  {t:'Ordinal — categorías con orden, pero la distancia entre ellas no es necesariamente igual',ok:true,fb:'✓ Correcto. El orden existe pero las distancias no son iguales. Si midiera el estrés con un puntaje continuo (EEP 0–56), ese puntaje sería de razón. Las categorías derivadas son ordinales.'},
+  {t:'Razón — tiene cero verdadero y valor numérico',ok:false,fb:'No — "bajo", "medio" y "alto" son etiquetas ordenadas, no valores numéricos con cero absoluto.'}]},
+q2:{p:'El grupo de estrés alto tiene calificaciones: 2.8, 3.1, 2.5, 2.9, 3.0, 2.7. ¿Qué medida de tendencia central es más apropiada?',ch:[
+  {t:'La mediana — siempre más robusta que la media',ok:false,fb:'La mediana es más robusta cuando hay outliers. Aquí los valores van de 2.5 a 3.1, sin extremos obvios. La media es igualmente válida y usa toda la información.'},
+  {t:'La media — datos de razón sin outliers; captura toda la información disponible',ok:true,fb:'✓ Correcto. Calificaciones de razón, sin valores extremos. M = 2.83, DE = 0.21 en formato APA. La media representa bien al grupo.'},
+  {t:'La moda — la única medida recomendada para escalas de 0 a 5',ok:false,fb:'La moda es la única válida para datos NOMINALES. Las calificaciones son de razón — la media es perfectamente apropiada.'}]},
+q3:{p:'Estrés bajo: M = 4.05, DE = 0.19. Estrés alto: M = 2.83, DE = 0.21. Un colega dice que la diferencia de 1.22 puntos habla por sí sola y que la DE es irrelevante. ¿Tiene razón?',ch:[
+  {t:'Sí — la diferencia es grande y obvia',ok:false,fb:'Sin la DE no puedes calcular el estadístico F ni el tamaño del efecto. "Grande" es relativo a la variabilidad interna. La DE es imprescindible.'},
+  {t:'No — sin la DE no puedes calcular el estadístico de prueba ni el tamaño del efecto',ok:true,fb:'✓ Correcto. La significancia estadística depende de cuánto se solapan las distribuciones de los grupos — y eso lo determina la DE. Siempre reporta M y DE juntas.'},
+  {t:'No — la DE solo sirve para detectar outliers',ok:false,fb:'La DE tiene múltiples usos: mide dispersión, entra en el cálculo de estadísticos de prueba, calcula tamaños del efecto y ayuda a detectar outliers. Su papel principal aquí es el cálculo de F y d de Cohen.'}]},
+q5:{p:'Grupo de estrés bajo: M = 4.05, DE = 0.19. Un estudiante tiene calificación de 3.55. Calcula su puntuación z y decide si es un outlier.',ch:[
+  {t:'Puntuación z = (3.55 − 4.05) ÷ 0.19 = −2.63. Sí supera el umbral de ±2 — merece investigarse',ok:true,fb:'✓ Correcto. −0.50 ÷ 0.19 = −2.63. |−2.63| > 2. Este estudiante de estrés "bajo" tiene calificación inusualmente baja para su grupo. ¿Fue clasificado incorrectamente? ¿Tuvo alguna dificultad? Debe investigarse antes de decidir.'},
+  {t:'No es un outlier — 3.55 es posible en la escala 0–5',ok:false,fb:'Estar dentro del rango de la escala no evita ser outlier. El criterio es la puntuación z: qué tan lejos está el valor de la media de su grupo en desviaciones estándar.'},
+  {t:'Sí, puntuación z = (4.05 − 3.55) ÷ 0.19 = +2.63',ok:false,fb:'La fórmula es (valor − media) ÷ DE, no (media − valor). El valor 3.55 está POR DEBAJO de la media, por lo que z debe ser negativo: −2.63.'}]},
+q6:{p:'Muestra: 90 estudiantes de la Universidad de Cundinamarca, Facatativá. ¿A quién puedes generalizar?',ch:[
+  {t:'A todos los estudiantes universitarios colombianos',ok:false,fb:'Una sola universidad no es representativa de todos los universitarios colombianos. Los de universidades privadas de Bogotá o de otras regiones tienen contextos distintos.'},
+  {t:'A estudiantes universitarios en contextos similares (universidades medianas en ciudades intermedias), con limitaciones explícitas en la discusión',ok:true,fb:'✓ Correcto. Generalización honesta y justificada. La discusión debe señalar las limitaciones: muestra de una sola institución, sesgo de conveniencia.'},
+  {t:'Solo a los 90 estudiantes de tu muestra',ok:false,fb:'Demasiado conservador. La estadística inferencial permite generalizaciones cautelosas. La clave es ser transparente sobre las limitaciones.'}]},
+q7:{p:'¿Cuál es la hipótesis nula (H₀) de tu estudio?',ch:[
+  {t:'Los estudiantes con mayor estrés tienen menor promedio de calificaciones',ok:false,fb:'Esa es la hipótesis alterna (H₁). H₀ siempre afirma que no hay efecto.'},
+  {t:'No hay diferencia en el promedio de calificaciones entre los grupos de estrés. Cualquier diferencia observada se debe al azar',ok:true,fb:'✓ Correcto. H₀ es la hipótesis del "no efecto." Si el ANOVA da p < α, rechazas H₀.'},
+  {t:'El estrés y las calificaciones no tienen ninguna relación causal',ok:false,fb:'H₀ habla de diferencias entre medias, no de causalidad. La causalidad es una cuestión de diseño.'}]},
+q9:{p:'ANOVA: F(2,87) = 8.34, p = .001, η² = .16. ¿Cuál es la interpretación completa y correcta?',ch:[
+  {t:'Efecto estadísticamente significativo de tamaño grande: el estrés explica el 16% de la varianza en calificaciones. Se rechaza H₀.',ok:true,fb:'✓ Correcto. p = .001 < .05 → significativo → se rechaza H₀. η² = .16 → efecto grande. Reporte APA completo: F(2, 87) = 8.34, p = .001, η² = .16.'},
+  {t:'El estrés causa directamente las bajas calificaciones con 99.9% de certeza',ok:false,fb:'Dos errores: sin manipulación experimental no hay causalidad. Y 1−p no es probabilidad de que el efecto sea real.'},
+  {t:'El efecto es muy grande porque F = 8.34 es mucho mayor a 1',ok:false,fb:'El tamaño de F no indica el tamaño del efecto práctico — depende de los grados de libertad y n. El tamaño del efecto es η² = .16.'}]},
+q11:{p:'Quieres saber si las horas de estudio (continua) se relacionan con el promedio de calificaciones (continua). ¿Qué prueba y qué limitación?',ch:[
+  {t:'Prueba t — para comparar los que estudian más con los que estudian menos',ok:false,fb:'Dividir horas en grupos crea un corte arbitrario y pierde información. La correlación mide la relación continua directamente.'},
+  {t:'Correlación de Pearson — mide la relación lineal entre dos continuas; limitación: correlación no implica causalidad',ok:true,fb:'✓ Correcto. Dos continuas en los mismos participantes → correlación. Que estudiar más se correlacione con mejores notas no prueba que sea la causa — puede haber variables de confusión.'},
+  {t:'Chi-cuadrado — para analizar dos escalas de medición',ok:false,fb:'Chi-cuadrado es para variables categóricas. Calificaciones y horas son continuas.'}]},
+q13:{p:'Mides el promedio ANTES y DESPUÉS de un programa de tutorías en los mismos 45 estudiantes. ¿Qué prueba y por qué?',ch:[
+  {t:'Prueba t independiente — son dos momentos, dos conjuntos de datos',ok:false,fb:'Son las MISMAS personas antes y después. Usar t independiente ignoraría el emparejamiento y daría resultados incorrectos.'},
+  {t:'Prueba t pareada — las mismas personas antes y después; cancela la variabilidad individual; más sensible para detectar el efecto',ok:true,fb:'✓ Correcto. La t pareada compara el cambio de cada persona (Juan-antes vs Juan-después). Elimina el ruido de que algunos estudiantes siempre rindan más que otros.'},
+  {t:'ANOVA — es la prueba más poderosa',ok:false,fb:'Para dos mediciones en las mismas personas, la t pareada (o ANOVA de medidas repetidas, su extensión con más de 2 momentos) es la prueba correcta.'}]},
+q14:{p:'ANOVA de 3 grupos, 90 participantes: ¿cuántos grados de libertad tiene el factor y cuántos el error?',ch:[
+  {t:'Factor: 3. Error: 87.',ok:false,fb:'Los grados de libertad del factor son número de grupos − 1 = 3 − 1 = 2. El error sí es 90 − 3 = 87.'},
+  {t:'Factor: 2 (= 3 grupos − 1). Error: 87 (= 90 − 3 grupos).',ok:true,fb:'✓ Correcto. Factor: 3−1=2. Error: 90−3=87. Por eso se reporta F(2,87).'},
+  {t:'Factor: 89. Error: 87.',ok:false,fb:'89 = n−1 son los grados de libertad totales. Los del factor son siempre número de grupos − 1.'}]}},
+sleep:{name:'Sueño y atención',intro:'En tu escenario estudias si las horas de sueño (menos de 6 horas / entre 6 y 8 horas / más de 8 horas) afectan el puntaje de atención sostenida (0–100) en adolescentes bogotanos de 14–18 años.',
+scen1:'Variables: horas de sueño (3 categorías) y puntaje de atención (0–100). Una define los grupos; la otra se mide.',
+scen2:'Menos de 6 horas: 52, 48, 55, 50, 53, 47 → M = 50.8, DE = 2.93. Más de 8 horas: M = 79.7. Datos de razón sin outliers obvios: la media es apropiada.',
+scen3:'Menos de 6h: M=50.8, DE=2.93. Más de 8h: M=79.7, DE=3.20. DEs similares: variabilidad interna comparable. Sin DE no puedes calcular t ni d de Cohen.',
+h0:'H₀: "No hay diferencia en el puntaje de atención entre adolescentes que duermen menos de 6h, entre 6 y 8h, o más de 8h."',
+h1:'H₁: "Los adolescentes con diferentes patrones de sueño obtienen puntajes de atención significativamente distintos."',
+vivd:[
+  {n:'Horas de sueño por noche',d:'Tres categorías: menos de 6h / entre 6 y 8h / más de 8h (diario de sueño semanal).',vi:true,vifb:'✓ Correcto. Las horas de sueño definen los grupos — es la VI.',vdfb:'No — las horas de sueño definen los grupos. Son la VI.'},
+  {n:'Puntaje de atención sostenida (0–100)',d:'0 = ningún ítem correcto, 100 = todos correctos.',vi:false,vifb:'No — el puntaje de atención es lo que se mide para ver si cambió. Es la VD.',vdfb:'✓ Correcto. El puntaje de atención es la VD.'},
+],
+q1:{p:'El puntaje de atención va de 0 a 100 donde 0 = ningún ítem correcto. ¿Qué escala de medición es?',ch:[
+  {t:'Ordinal — porque los puntajes tienen orden de mejor a peor',ok:false,fb:'El orden existe, pero también los intervalos son iguales y el cero significa ausencia de desempeño (cero verdadero). Eso es razón.'},
+  {t:'Razón — cero verdadero (0 = sin desempeño), intervalos iguales, continua',ok:true,fb:'✓ Correcto. Cero verdadero, intervalos iguales. Permite media, DE, ANOVA.'},
+  {t:'Nominal — son etiquetas numéricas de categorías',ok:false,fb:'No — los puntajes tienen valor cuantitativo real.'}]},
+q2:{p:'Menos de 6h: 52, 48, 55, 50, 53, 47. ¿Qué medida de tendencia central usarías?',ch:[
+  {t:'La mediana — siempre más representativa para pruebas psicológicas',ok:false,fb:'La mediana es más representativa cuando hay outliers. Sin valores extremos, la media es perfectamente apropiada.'},
+  {t:'La media — datos de razón sin outliers visibles; captura toda la información',ok:true,fb:'✓ Correcto. M = 50.8 (DE = 2.93) en formato APA.'},
+  {t:'La moda — para identificar el puntaje más frecuente',ok:false,fb:'Con 6 valores posiblemente todos distintos, la moda puede no estar definida. Para datos continuos de razón la media es el estándar.'}]},
+q3:{p:'Menos de 6h: M=50.8, DE=2.93. Más de 8h: M=79.7, DE=3.20. ¿Por qué es importante la DE aunque la diferencia de medias ya parezca grande?',ch:[
+  {t:'La DE mayor del grupo de más sueño explica su rendimiento superior',ok:false,fb:'DE=3.20 vs 2.93 es diferencia mínima. La DE no explica el nivel de rendimiento — mide dispersión.'},
+  {t:'Sin la DE no puedes calcular el estadístico de prueba (t o F) ni el tamaño del efecto. La "grandeza" es relativa a la variabilidad interna',ok:true,fb:'✓ Correcto. t = (M1−M2) ÷ error estándar, donde el error estándar depende de las DEs. d de Cohen = diferencia de medias ÷ DE combinada. Sin DE, la diferencia es descriptiva pero no permite inferencia.'},
+  {t:'La DE es irrelevante porque la diferencia de 28.9 puntos es suficientemente obvia',ok:false,fb:'"Obvio" no es criterio estadístico. La significancia depende de la diferencia relativa a la variabilidad interna.'}]},
+q5:{p:'Grupo menos de 6h: M=50.8, DE=2.93. Un adolescente obtiene 44 en la prueba de atención (0–100). ¿Es un outlier?',ch:[
+  {t:'Sí — puntuación z = (44 − 50.8) ÷ 2.93 = −2.32. Supera el umbral de ±2',ok:true,fb:'✓ Correcto. −6.8 ÷ 2.93 = −2.32. |−2.32| > 2 → supera el umbral. Este adolescente tiene atención inusualmente baja para su grupo. ¿Problema durante la prueba? ¿Condición adicional? Debe investigarse.'},
+  {t:'No — 44 está dentro del rango posible 0–100',ok:false,fb:'El rango de la escala no determina si un dato es outlier. El criterio es la puntuación z.'},
+  {t:'Sí — porque 44 es más de 6 puntos menor a la media',ok:false,fb:'No existe un criterio de "X puntos de diferencia." La puntuación z = diferencia ÷ DE es el criterio universal.'}]},
+q6:{p:'Muestra: 90 adolescentes bogotanos 14–18 años. ¿A quién generalizas?',ch:[
+  {t:'A todos los adolescentes colombianos de 14–18 años',ok:false,fb:'Tu muestra es de Bogotá, colegios específicos. Adolescentes rurales o de otras regiones pueden tener patrones muy diferentes.'},
+  {t:'A adolescentes bogotanos en contextos educativos similares, con limitaciones explicitadas',ok:true,fb:'✓ Correcto. Generalización honesta reconociendo el perfil de la muestra.'},
+  {t:'A ninguna población sin muestreo probabilístico nacional',ok:false,fb:'La investigación con muestras de conveniencia hace contribuciones válidas con limitaciones transparentes.'}]},
+q7:{p:'¿Cuál es la hipótesis nula correcta para tu ANOVA?',ch:[
+  {t:'No hay diferencia en el puntaje de atención entre los tres grupos de sueño; cualquier diferencia observada se debe al azar',ok:true,fb:'✓ Correcto. H₀ = no hay efecto real.'},
+  {t:'El sueño no causa diferencias en atención en ningún contexto',ok:false,fb:'H₀ habla de diferencias entre medias en tu muestra — no hace afirmaciones causales universales.'},
+  {t:'Los tres grupos tienen exactamente el mismo puntaje',ok:false,fb:'H₀ afirma que las diferencias observadas se deben al azar — no que sean exactamente cero en toda la población.'}]},
+q9:{p:'ANOVA: F(2,87) = 18.47, p < .001, η² = .28. ¿Qué reportas e interpretas?',ch:[
+  {t:'Efecto significativo y grande: el sueño explica el 28% de la varianza en atención. F(2,87)=18.47, p<.001, η²=.28',ok:true,fb:'✓ Correcto. p<.001 → significativo. η²=.28 → efecto grande. Siempre reportar F con sus grados de libertad, p y tamaño del efecto.'},
+  {t:'Las horas de sueño causan mejoras en atención con >99% de probabilidad',ok:false,fb:'Sin diseño experimental no hay causalidad. Y 1−p ≠ probabilidad de que el efecto sea real.'},
+  {t:'El resultado es definitivo para todos los adolescentes colombianos',ok:false,fb:'La generalización requiere argumentación sobre representatividad.'}]},
+q11:{p:'Quieres saber si las horas de sueño (continua) se relacionan con el puntaje de atención (continua). ¿Pearson o Spearman?',ch:[
+  {t:'Spearman — siempre más segura para datos psicológicos',ok:false,fb:'Spearman es más apropiada con datos ordinales o no normales. Con datos continuos y relación lineal, Pearson es más poderosa.'},
+  {t:'Pearson como primera opción — dos continuas; si la relación no es lineal, considerar Spearman',ok:true,fb:'✓ Correcto. Dos continuas → Pearson de partida. Si al graficar ves relación no-lineal, Spearman puede ser mejor.'},
+  {t:'Prueba t — para comparar grupos de sueño',ok:false,fb:'Sin grupos definidos — dos continuas en los mismos participantes — la correlación es la correcta.'}]},
+q13:{p:'Mides el puntaje de atención ANTES y DESPUÉS de una intervención de higiene del sueño en los mismos adolescentes. ¿Qué prueba?',ch:[
+  {t:'Prueba t independiente — dos mediciones separadas',ok:false,fb:'Las MISMAS personas → no son independientes. T independiente sería estadísticamente incorrecta.'},
+  {t:'Prueba t pareada — mismas personas antes y después; más sensible para detectar cambios',ok:true,fb:'✓ Correcto. Antes/después en los mismos participantes → t pareada. Elimina el ruido de diferencias individuales previas.'},
+  {t:'Correlación — para ver si quien tiene alta atención antes también la tiene después',ok:false,fb:'La correlación pre-post mide estabilidad del rasgo, no cambio. Para el efecto de la intervención → t pareada.'}]},
+q14:{p:'ANOVA de 3 grupos con 90 participantes: ¿por qué 87 grados de libertad en el error?',ch:[
+  {t:'87 = n total (90) − 1',ok:false,fb:'n−1=89 son los grados de libertad totales. Los del error son n − número de grupos = 90−3=87.'},
+  {t:'87 = n total (90) − número de grupos (3). Refleja la variabilidad disponible después de estimar una media por grupo',ok:true,fb:'✓ Correcto. Se "usa" un dato por grupo para estimar la media. 90−3=87 grados de libertad libres.'},
+  {t:'87 es el n del grupo más grande ajustado',ok:false,fb:'No — gl del error = n total − número de grupos, siempre.'}]}},
+mindful:{name:'Mindfulness y bienestar',intro:'En tu escenario evalúas si una intervención de mindfulness de 8 semanas mejora el bienestar psicológico (BIEPS-A, 0–52) versus un grupo de lista de espera.',
+scen1:'Variables: tipo de intervención (mindfulness vs. control) y puntaje de bienestar BIEPS-A (0–52).',
+scen2:'Mindfulness: 44, 47, 43, 45, 48, 46 → M=45.5, DE=1.76. Control: M=38.0, DE=1.41. La media es apropiada para datos de razón sin outliers.',
+scen3:'Mindfulness: M=45.5, DE=1.76. Control: M=38.0, DE=1.41. DEs pequeñas y similares: grupos internamente homogéneos. Sin DE no calculas t ni d de Cohen.',
+h0:'H₀: "La intervención de mindfulness no mejora el bienestar en comparación con la lista de espera. Cualquier diferencia observada se debe al azar."',
+h1:'H₁: "El grupo de mindfulness muestra significativamente mayor bienestar al finalizar la intervención que el grupo control."',
+vivd:[
+  {n:'Tipo de intervención',d:'Dos condiciones: grupo mindfulness / grupo de lista de espera (control). Asignación aleatoria.',vi:true,vifb:'✓ Correcto. El tipo de intervención es la VI — fue manipulado mediante asignación aleatoria.',vdfb:'No — el tipo de intervención es lo que el investigador manipuló. Es la VI.'},
+  {n:'Puntaje de bienestar (BIEPS-A, 0–52)',d:'Medido al final de las 8 semanas. Mayor puntaje = mayor bienestar.',vi:false,vifb:'No — el bienestar es lo que se mide para ver si la intervención lo cambió. Es la VD.',vdfb:'✓ Correcto. El puntaje de bienestar es la VD.'},
+],
+q1:{p:'La BIEPS-A suma 7 ítems Likert (1, 2, 3) produciendo puntajes de 0 a 52. ¿Qué escala de medición es el puntaje total?',ch:[
+  {t:'Ordinal — porque los ítems son categorías (1, 2, 3)',ok:false,fb:'Los ítems son ordinales, pero en la práctica, puntajes de escalas validadas se tratan como de intervalo/razón. El Teorema Central del Límite garantiza comportamiento continuo al sumar varios ítems.'},
+  {t:'Intervalo o razón — el puntaje total se trata como continuo: permite media, DE, prueba t y ANOVA',ok:true,fb:'✓ Correcto. Decisión metodológica estándar en psicología. Permite pruebas paramétricas.'},
+  {t:'Nominal — son categorías de bienestar',ok:false,fb:'El puntaje continuo 0–52 tiene valor cuantitativo real.'}]},
+q2:{p:'¿Qué medida de tendencia central y dispersión reportarías para el grupo mindfulness (44, 47, 43, 45, 48, 46)?',ch:[
+  {t:'Media y mediana — para tener dos perspectivas',ok:false,fb:'Con datos de razón sin outliers, la media sola es suficiente. El estándar APA es M y DE.'},
+  {t:'Media y desviación estándar — el par estándar en APA para datos continuos',ok:true,fb:'✓ Correcto. M=45.5 (DE=1.76). La DE indica datos muy concentrados.'},
+  {t:'Moda y rango — las medidas más simples',ok:false,fb:'El estándar para datos continuos en psicología es M y DE.'}]},
+q3:{p:'Mindfulness: M=45.5, DE=1.76. Control: M=38.0, DE=1.41. La DE del grupo mindfulness es levemente mayor. ¿Implica un problema?',ch:[
+  {t:'Sí — si las DEs son diferentes no se puede usar la prueba t',ok:false,fb:'La diferencia entre 1.76 y 1.41 es pequeña. Se verifica con la prueba de Levene. Si hay violación, la corrección de Welch resuelve el problema.'},
+  {t:'No necesariamente — la diferencia es pequeña. Se verifica con Levene y si hay violación, se usa la corrección de Welch',ok:true,fb:'✓ Correcto. La homogeneidad de varianzas se verifica estadísticamente, no se asume.'},
+  {t:'Sí — cuando las DEs son diferentes hay que usar estadísticos no paramétricos',ok:false,fb:'Los no paramétricos se usan cuando la distribución es muy no-normal, no simplemente porque las DEs difieran ligeramente.'}]},
+q5:{p:'Grupo mindfulness: M=45.5, DE=1.76. Un participante tiene puntaje de 49. ¿Es un outlier?',ch:[
+  {t:'No — puntuación z = (49 − 45.5) ÷ 1.76 = 1.99. No supera el umbral de ±2',ok:true,fb:'✓ Correcto. 3.5 ÷ 1.76 = 1.99. No supera el umbral de 2 — muy por poco. No es outlier estadístico.'},
+  {t:'Sí — está más de una desviación estándar por encima de la media',ok:false,fb:'El umbral es ±2 desviaciones estándar, no ±1. El 68% de los datos cae dentro de ±1 — eso es completamente normal.'},
+  {t:'Sí — cualquier valor por encima de 48 es outlier',ok:false,fb:'No existe umbral fijo en valores brutos. El criterio universal es la puntuación z.'}]},
+q6:{p:'Muestra: 60 adultos jóvenes universitarios colombianos. ¿A quién generalizas?',ch:[
+  {t:'A todos los colombianos que podrían beneficiarse del mindfulness',ok:false,fb:'Muestra específica: jóvenes universitarios con sesgo de autoselección (se inscribieron voluntariamente). Personas mayores o sin motivación previa pueden responder diferente.'},
+  {t:'A adultos jóvenes universitarios con interés en bienestar en contextos colombianos similares, con limitaciones explicitadas',ok:true,fb:'✓ Correcto. El sesgo de autoselección es una limitación importante que va en la discusión.'},
+  {t:'A ninguna población — necesitas un ensayo clínico multicéntrico',ok:false,fb:'Los estudios pequeños hacen contribuciones reales con limitaciones transparentes.'}]},
+q7:{p:'¿Cuál es la H₀ de tu estudio?',ch:[
+  {t:'El mindfulness produce exactamente 7.5 puntos de mejora',ok:false,fb:'H₀ nunca especifica un tamaño de efecto. Afirma "no hay diferencia."'},
+  {t:'No hay diferencia en bienestar entre el grupo mindfulness y el grupo control al final de las 8 semanas',ok:true,fb:'✓ Correcto. H₀ afirma igualdad de medias. La prueba t calcula p = probabilidad de la diferencia observada si H₀ fuera verdadera.'},
+  {t:'Los dos grupos tienen el mismo bienestar al inicio',ok:false,fb:'Eso es la verificación de equivalencia inicial (línea de base), no la H₀ del efecto de la intervención.'}]},
+q9:{p:'Prueba t: t(58) = 4.23, p = .004, d = 0.72. ¿Qué reportas e interpretas?',ch:[
+  {t:'Diferencia estadísticamente significativa, efecto mediano-grande: t(58)=4.23, p=.004, d=0.72',ok:true,fb:'✓ Correcto. p=.004 < .05 → significativo. d=0.72 → entre mediano y grande. Reporte APA completo: t(58)=4.23, p=.004, d=0.72.'},
+  {t:'El mindfulness tiene efectividad del 99.6%',ok:false,fb:'1−p no es efectividad. p solo dice qué tan probable sería el resultado si H₀ fuera verdadera.'},
+  {t:'El resultado es marginal porque d=0.72 no alcanza 0.8',ok:false,fb:'Los valores de Cohen son guías orientativas, no clasificaciones binarias definitivas.'}]},
+q11:{p:'Quieres ver si las sesiones completadas (1–16, continua) se relacionan con el cambio en bienestar (continua). ¿Qué prueba?',ch:[
+  {t:'Prueba t — comparar quienes completaron más vs menos sesiones',ok:false,fb:'Crear grupos requiere corte arbitrario y pierde información. La correlación mide la relación directamente.'},
+  {t:'Correlación de Pearson — dos continuas en los mismos participantes',ok:true,fb:'✓ Correcto. Sesiones y cambio en bienestar son continuas. Pearson mide si a más sesiones corresponde mayor cambio.'},
+  {t:'Chi-cuadrado — para comparar escalas psicológicas',ok:false,fb:'Chi-cuadrado es para variables categóricas. Ambas aquí son continuas.'}]},
+q13:{p:'Mides el bienestar ANTES y DESPUÉS de la intervención en los mismos 60 participantes. ¿Qué prueba?',ch:[
+  {t:'Prueba t independiente — el antes y el después son dos conjuntos separados',ok:false,fb:'Las MISMAS personas antes y después no son grupos independientes.'},
+  {t:'Prueba t pareada — mismas personas antes y después; elimina la variabilidad individual',ok:true,fb:'✓ Correcto. Antes/después en las mismas personas → t pareada.'},
+  {t:'Correlación — para ver si el bienestar alto antes predice bienestar alto después',ok:false,fb:'La correlación pre-post mide estabilidad, no cambio. Para el efecto de la intervención → t pareada.'}]},
+q14:{p:'Para tu prueba t (2 grupos de 30 cada uno), ¿cuántos grados de libertad?',ch:[
+  {t:'gl = 60',ok:false,fb:'gl de la prueba t independiente = n total − 2 = 60 − 2 = 58.'},
+  {t:'gl = 58 (= n total − 2 = 60 − 2). Se pierde un gl por cada media estimada',ok:true,fb:'✓ Correcto. Con dos grupos, estimas dos medias. 60 − 2 = 58. Por eso t(58).'},
+  {t:'gl = 29 (= n por grupo − 1)',ok:false,fb:'Eso sería para una prueba t de una muestra. Con dos grupos independientes: n1−1 + n2−1 = n total − 2 = 58.'}]}},
+anxiety:{name:'Ansiedad rural vs urbano',intro:'En tu escenario comparas los niveles de ansiedad (GAD-7, 0–21) entre adultos rurales y urbanos de Cundinamarca, Colombia.',
+scen1:'Variables: contexto geográfico (rural vs. urbano) y puntaje de ansiedad GAD-7 (0–21).',
+scen2:'Rural: M=14.2, DE=3.1. Urbano: M=10.8, DE=2.9. Datos de razón: la media es la medida apropiada.',
+scen3:'Rural: M=14.2, DE=3.1. Urbano: M=10.8, DE=2.9. DEs similares. Sin DE no puedes calcular el estadístico t ni d de Cohen.',
+h0:'H₀: "Los adultos rurales y urbanos de Cundinamarca tienen el mismo nivel promedio de ansiedad. Cualquier diferencia observada se debe al azar."',
+h1:'H₁: "Los adultos rurales y urbanos de Cundinamarca difieren significativamente en su nivel de ansiedad."',
+vivd:[
+  {n:'Contexto geográfico',d:'Dos categorías: rural (menos de 10.000 hab.) vs. urbano (ciudades capitales de departamento).',vi:true,vifb:'✓ Correcto. El contexto define los grupos — es la VI. Cuasiexperimental porque los grupos son preexistentes.',vdfb:'No — el contexto geográfico diferencia los grupos. Es la VI.'},
+  {n:'Puntaje de ansiedad (GAD-7, 0–21)',d:'Mayor puntaje = mayor ansiedad.',vi:false,vifb:'No — el GAD-7 es lo que se mide para ver si difiere entre contextos. Es la VD.',vdfb:'✓ Correcto. El GAD-7 es la VD.'},
+],
+q1:{p:'El GAD-7 produce puntajes de 0 a 21, donde 0 = sin síntomas. ¿Qué escala de medición es?',ch:[
+  {t:'Ordinal — porque los ítems son Likert',ok:false,fb:'En la práctica clínica e investigativa, el puntaje total del GAD-7 se trata como de razón: cero verdadero y continuo.'},
+  {t:'Razón — cero verdadero (0 = sin síntomas), tratado como continuo en investigación',ok:true,fb:'✓ Correcto. 0 = ausencia de síntomas (cero verdadero). Permite media, DE, prueba t.'},
+  {t:'Nominal — solo clasifica quién tiene o no ansiedad',ok:false,fb:'El puntaje continuo 0–21 es cuantitativo — se usa como variable continua en investigación.'}]},
+q2:{p:'Rural: M=14.2, DE=3.1. Urbano: M=10.8, DE=2.9. La DE rural es levemente mayor. ¿Qué significa?',ch:[
+  {t:'El grupo rural tiene más ansiedad — la DE mayor lo confirma',ok:false,fb:'La media más alta confirma mayor ansiedad promedio. Pero la DE mide dispersión, no el nivel de ansiedad.'},
+  {t:'El grupo rural tiene ligeramente más variabilidad interna — más heterogeneidad entre personas rurales',ok:true,fb:'✓ Correcto. DE=3.1 vs 2.9 indica que los puntajes varían un poco más dentro del grupo rural.'},
+  {t:'La diferencia de DEs indica que los grupos no son comparables',ok:false,fb:'Una diferencia de 0.2 entre DEs es muy pequeña. La prueba de Levene determinaría si hay heterogeneidad significativa.'}]},
+q3:{p:'Un colega dice que la diferencia de 3.4 puntos entre medias ya es suficiente para concluir diferencias sin calcular estadísticos. ¿Tiene razón?',ch:[
+  {t:'Sí — 3.4 puntos con 160 participantes es suficientemente obvio',ok:false,fb:'"Obvio" no es criterio estadístico. Necesitas calcular t y p para determinar significancia.'},
+  {t:'No — sin calcular el estadístico t, el tamaño del efecto y el p-valor no puedes concluir nada sobre significancia',ok:true,fb:'✓ Correcto. En este caso d ≈ 1.13 — efecto grande. Pero esto requiere calcularse, no asumirse.'},
+  {t:'No — necesitas al menos 200 participantes por grupo',ok:false,fb:'No existe un mínimo fijo. Con efecto grande (d≈1.0), 80 por grupo da poder estadístico muy alto.'}]},
+q5:{p:'Grupo rural: M=14.2, DE=3.1. Una persona tiene puntaje de 21 (el máximo del GAD-7). ¿Es un outlier estadístico?',ch:[
+  {t:'Sí — 21 es el máximo de la escala y eso lo hace outlier automáticamente',ok:false,fb:'El máximo de la escala no hace automáticamente outlier. La puntuación z: (21−14.2)÷3.1 = 2.19. Sí supera el umbral — pero por el cálculo, no por ser el máximo.'},
+  {t:'Sí — puntuación z = (21 − 14.2) ÷ 3.1 = 2.19. Supera el umbral de ±2. Debe investigarse.',ok:true,fb:'✓ Correcto. z=2.19 > 2. Debe investigarse: ¿evento de vida agudo? ¿condición adicional? La decisión se documenta en el Método.'},
+  {t:'No — en el contexto rural es esperable que algunos tengan ansiedad muy alta',ok:false,fb:'El razonamiento contextual es válido para JUSTIFICAR la inclusión (paso de decisión), pero no cancela el criterio estadístico.'}]},
+q6:{p:'Muestra: 80 adultos rurales y 80 urbanos de Cundinamarca. ¿A quién generalizas?',ch:[
+  {t:'A todos los colombianos rurales y urbanos',ok:false,fb:'Cundinamarca tiene características particulares. Los contextos rurales de otras regiones pueden ser muy diferentes.'},
+  {t:'A adultos de zonas rurales y urbanas con características similares a las de Cundinamarca, con limitaciones explícitas',ok:true,fb:'✓ Correcto. Puedes extrapolar con cautela a contextos similares.'},
+  {t:'A cualquier diferencia rural-urbana en América Latina',ok:false,fb:'Las dinámicas rurales colombianas (conflicto, desplazamiento, economías) no son universales en Latinoamérica.'}]},
+q7:{p:'¿Cuál es la hipótesis nula de la comparación?',ch:[
+  {t:'Los adultos rurales tienen más ansiedad que los urbanos',ok:false,fb:'Esa es H₁. H₀ siempre afirma igualdad.'},
+  {t:'No hay diferencia en el puntaje GAD-7 entre adultos rurales y urbanos de Cundinamarca. Cualquier diferencia se debe al azar',ok:true,fb:'✓ Correcto. H₀ es específica para la VD (GAD-7) y los grupos de tu estudio.'},
+  {t:'El contexto rural no causa ansiedad en ninguna circunstancia',ok:false,fb:'H₀ no hace afirmaciones causales. Solo dice que las medias son iguales en la población de interés.'}]},
+q9:{p:'Prueba t: t(158)=5.67, p<.001, d=1.13. ¿Interpretación completa?',ch:[
+  {t:'Diferencia estadísticamente significativa de tamaño grande: t(158)=5.67, p<.001, d=1.13',ok:true,fb:'✓ Correcto. p<.001 → significativo. d=1.13 → efecto grande. Reporte APA: t(158)=5.67, p<.001, d=1.13.'},
+  {t:'El contexto rural causa ansiedad 5.67 veces mayor que el urbano',ok:false,fb:'El estadístico t no es una razón de proporciones. Y sin diseño experimental no hay causalidad.'},
+  {t:'El resultado es casi perfecto porque d=1.13 está muy por encima de 0.8',ok:false,fb:'Un efecto grande indica diferencia sustancial, pero siempre hay limitaciones: sin causalidad establecida, muestra cundinamarquesa específica, posibles variables de confusión.'}]},
+q11:{p:'Quieres saber si el GAD-7 (continuo) y el apoyo social percibido (continuo) están relacionados. ¿Qué prueba?',ch:[
+  {t:'Chi-cuadrado — para comparar escalas psicológicas',ok:false,fb:'Chi-cuadrado es para variables categóricas. Ambas son continuas.'},
+  {t:'Correlación de Pearson o Spearman — dos continuas en los mismos participantes',ok:true,fb:'✓ Correcto. Pearson si se cumplen supuestos; Spearman si no. Probablemente correlación negativa: mayor apoyo → menor ansiedad.'},
+  {t:'ANOVA — para comparar grupos de apoyo social',ok:false,fb:'Apoyo social es continuo — sin grupos definidos. La correlación es la prueba correcta.'}]},
+q13:{p:'Añades una medida de ansiedad antes y después de elecciones municipales en los mismos 160 participantes. ¿Qué prueba?',ch:[
+  {t:'Prueba t independiente — dos momentos separados',ok:false,fb:'Las MISMAS personas → no son grupos independientes.'},
+  {t:'Prueba t pareada — mismas personas antes y después; más sensible para detectar cambios temporales',ok:true,fb:'✓ Correcto. Antes/después en los mismos participantes → t pareada.'},
+  {t:'Correlación — para ver si ansiedad antes predice ansiedad después',ok:false,fb:'La correlación mide estabilidad del rasgo, no cambio. Para detectar si la ansiedad aumentó → t pareada.'}]},
+q14:{p:'ANOVA dos factores (contexto 2 niveles × NSE 3 niveles), 180 participantes. F de la interacción tiene gl=(2,174). ¿Por qué 174?',ch:[
+  {t:'174 = n total (180) − 1',ok:false,fb:'n−1=179 son gl totales. Los del error = n − número de celdas.'},
+  {t:'174 = n total (180) − número de celdas (6 = 2×3). Después de estimar una media por celda quedan 174 grados de libertad',ok:true,fb:'✓ Correcto. Diseño 2×3 → 6 celdas. 180−6=174 gl en el error. Los de la interacción: (2−1)×(3−1)=2, por eso F(2,174).'},
+  {t:'174 = n − factores − niveles',ok:false,fb:'Fórmula incorrecta. GL del error = n total − número de celdas del diseño factorial.'}]}
+}};
+function pickScen(key,btn){
+  SCEN=SCENS[key];
+  document.querySelectorAll('.sb').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById('scen-chosen').style.display='block';
+  document.getElementById('scen-chosen').innerHTML='<strong>Elegiste:</strong> '+SCEN.name+' — '+SCEN.intro;
+  document.getElementById('btn-start').style.display='block';
+}
+function makeQ(pid,chid,fbid,data,onOk){
+  const p=document.getElementById(pid),ch=document.getElementById(chid),fb=document.getElementById(fbid);
+  if(!ch||!fb||!data)return;
+  if(p)p.textContent=data.p;
+  ch.replaceChildren();
+  ch._ok=onOk;
+  data.ch.forEach((o,i)=>{
+    const btn=document.createElement('button');
+    btn.className='qo';
+    btn.type='button';
+    btn.textContent=o.t;
+    btn.addEventListener('click',()=>ansQ(i,chid,fbid,o.ok,o.fb,btn));
+    ch.appendChild(btn);
+  });
+}
+function esc(s){return(s||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\n/g,' ');}
+function ansQ(idx,chid,fbid,ok,fb,btn){
+  const ch=document.getElementById(chid),fbEl=document.getElementById(fbid);
+  ch.querySelectorAll('.qo').forEach(b=>b.classList.add('dim'));
+  btn.classList.remove('dim');btn.classList.add(ok?'ok':'bad');
+  fbEl.className='qfb '+(ok?'ok':'bad');fbEl.textContent=fb;
+  if(ok&&ch._ok)ch._ok();
+  if(!ok)setTimeout(()=>{ch.querySelectorAll('.qo:not(.ok)').forEach(b=>b.classList.remove('dim','bad'));},1500);
+}
+function initS1(){
+  if(!SCEN)return;
+  const el=document.getElementById('s1-scen');if(el)el.textContent=SCEN.scen1;
+  const items=[{v:'Sexo de los participantes (hombre/mujer)',a:'nom'},{v:'Calificaciones (0–5)',a:'rat'},{v:'Nivel de satisfacción (nada/poco/mucho)',a:'ord'},{v:'Tipo de diagnóstico (ansiedad/depresión/otro)',a:'nom'},{v:'Temperatura en Celsius',a:'int'},{v:'Tiempo de reacción en milisegundos',a:'rat'},{v:'Posición en ranking (1°, 2°, 3°...)',a:'ord'}];
+  const opts=[['nom','Nominal'],['ord','Ordinal'],['int','Intervalo'],['rat','Razón']];
+  const clf=document.getElementById('clf-s1');if(!clf)return;
+  clf.replaceChildren();
+  items.forEach((it,i)=>{
+    const row=document.createElement('div');row.className='clrow';
+    const label=document.createElement('span');label.className='clvar';label.textContent=it.v;
+    const buttons=document.createElement('div');buttons.className='clbtns';
+    opts.forEach(([val,name])=>{
+      const btn=document.createElement('button');
+      btn.className='clb';btn.type='button';btn.textContent=name;
+      btn.addEventListener('click',()=>chkClf(i,it.a,val,btn));
+      buttons.appendChild(btn);
+    });
+    const feedback=document.createElement('span');feedback.className='clffb';feedback.id='clfb'+i;
+    row.append(label,buttons,feedback);clf.appendChild(row);
+  });
+  const vvd=document.getElementById('vivd-s1');if(!vvd)return;
+  vvd.replaceChildren();
+  SCEN.vivd.forEach((v,i)=>{
+    const row=document.createElement('div');row.className='vvrow';
+    const name=document.createElement('div');name.className='vvn';name.textContent=v.n;
+    const desc=document.createElement('div');desc.className='vvd';desc.textContent=v.d;
+    const buttons=document.createElement('div');buttons.className='vvbtns';
+    const viBtn=document.createElement('button');viBtn.className='vvb';viBtn.type='button';viBtn.textContent='🔵 Variable Independiente (VI)';
+    viBtn.addEventListener('click',()=>chkVV(i,true,v.vifb,v.vdfb,v.vi,viBtn));
+    const vdBtn=document.createElement('button');vdBtn.className='vvb';vdBtn.type='button';vdBtn.textContent='🔴 Variable Dependiente (VD)';
+    vdBtn.addEventListener('click',()=>chkVV(i,false,v.vifb,v.vdfb,v.vi,vdBtn));
+    buttons.append(viBtn,vdBtn);
+    const feedback=document.createElement('div');feedback.className='vvfb';feedback.id='vvfb'+i;
+    row.append(name,desc,buttons,feedback);vvd.appendChild(row);
+  });
+  makeQ('q1p','q1ch','q1fb',SCEN.q1,()=>document.getElementById('btn-s1').disabled=false);
+}
+function chkClf(i,ans,sel,btn){
+  const fb=document.getElementById('clfb'+i);
+  btn.closest('.clbtns').querySelectorAll('.clb').forEach(b=>b.classList.remove('ok','bad'));
+  if(sel===ans){btn.classList.add('ok');fb.className='clffb ok';fb.textContent='✓ Correcto';}
+  else{btn.classList.add('bad');fb.className='clffb bad';fb.textContent='✗ Inténtalo de nuevo';}
+}
+function chkVV(i,isVI,vifb,vdfb,correct,btn){
+  const isOk=(isVI===correct);
+  btn.closest('.vvbtns').querySelectorAll('.vvb').forEach(b=>b.classList.remove('ok','bad'));
+  btn.classList.add(isOk?'ok':'bad');
+  const fb=document.getElementById('vvfb'+i);
+  fb.className='vvfb on';fb.style.color=isOk?'var(--gn)':'var(--rd)';
+  fb.textContent=isVI?vifb:vdfb;
+}
+function initS2(){if(!SCEN)return;const el=document.getElementById('s2-scen');if(el)el.innerHTML='<strong>En tu escenario:</strong> '+SCEN.scen2;makeQ('q2p','q2ch','q2fb',SCEN.q2,()=>document.getElementById('btn-s2').disabled=false);}
+function initS3(){if(!SCEN)return;const el=document.getElementById('s3-scen');if(el)el.innerHTML='<strong>En tu escenario:</strong> '+SCEN.scen3;makeQ('q3p','q3ch','q3fb',SCEN.q3,()=>document.getElementById('btn-s3').disabled=false);}
+function initS5(){if(!SCEN)return;makeQ('q5p','q5ch','q5fb',SCEN.q5,()=>document.getElementById('btn-s5').disabled=false);}
+function initS6(){if(!SCEN)return;makeQ('q6p','q6ch','q6fb',SCEN.q6,()=>document.getElementById('btn-s6').disabled=false);}
+function initS7(){if(!SCEN)return;const h0=document.getElementById('s7-h0');if(h0)h0.innerHTML='<strong>H₀ en tu escenario:</strong> '+SCEN.h0;const h1=document.getElementById('s7-h1');if(h1)h1.innerHTML='<strong>H₁ en tu escenario:</strong> '+SCEN.h1;makeQ('q7p','q7ch','q7fb',SCEN.q7,()=>document.getElementById('btn-s7').disabled=false);}
+function initS9(){if(!SCEN)return;makeQ('q9p','q9ch','q9fb',SCEN.q9,()=>document.getElementById('btn-s9').disabled=false);}
+function initS11(){if(!SCEN)return;makeQ('q11p','q11ch','q11fb',SCEN.q11,null);}
+function initS13(){if(!SCEN)return;const ind=document.getElementById('s13-ind');if(ind)ind.innerHTML='<strong>Ejemplo en tu escenario:</strong> Comparar '+SCEN.name.toLowerCase()+' entre dos grupos distintos (diferentes personas) → t independiente.';const par=document.getElementById('s13-par');if(par)par.innerHTML='<strong>Ejemplo en tu escenario:</strong> Medir '+SCEN.name.toLowerCase()+' ANTES y DESPUÉS en los mismos participantes → t pareada.';makeQ('q13p','q13ch','q13fb',SCEN.q13,null);}
+function initS14(){if(!SCEN)return;makeQ('q14p','q14ch','q14fb',SCEN.q14,null);}
+const TREE=[
+  {q:'¿Tu variable dependiente (lo que mides) es numérica y continua?',opts:[{t:'Sí — puntaje, tiempo, escala continua',n:1},{t:'No — es una categoría (sí/no, tipo de diagnóstico, abandona/no)',r:'<h4>Chi-cuadrado (χ²) o Regresión logística</h4><p>Si ambas variables son categóricas → Chi-cuadrado. Si la VD es dicotómica (sí/no) y quieres predecir la probabilidad → Regresión logística.</p>'}]},
+  {q:'¿Estás buscando la relación entre dos variables continuas (sin grupos)?',opts:[{t:'Sí — quiero ver si A y B se relacionan',r:'<h4>Correlación de Pearson o Spearman</h4><p>Pearson si ambas son continuas y la relación es lineal. Spearman si una es ordinal o los datos no son normales.</p>'},{t:'No — estoy comparando grupos',n:2}]},
+  {q:'¿Cuántas variables independientes (factores) tienes?',opts:[{t:'1 factor — una sola VI',n:3},{t:'2 factores — dos VI que estudiar juntas',r:'<h4>ANOVA de dos factores (factorial)</h4><p>Evalúa el efecto de ambas VI y su interacción. Descubre si el efecto de una VI depende del nivel de la otra. El diseño más completo para preguntas complejas.</p>'}]},
+  {q:'¿Cuántos grupos o niveles tiene tu variable independiente?',opts:[{t:'2 grupos',n:4},{t:'3 o más grupos',r:'<h4>ANOVA de un factor</h4><p>Compara medias de 3+ grupos simultáneamente sin inflar el error Tipo I. Con 3 grupos, hacer 3 pruebas t independientes inflaría el error al 14.3%.</p>'}]},
+  {q:'¿Los grupos son personas diferentes (independientes) o las mismas personas medidas dos veces?',opts:[{t:'Independientes — personas diferentes en cada grupo',r:'<h4>Prueba t para muestras independientes</h4><p>Compara las medias de dos grupos separados. Ejemplo: rurales vs urbanos en ansiedad.</p>'},{t:'Relacionadas — mismas personas antes/después o pares emparejados',r:'<h4>Prueba t para muestras pareadas</h4><p>Compara el cambio dentro de cada persona. Más sensible que la t independiente. Ejemplo: bienestar antes vs después de mindfulness.</p>'}]}
+];
+let treeNode=0;
+function initDTree(){treeNode=0;renderTree();}
+function renderTree(){
+  const n=TREE[treeNode];
+  document.getElementById('dtree').innerHTML=`<div class="dtree-step"><div class="dql">Pregunta ${treeNode+1} de ${TREE.length}</div><div class="dqp">${n.q}</div><div class="dopts">${n.opts.map((o,i)=>`<button class="dopt" onclick="dtStep(${i})">${o.t}</button>`).join('')}</div></div>`;
+  document.getElementById('dres').className='dres';document.getElementById('dres').innerHTML='';
+}
+function dtStep(i){
+  const opt=TREE[treeNode].opts[i];
+  document.getElementById('dtree').querySelectorAll('.dopt').forEach((b,j)=>b.classList.toggle('on',j===i));
+  if(opt.r){const res=document.getElementById('dres');res.className='dres on';res.innerHTML=opt.r;}
+  else{treeNode=opt.n;setTimeout(renderTree,280);}
+}
+function resetTree(){treeNode=0;renderTree();}
+function drawSalones(){
+  const cv=document.getElementById('cvSalones');if(!cv)return;
+  const ctx=cv.getContext('2d'),W=cv.width,H=cv.height;
+  ctx.clearRect(0,0,W,H);
+  const sA=[3.3,3.4,3.5,3.5,3.6,3.6,3.7,3.7];
+  const sB=[1.5,2.0,2.5,3.5,4.0,4.5,4.8,5.0];
+  const pL=55,pR=20,pT=20,pB=50,wc=W-pL-pR,hc=H-pT-pB;
+  const toY=v=>pT+hc*(1-v/5.5);
+  ctx.fillStyle='#F8FAFC';ctx.fillRect(pL,pT,wc,hc);
+  [0,1,2,3,4,5].forEach(v=>{const y=toY(v);ctx.strokeStyle='#E2E8F0';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(pL,y);ctx.lineTo(pL+wc,y);ctx.stroke();ctx.fillStyle='#94A3B8';ctx.font='10px JetBrains Mono,monospace';ctx.textAlign='right';ctx.fillText(v,pL-5,y+3.5);});
+  const bw=wc/2/sA.length*0.65;
+  sA.forEach((v,i)=>{const x=pL+(wc/2/sA.length)*i+(wc/2/sA.length-bw)/2,y=toY(v),bh=hc*v/5.5;ctx.fillStyle='rgba(37,99,235,0.75)';ctx.fillRect(x,y,bw,bh);});
+  sB.forEach((v,i)=>{const x=pL+wc/2+(wc/2/sB.length)*i+(wc/2/sB.length-bw)/2,y=toY(v),bh=hc*v/5.5;ctx.fillStyle='rgba(180,83,9,0.75)';ctx.fillRect(x,y,bw,bh);});
+  const my=toY(3.5);ctx.strokeStyle='#16A34A';ctx.setLineDash([5,3]);ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(pL,my);ctx.lineTo(pL+wc,my);ctx.stroke();ctx.setLineDash([]);
+  ctx.strokeStyle='#CBD5E1';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(pL,pT);ctx.lineTo(pL,pT+hc);ctx.lineTo(pL+wc,pT+hc);ctx.stroke();
+  ctx.font='11px DM Sans,sans-serif';ctx.textAlign='center';
+  ctx.fillStyle='#2563EB';ctx.fillText('Salón A — M=3.5, DE=0.14',pL+wc/4,H-10);
+  ctx.fillStyle='#B45309';ctx.fillText('Salón B — M=3.5, DE=1.12',pL+3*wc/4,H-10);
+  ctx.fillStyle='#16A34A';ctx.fillText('── M=3.5 (igual en ambos)',pL+wc/2,pT+14);
+}
+function drawBell(){
+  const cv=document.getElementById('cvBell');if(!cv)return;
+  const ctx=cv.getContext('2d'),W=cv.width,H=cv.height;ctx.clearRect(0,0,W,H);
+  const pL=45,pR=20,pT=20,pB=40,wc=W-pL-pR,hc=H-pT-pB;
+  const phi=x=>Math.exp(-x*x/2)/Math.sqrt(2*Math.PI),mx=phi(0);
+  const toX=v=>pL+(v+3.5)/7*wc,toY=v=>pT+hc*(1-v/mx*0.9);
+  const zones=[{a:-3,b:3,c:'rgba(220,38,38,0.07)'},{a:-2,b:2,c:'rgba(37,99,235,0.1)'},{a:-1,b:1,c:'rgba(22,163,74,0.15)'}];
+  zones.forEach(z=>{ctx.fillStyle=z.c;ctx.beginPath();ctx.moveTo(toX(z.a),pT+hc);for(let i=0;i<=80;i++){const x=z.a+i*(z.b-z.a)/80;ctx.lineTo(toX(x),toY(phi(x)));}ctx.lineTo(toX(z.b),pT+hc);ctx.closePath();ctx.fill();});
+  ctx.strokeStyle='#2563EB';ctx.lineWidth=2;ctx.beginPath();for(let i=0;i<=120;i++){const x=-3.5+i*7/120;i?ctx.lineTo(toX(x),toY(phi(x))):ctx.moveTo(toX(x),toY(phi(x)));}ctx.stroke();
+  [[-1,'#16A34A'],[1,'#16A34A'],[-2,'#2563EB'],[2,'#2563EB'],[-3,'#DC2626'],[3,'#DC2626'],[0,'#64748B']].forEach(([v,c])=>{
+    const x=toX(v);ctx.strokeStyle=c;ctx.lineWidth=1;ctx.setLineDash([3,2]);ctx.beginPath();ctx.moveTo(x,pT);ctx.lineTo(x,pT+hc);ctx.stroke();ctx.setLineDash([]);
+    const lbls={'-3':'-3σ','-2':'-2σ','-1':'-σ','0':'μ','1':'+σ','2':'+2σ','3':'+3σ'};
+    ctx.fillStyle=c;ctx.font='10px JetBrains Mono,monospace';ctx.textAlign='center';ctx.fillText(lbls[v],x,H-8);
+  });
+  ctx.font='bold 11px JetBrains Mono,monospace';ctx.textAlign='center';
+  ctx.fillStyle='#16A34A';ctx.fillText('68%',toX(0),pT+35);
+  ctx.fillStyle='#2563EB';ctx.fillText('95%',toX(1.6),pT+55);
+  ctx.fillStyle='#DC2626';ctx.fillText('99.7%',toX(2.7),pT+75);
+}
+function drawPval(){
+  const cv=document.getElementById('cvPval');if(!cv)return;
+  const ctx=cv.getContext('2d'),W=cv.width,H=cv.height;ctx.clearRect(0,0,W,H);
+  const pL=45,pR=20,pT=20,pB=40,wc=W-pL-pR,hc=H-pT-pB;
+  const phi=x=>Math.exp(-x*x/2)/Math.sqrt(2*Math.PI),mx=phi(0);
+  const toX=v=>pL+(v+3.5)/7*wc,toY=v=>pT+hc*(1-v/mx*0.9);
+  ctx.fillStyle='rgba(37,99,235,0.06)';ctx.beginPath();ctx.moveTo(toX(-3.5),pT+hc);for(let i=0;i<=120;i++){const x=-3.5+i*7/120;ctx.lineTo(toX(x),toY(phi(x)));}ctx.lineTo(toX(3.5),pT+hc);ctx.closePath();ctx.fill();
+  [[1.96,3.5],[],[],[-3.5,-1.96]].filter((z,i)=>i===0||i===3).forEach(([a,b])=>{ctx.fillStyle='rgba(220,38,38,0.28)';ctx.beginPath();ctx.moveTo(toX(a),pT+hc);for(let i=0;i<=40;i++){const x=a+i*(b-a)/40;ctx.lineTo(toX(x),toY(phi(x)));}ctx.lineTo(toX(b),pT+hc);ctx.closePath();ctx.fill();});
+  ctx.strokeStyle='#2563EB';ctx.lineWidth=2;ctx.beginPath();for(let i=0;i<=120;i++){const x=-3.5+i*7/120;i?ctx.lineTo(toX(x),toY(phi(x))):ctx.moveTo(toX(x),toY(phi(x)));}ctx.stroke();
+  ctx.strokeStyle='#DC2626';ctx.setLineDash([4,3]);ctx.lineWidth=1.5;[-1.96,1.96].forEach(v=>{ctx.beginPath();ctx.moveTo(toX(v),pT);ctx.lineTo(toX(v),pT+hc);ctx.stroke();});ctx.setLineDash([]);
+  ctx.fillStyle='#DC2626';ctx.font='bold 11px JetBrains Mono,monospace';ctx.textAlign='center';
+  ctx.fillText('p/2',toX(2.6),pT+60);ctx.fillText('p/2',toX(-2.6),pT+60);
+  ctx.fillStyle='#64748B';ctx.font='11px DM Sans,sans-serif';ctx.textAlign='center';
+  ctx.fillText('Distribución de todos los posibles resultados si H₀ fuera verdadera',toX(0),pT+28);
+  ctx.fillStyle='#DC2626';ctx.font='10px DM Sans,sans-serif';ctx.fillText('zona p (5% de los resultados más extremos)',toX(0),H-8);
+}
+function drawFratio(){
+  const cv=document.getElementById('cvFratio');if(!cv)return;
+  const ctx=cv.getContext('2d'),W=cv.width,H=cv.height;ctx.clearRect(0,0,W,H);
+  const pL=40,pR=20,pT=20,pB=45,wc=W-pL-pR,hc=H-pT-pB;
+  const grps=[{m:3.2,s:0.3,c:'rgba(37,99,235,',l:'Cognitiva'},{m:3.8,s:0.35,c:'rgba(22,163,74,',l:'Humanista'},{m:4.8,s:0.28,c:'rgba(180,83,9,',l:'Farmacológica'}];
+  const xMin=1.5,xMax=6.5;const toX=v=>pL+(v-xMin)/(xMax-xMin)*wc;
+  ctx.fillStyle='#F8FAFC';ctx.fillRect(pL,pT,wc,hc);
+  grps.forEach(g=>{
+    const phi=x=>Math.exp(-Math.pow(x-g.m,2)/(2*g.s*g.s))/(g.s*Math.sqrt(2*Math.PI)),peak=phi(g.m);
+    const toYg=v=>pT+hc*(1-Math.min(v/peak*0.88,1));
+    const xa=g.m-3.5*g.s,xb=g.m+3.5*g.s;
+    ctx.fillStyle=g.c+'0.18)';ctx.beginPath();ctx.moveTo(toX(xa),pT+hc);
+    for(let i=0;i<=80;i++){const x=xa+i*(xb-xa)/80;ctx.lineTo(toX(x),toYg(phi(x)));}
+    ctx.lineTo(toX(xb),pT+hc);ctx.closePath();ctx.fill();
+    ctx.strokeStyle=g.c+'0.9)';ctx.lineWidth=2;ctx.beginPath();
+    for(let i=0;i<=80;i++){const x=xa+i*(xb-xa)/80;i?ctx.lineTo(toX(x),toYg(phi(x))):ctx.moveTo(toX(x),toYg(phi(x)));}ctx.stroke();
+    const mx=toX(g.m);ctx.strokeStyle=g.c+'0.6)';ctx.setLineDash([4,3]);ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(mx,pT);ctx.lineTo(mx,pT+hc);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle=g.c+'1)';ctx.font='bold 11px DM Sans,sans-serif';ctx.textAlign='center';ctx.fillText(g.l,mx,H-10);
+  });
+  ctx.strokeStyle='#CBD5E1';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(pL,pT);ctx.lineTo(pL,pT+hc);ctx.lineTo(pL+wc,pT+hc);ctx.stroke();
+  const gm=(grps[0].m+grps[1].m+grps[2].m)/3;ctx.strokeStyle='#94A3B8';ctx.setLineDash([2,2]);ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(toX(gm),pT);ctx.lineTo(toX(gm),pT+hc);ctx.stroke();ctx.setLineDash([]);
+  ctx.fillStyle='#94A3B8';ctx.font='10px JetBrains Mono,monospace';ctx.textAlign='center';ctx.fillText('Gran M',toX(gm),pT+12);
+}
+function drawInteract(){
+  const cv=document.getElementById('cvInteract');if(!cv)return;
+  const ctx=cv.getContext('2d'),W=cv.width,H=cv.height;ctx.clearRect(0,0,W,H);
+  const pL=55,pR=20,pT=25,pB=45,wc=W-pL-pR,hc=H-pT-pB;
+  // Data: terapia cogn/human/farm × NSE bajo/alto
+  const data={cog:{bajo:3.2,alto:4.5},hum:{bajo:4.3,alto:3.1},farm:{bajo:3.8,alto:3.9}};
+  const conds=['cog','hum','farm'],labs=['Cognitiva','Humanista','Farmacológica'];
+  const grps=[{k:'bajo',c:'#2563EB',d:'',l:'NSE Bajo'},{k:'alto',c:'#B45309',d:'6,3',l:'NSE Alto'}];
+  const allV=Object.values(data).flatMap(g=>Object.values(g));
+  const yMin=Math.min(...allV)-.4,yMax=Math.max(...allV)+.4;
+  const toX=i=>pL+wc*i/2;
+  const toY=v=>pT+hc*(1-(v-yMin)/(yMax-yMin));
+  ctx.fillStyle='#F8FAFC';ctx.fillRect(pL,pT,wc,hc);
+  for(let t=0;t<=4;t++){const v=yMin+(yMax-yMin)*t/4,y=toY(v);ctx.strokeStyle='#E2E8F0';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(pL,y);ctx.lineTo(pL+wc,y);ctx.stroke();ctx.fillStyle='#94A3B8';ctx.font='10px JetBrains Mono,monospace';ctx.textAlign='right';ctx.fillText(v.toFixed(1),pL-5,y+3.5);}
+  grps.forEach(g=>{
+    const pts=conds.map((c,i)=>({x:toX(i),y:toY(data[c][g.k])}));
+    ctx.strokeStyle=g.c;ctx.lineWidth=2.5;ctx.setLineDash(g.d?g.d.split(',').map(Number):[]);
+    ctx.beginPath();pts.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.stroke();ctx.setLineDash([]);
+    pts.forEach((p,i)=>{
+      ctx.fillStyle=g.c;ctx.beginPath();ctx.arc(p.x,p.y,5,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle=g.c;ctx.font='bold 11px JetBrains Mono,monospace';ctx.textAlign='left';ctx.fillText(data[conds[i]][g.k].toFixed(1),p.x+8,p.y+4);
+    });
+  });
+  conds.forEach((c,i)=>{ctx.fillStyle='#64748B';ctx.font='11px DM Sans,sans-serif';ctx.textAlign='center';ctx.fillText(labs[i],toX(i),H-10);});
+  ctx.strokeStyle='#CBD5E1';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(pL,pT);ctx.lineTo(pL,pT+hc);ctx.lineTo(pL+wc,pT+hc);ctx.stroke();
+  ctx.fillStyle='#94A3B8';ctx.font='10px DM Sans,sans-serif';ctx.textAlign='left';
+  ctx.fillStyle='#2563EB';ctx.fillRect(pL+wc-130,pT+8,10,10);ctx.fillStyle='#2563EB';ctx.fillText('NSE Bajo',pL+wc-116,pT+17);
+  ctx.fillStyle='#B45309';ctx.fillRect(pL+wc-130,pT+24,10,10);ctx.fillStyle='#B45309';ctx.fillText('NSE Alto',pL+wc-116,pT+33);
+  ctx.fillStyle='#DC2626';ctx.font='bold 11px DM Sans,sans-serif';ctx.textAlign='center';
+  ctx.fillText('← Las líneas se cruzan = Interacción',toX(1),pT+16);
+}
+// Auto-init fixed questions
+document.addEventListener('DOMContentLoaded',()=>{
+  makeQ('q4p','q4ch','q4fb',{p:'Una prueba de atención tiene media = 50 y desviación estándar = 10. Un estudiante obtiene 72. ¿Qué puedes concluir?',ch:[
+    {t:'Es un valor normal — 72 está dentro del rango posible de la prueba (0–100)',ok:false,fb:'Estar dentro del rango de la escala no determina si un dato es normal o extremo. La puntuación z = (72 − 50) ÷ 10 = 2.2. Supera el umbral de ±2 — solo el 5% de los datos cae más allá de ±2 en una distribución normal.'},
+    {t:'Es inusualmente alto: puntuación z = (72 − 50) ÷ 10 = 2.2. Está a 2.2 desviaciones estándar de la media — en el 5% más extremo de la distribución',ok:true,fb:'✓ Correcto. z = 2.2 supera el umbral de ±2. Por la regla empírica del 95%, solo el 5% de los datos cae más allá de ±2 desviaciones estándar. Este estudiante rinde inusualmente bien para ese grupo. No necesariamente un outlier que excluir, sino un dato que merece registrarse.'},
+    {t:'Es definitivamente un outlier que debe eliminarse del análisis',ok:false,fb:'Un outlier estadístico (|z| > 2) merece investigarse, no eliminarse automáticamente. Si ese puntaje refleja un rendimiento genuinamente excelente, se mantiene. La decisión siempre requiere justificación contextual.'}]},
+  ()=>document.getElementById('btn-s4').disabled=false);
+  makeQ('q8p','q8ch','q8fb',{p:'Un investigador obtiene p = 0.07 con α = 0.05. ¿Cuál es la interpretación correcta?',ch:[
+    {t:'El resultado es estadísticamente significativo — p = 0.07 es muy cercano a 0.05',ok:false,fb:'En estadística, "cercano al umbral" no es una categoría de decisión. p = 0.07 > α = 0.05 → no se rechaza H₀. No es significativo. La distinción es binaria dado el α fijado de antemano.'},
+    {t:'No hay evidencia suficiente para rechazar H₀ con α = 0.05. Eso no prueba que no haya efecto — puede ser que la muestra no tenga el poder suficiente para detectarlo si existe',ok:true,fb:'✓ Correcto. p = 0.07 > 0.05 → no se rechaza H₀. Pero no rechazar H₀ ≠ probar que no hay efecto. El efecto puede existir y la muestra ser demasiado pequeña para detectarlo. Un estudio con el doble de participantes podría dar p = 0.03 con el mismo efecto real.'},
+    {t:'El efecto es real con 93% de probabilidad (= 1 − 0.07)',ok:false,fb:'El error más frecuente en estadística. 1 − p no es la probabilidad de que el efecto sea real. p es la probabilidad del RESULTADO dado que H₀ es verdadera — no la probabilidad de que H₀ sea verdadera o falsa.'}]},
+  ()=>document.getElementById('btn-s8').disabled=false);
+  makeQ('q12p','q12ch','q12fb',{p:'Un investigador quiere saber si hay relación entre el diagnóstico (ansiedad / depresión / ninguno) y el abandono del tratamiento (sí / no). ¿Qué prueba es la correcta?',ch:[
+    {t:'Prueba t — para comparar los que abandonan con los que no abandonan',ok:false,fb:'La prueba t compara medias de una variable continua entre grupos. "Abandono" es nominal (sí/no) y "diagnóstico" también es nominal. Sin variable continua como VD, la prueba t no aplica.'},
+    {t:'Chi-cuadrado — ambas variables son categóricas: diagnóstico (nominal, 3 categorías) × abandono (nominal, 2 categorías)',ok:true,fb:'✓ Correcto. Diagnóstico (3 categorías nominales) × abandono (2 categorías nominales) = tabla de contingencia 3×2. El chi-cuadrado compara las frecuencias observadas con las que esperarías si no hubiera ninguna relación entre diagnóstico y abandono.'},
+    {t:'Correlación de Pearson — para relacionar dos variables de escalas psicológicas',ok:false,fb:'Pearson requiere dos variables continuas. Diagnóstico y abandono son nominales — no se puede calcular una correlación de Pearson entre ellas.'}]},null);
+  makeQ('q15p','q15ch','q15fb',{p:'El ANOVA del Proyecto Integrador: Cultura F(1,48)=1.24, p=.271; Condición F(2,96)=18.47, p<.001; Interacción F(2,96)=12.83, p<.001. El efecto principal de Cultura NO es significativo. ¿Cuál es la interpretación correcta?',ch:[
+    {t:'El estudio falla — si Cultura no es significativa, el factor cultural no importa y el diseño no sirve',ok:false,fb:'Un efecto principal no significativo con interacción significativa es un resultado perfectamente coherente y muy informativo. La interacción significativa (F=12.83, p<.001, η²=.211) sí muestra que la cultura importa — pero su efecto depende de la condición. Esto es exactamente lo que el diseño factorial revela.'},
+    {t:'Los dos grupos tienen d\' global similar (promediando sobre las 3 condiciones) pero sus patrones son opuestos: Oriental mejor en expandida, Occidental en misma posición. La interacción captura esa diferencia de patrones — es el hallazgo central',ok:true,fb:'✓ Correcto. El efecto principal no significativo (p=.271) dice que los grupos son globalmente similares. Pero la interacción significativa (p<.001, η²=.211) dice que sus patrones de respuesta son opuestos según la condición. Las líneas del gráfico se cruzan. Ese cruce es el hallazgo central del estudio.'},
+    {t:'Solo importa el efecto de Condición (p<.001) — la condición espacial afecta a todos por igual independientemente de la cultura',ok:false,fb:'Si eso fuera cierto, las líneas del gráfico serían paralelas. Pero la interacción significativa (p<.001) indica que el efecto de la condición NO es igual para los dos grupos. El efecto de Condición solo, sin la interacción, contaría una historia incompleta y errónea.'}]},null);
+});
+</script>
+
+<script>
+/* =========================================================
+   ESTADÍSTICALAB PRO — UX/PEDAGOGÍA/PERSISTENCIA
+   Añadido no destructivo: no elimina contenido ni cambia preguntas.
+   ========================================================= */
+(function(){
+  const STORAGE_KEY='estadisticalab_cap10_progreso_v2';
+  const sectionMeta={
+    s0:{goal:'Elegir un escenario para contextualizar todos los ejemplos y activar el recorrido.'},
+    s1:{goal:'Distinguir variables, escalas de medición, VI y VD antes de calcular cualquier estadístico.'},
+    s2:{goal:'Decidir cuándo usar media, mediana o moda según escala, distribución y presencia de outliers.'},
+    s3:{goal:'Interpretar varianza y desviación estándar como información indispensable para comparar grupos.'},
+    s4:{goal:'Comprender distribución normal y regla 68–95–99.7 para interpretar resultados extremos.'},
+    s5:{goal:'Detectar outliers con puntuación z y justificar decisiones sin eliminarlos automáticamente.'},
+    s6:{goal:'Separar población, muestra, alcance de generalización y límites del muestreo.'},
+    s7:{goal:'Formular H₀ y H₁ entendiendo que la inferencia intenta rechazar H₀, no probar H₁ absolutamente.'},
+    s8:{goal:'Interpretar valor p y α sin confundir significancia con certeza, tamaño del efecto o causalidad.'},
+    s9:{goal:'Integrar significancia, tamaño del efecto y reporte APA para no quedarse solo en p < .05.'},
+    s10:{goal:'Seleccionar la prueba estadística por estructura de variables, diseño y objetivo analítico.'},
+    s11:{goal:'Usar correlación cuando hay dos variables continuas y evitar inferencias causales indebidas.'},
+    s12:{goal:'Usar chi-cuadrado cuando se cruzan variables categóricas y se analizan frecuencias.'},
+    s13:{goal:'Distinguir t independiente y t pareada según si los grupos son distintos o las medidas repetidas.'},
+    s14:{goal:'Usar ANOVA de un factor para comparar tres o más grupos sin inflar el error tipo I.'},
+    s15:{goal:'Comprender interacción en ANOVA factorial: el efecto de un factor depende del nivel de otro.'},
+    s16:{goal:'Entender regresión logística cuando la variable dependiente es binaria y se predice probabilidad.'},
+    s17:{goal:'Aplicar todo lo anterior al Proyecto Integrador y preparar el paso al laboratorio avanzado.'}
+  };
+  function readState(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}')}catch(e){return {}}}
+  function writeState(s){localStorage.setItem(STORAGE_KEY,JSON.stringify(s));}
+  const state=Object.assign({visited:{},answers:[],mistakes:{},last:'s0',completed:{}},readState());
+  function getSids(){return (window.SIDS&&Array.isArray(window.SIDS))?window.SIDS:Array.from(document.querySelectorAll('.scr')).map(e=>e.id)}
+  function currentId(){return (document.querySelector('.scr.on')||{}).id||state.last||'s0'}
+  function toast(msg){const t=document.getElementById('proToast');if(!t)return;t.textContent=msg;t.classList.add('on');clearTimeout(window.__proToastTimer);window.__proToastTimer=setTimeout(()=>t.classList.remove('on'),2800)}
+  function markVisited(id){state.visited[id]=true;state.last=id;writeState(state);updateProgress();}
+  function updateProgress(){
+    const ids=getSids();const visited=ids.filter(id=>state.visited[id]).length;const pct=Math.round((visited/ids.length)*100);
+    const bar=document.getElementById('proProgressBar');if(bar)bar.style.width=pct+'%';
+    const label=document.getElementById('proProgressLabel');if(label)label.textContent=`${pct}% recorrido · ${visited}/${ids.length} pestañas`;
+    const ds=document.getElementById('proDashStats');if(ds){
+      const errors=Object.values(state.mistakes||{}).reduce((a,b)=>a+b,0);
+      const correct=(state.answers||[]).filter(a=>a.ok).length;
+      const total=(state.answers||[]).length;
+      const weakness=Object.entries(state.mistakes||{}).sort((a,b)=>b[1]-a[1])[0];
+      ds.innerHTML=`<div class="pro-stat-row"><span>Pestañas visitadas</span><strong>${visited}/${ids.length}</strong></div><div class="pro-stat-row"><span>Respuestas registradas</span><strong>${total}</strong></div><div class="pro-stat-row"><span>Aciertos</span><strong>${correct}</strong></div><div class="pro-stat-row"><span>Errores</span><strong>${errors}</strong></div><div class="pro-stat-row"><span>Repaso sugerido</span><strong>${weakness?weakness[0].toUpperCase():'—'}</strong></div>`;
+    }
+  }
+  function addTopbar(){
+    if(document.getElementById('proTopbar'))return;
+    document.body.insertAdjacentHTML('afterbegin',`<a class="pro-skip" href="#main">Saltar al contenido</a><div id="proTopbar" class="pro-topbar" role="banner"><div class="pro-topbar-title"><strong>EstadísticaLab Pro</strong><span id="proCurrentTitle">Capítulo 10</span></div><div class="pro-progress-wrap" aria-label="Progreso"><div id="proProgressBar" class="pro-progress-bar"></div></div><div class="pro-topbar-title" id="proProgressLabel">0% recorrido</div><div class="pro-topbar-actions"><button class="pro-icon-btn" id="proDashboardBtn" type="button">Progreso</button><button class="pro-icon-btn" id="proExportBtn" type="button">Exportar</button></div></div><div id="proDashboard" class="pro-dashboard"><h4>Panel de aprendizaje</h4><div id="proDashStats"></div><button class="pro-icon-btn" id="proResetBtn" style="width:100%;margin-top:10px" type="button">Reiniciar progreso local</button></div><div id="proToast" class="pro-toast"></div>`);
+    document.getElementById('proDashboardBtn')?.addEventListener('click',()=>document.getElementById('proDashboard')?.classList.toggle('on'));
+    document.getElementById('proResetBtn')?.addEventListener('click',()=>{localStorage.removeItem(STORAGE_KEY);toast('Progreso local reiniciado. Recarga la página para empezar de cero.');});
+    document.getElementById('proExportBtn')?.addEventListener('click',exportReport);
+  }
+  function addLearningCards(){
+    getSids().forEach(id=>{
+      const sec=document.getElementById(id); if(!sec||sec.querySelector('.pro-learning-card'))return;
+      const goal=sectionMeta[id]?.goal||'Completar la pestaña comprendiendo el criterio de decisión antes de avanzar.';
+      const title=sec.querySelector('h1,h2');
+      const card=document.createElement('div');card.className='pro-learning-card';
+      card.innerHTML=`<div class="k">Objetivo de salida</div><p>${goal}</p>`;
+      if(title&&title.nextSibling){title.insertAdjacentElement('afterend',card)} else sec.prepend(card);
+    });
+  }
+  function addFlowFooters(){
+    const ids=getSids();
+    ids.forEach((id,i)=>{
+      const sec=document.getElementById(id); if(!sec||sec.querySelector('.pro-flow-footer'))return;
+      const prev=ids[i-1], next=ids[i+1];
+      const nextLabel= next?`Siguiente pestaña →`:'Finalizar y exportar →';
+      const prevBtn=prev?`<button class="pro-flow-btn secondary" type="button" data-pro-go="${prev}">← Anterior</button>`:`<span></span>`;
+      const nextAction=next?`data-pro-go="${next}"`:`data-pro-export="1"`;
+      const footer=document.createElement('div');footer.className='pro-flow-footer';
+      footer.innerHTML=`<div class="pro-flow-meta"><strong>Pestaña ${i+1} de ${ids.length}</strong><br>${sectionMeta[id]?.goal||'Completa esta etapa antes de continuar.'}</div>${prevBtn}<button class="pro-flow-btn primary" type="button" ${nextAction}>${nextLabel}</button>`;
+      sec.appendChild(footer);
+    });
+    document.querySelectorAll('[data-pro-go]').forEach(btn=>btn.addEventListener('click',()=>{ if(typeof window.show==='function')window.show(btn.dataset.proGo); else document.getElementById(btn.dataset.proGo)?.scrollIntoView(); }));
+    document.querySelectorAll('[data-pro-export]').forEach(btn=>btn.addEventListener('click',exportReport));
+  }
+  function enhanceShow(){
+    if(typeof window.show!=='function'||window.show.__proEnhanced)return;
+    const old=window.show;
+    window.show=function(id){old(id);markVisited(id);updateCurrentTitle(id);};
+    window.show.__proEnhanced=true;
+  }
+  function updateCurrentTitle(id){
+    const sec=document.getElementById(id); const h=sec?.querySelector('h1,h2')?.textContent?.trim()||id;
+    const t=document.getElementById('proCurrentTitle'); if(t)t.textContent=h;
+    markVisited(id);
+  }
+  function wireAnswerTracking(){
+    document.addEventListener('click',function(ev){
+      const target=ev.target.closest('.qo,.vvb,.clb,.dopt,.det-btn,.pi-btn,.quiz-btn');
+      if(!target)return;
+      setTimeout(()=>{
+        const sec=currentId();
+        const ok=target.classList.contains('ok')||target.classList.contains('correct');
+        const bad=target.classList.contains('bad')||target.classList.contains('incorrect');
+        if(!ok&&!bad)return;
+        const topic=(sec||'general').replace('s','sección ');
+        state.answers=state.answers||[];
+        state.answers.push({section:sec,text:(target.textContent||'').trim().slice(0,180),ok:!!ok,at:new Date().toISOString()});
+        if(bad){state.mistakes[sec]=(state.mistakes[sec]||0)+1;toast('Respuesta registrada. Recomendación: revisa el objetivo de salida antes de avanzar.');}
+        if(ok){state.completed[sec]=true;toast('Acierto registrado. Puedes continuar o reforzar con los ejemplos.');}
+        writeState(state);updateProgress();
+      },60);
+    },true);
+  }
+  function exportReport(){
+    const ids=getSids();const visited=ids.filter(id=>state.visited[id]);const errors=Object.entries(state.mistakes||{}).sort((a,b)=>b[1]-a[1]);
+    const lines=[];
+    lines.push('# Reporte de progreso — EstadísticaLab Capítulo 10');
+    lines.push('');lines.push(`Fecha: ${new Date().toLocaleString('es-CO')}`);
+    lines.push(`Pestañas visitadas: ${visited.length}/${ids.length}`);
+    lines.push(`Respuestas registradas: ${(state.answers||[]).length}`);
+    lines.push('');lines.push('## Pestañas visitadas');
+    visited.forEach(id=>{const h=document.getElementById(id)?.querySelector('h1,h2')?.textContent?.trim()||id;lines.push(`- ${id}: ${h}`)});
+    lines.push('');lines.push('## Errores por sección');
+    if(errors.length){errors.forEach(([id,n])=>{const h=document.getElementById(id)?.querySelector('h1,h2')?.textContent?.trim()||id;lines.push(`- ${h}: ${n}`)})}else{lines.push('- Sin errores registrados.');}
+    lines.push('');lines.push('## Recomendación adaptativa');
+    if(errors[0]){lines.push(`Repasar primero: ${document.getElementById(errors[0][0])?.querySelector('h1,h2')?.textContent?.trim()||errors[0][0]}.`)}else{lines.push('Continuar hacia el laboratorio avanzado V4.');}
+    const blob=new Blob([lines.join('\n')],{type:'text/markdown;charset=utf-8'});
+    const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='reporte_progreso_estadisticalab.md';a.click();URL.revokeObjectURL(a.href);toast('Reporte de progreso exportado.');
+  }
+  function init(){addTopbar();addLearningCards();addFlowFooters();enhanceShow();wireAnswerTracking();updateCurrentTitle(currentId());updateProgress();}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script>
+
+</body>
+</html>
