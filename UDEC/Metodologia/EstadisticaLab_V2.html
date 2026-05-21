@@ -686,7 +686,15 @@ table.tbl tr:hover td{background:rgba(10,132,255,.035)!important;}
   <div class="card">
     <div class="ctit">Visualización del valor p</div>
     <div class="chart-wrap"><canvas id="cvPval" width="680" height="180" style="max-width:100%"></canvas></div>
-    <p class="body" style="margin-top:9px">La curva representa todos los resultados posibles si H₀ fuera verdadera. La zona sombreada (p) es la probabilidad de obtener un resultado tan extremo como el tuyo (o más extremo) si H₀ fuera cierta. Cuanto más pequeña esa zona, más inusual es tu resultado bajo H₀.</p>
+    <div class="body" style="margin-top:9px">
+    <p>La curva representa todos los resultados que podrían aparecer si realmente no existiera efecto ni diferencia en la población (si H₀ fuera verdadera).</p>
+
+    <p>La zona roja (<strong>p</strong>) muestra qué tan raro sería obtener un resultado como el tuyo —o más extremo— solo por azar.</p>
+
+    <p>Si esa zona es grande, tu resultado es relativamente común bajo H₀. Si esa zona es muy pequeña, tu resultado sería poco probable si H₀ fuera cierta.</p>
+
+    <p>Por eso, un valor <strong>p</strong> pequeño indica que los datos observados son difíciles de explicar únicamente por azar, y da evidencia en contra de H₀.</p>
+</div>
   </div>
   <div class="card">
     <div class="ctit">Los errores más comunes sobre el valor p</div>
