@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La raíz y la acción — IAP · Sesión 13 · Seminario de Investigación II</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --fondo:#F7F2EA; --p:#1B4332; --pc:#E3EDE6; --t:#B85C38; --tc:#F5E8E2;
+  --o:#7A5F0A; --oc:#F4EDD8; --m:#4A1E6B; --mc:#EDE5F6;
+  --borde:#CABFAB; --txt:#2A2520; --suave:#6E6459; --blanco:#FEFCF8;
+  --r:10px; --sombra:0 2px 14px rgba(42,37,32,.10);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--fondo);color:var(--txt);font-size:1rem;line-height:1.72}
+
+.skip{position:absolute;top:-100px;left:8px;background:var(--p);color:#fff;padding:8px 16px;border-radius:0 0 var(--r) var(--r);z-index:9999;font-size:.9rem;text-decoration:none;transition:top .2s}
+.skip:focus{top:0}
+
+.site-header{background:linear-gradient(135deg,#0E2D20 0%,#1B4332 55%,#2D6A4F 100%);color:var(--blanco);padding:2.2rem 1.5rem 1.8rem;text-align:center;position:relative;overflow:hidden}
+.site-header::before{content:'';position:absolute;inset:0;background-image:radial-gradient(circle at 20% 80%,rgba(184,92,56,.18) 0%,transparent 50%),radial-gradient(circle at 80% 20%,rgba(122,95,10,.15) 0%,transparent 50%);pointer-events:none}
+.hpat{position:absolute;inset:0;opacity:.04;background-image:url("data:image/svg+xml,%3Csvg width='52' height='52' viewBox='0 0 52 52' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M26 0C11.664 0 0 11.664 0 26s11.664 26 26 26 26-11.664 26-26S40.336 0 26 0zm0 4c12.15 0 22 9.85 22 22s-9.85 22-22 22S4 38.15 4 26 13.85 4 26 4z' fill='%23fff'/%3E%3C/svg%3E");pointer-events:none}
+.site-header>*{position:relative;z-index:1}
+.hbadge{display:inline-block;background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.28);color:var(--blanco);font-size:.75rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:4px 16px;border-radius:20px;margin-bottom:1rem}
+.site-header h1{font-family:'Playfair Display',serif;font-size:clamp(1.7rem,4.5vw,2.6rem);font-weight:700;line-height:1.15;margin-bottom:.4rem}
+.site-header h1 em{font-style:italic;color:#F4C99A}
+.site-header .sub{font-size:1.05rem;opacity:.82}
+.hmeta{display:flex;flex-wrap:wrap;gap:.6rem;justify-content:center;margin-top:1.1rem}
+.hmeta span{background:rgba(255,255,255,.11);border-radius:20px;padding:3px 13px;font-size:.8rem;opacity:.88}
+
+.tnw{background:var(--p);position:sticky;top:0;z-index:100;box-shadow:0 3px 10px rgba(0,0,0,.25)}
+.tnav{display:flex;overflow-x:auto;scrollbar-width:none;max-width:1100px;margin:0 auto}
+.tnav::-webkit-scrollbar{display:none}
+.tbtn{background:none;border:none;color:rgba(255,255,255,.65);padding:.78rem 1rem;font-family:'DM Sans',sans-serif;font-size:.8rem;font-weight:500;cursor:pointer;white-space:nowrap;border-bottom:3px solid transparent;transition:all .2s;display:flex;align-items:center;gap:5px}
+.tbtn:hover{color:#fff;background:rgba(255,255,255,.07)}
+.tbtn.active{color:#fff;border-bottom-color:#F4C99A;background:rgba(255,255,255,.1)}
+.tbtn:focus-visible{outline:2px solid #F4C99A;outline-offset:-2px}
+
+main{max-width:900px;margin:0 auto;padding:1.8rem 1rem 4rem}
+.mod{display:none}
+.mod.activo{display:block;animation:fadeUp .32s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+.mhdr{margin-bottom:1.6rem;padding-bottom:1rem;border-bottom:2px solid var(--borde)}
+.mtag{display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;padding:3px 11px;border-radius:4px;margin-bottom:.55rem}
+.ta{background:var(--pc);color:var(--p)} .tt{background:var(--oc);color:var(--o)}
+.tact{background:var(--tc);color:var(--t)} .tq{background:var(--mc);color:var(--m)}
+.mhdr h2{font-family:'Playfair Display',serif;font-size:clamp(1.45rem,3.2vw,1.95rem);color:var(--p);line-height:1.2;margin-bottom:.3rem}
+.mtime{font-size:.8rem;color:var(--suave);display:flex;align-items:center;gap:5px}
+
+.card{background:var(--blanco);border:1px solid var(--borde);border-radius:var(--r);padding:1.4rem 1.5rem;margin-bottom:1.2rem;box-shadow:var(--sombra)}
+.cv{border-left:4px solid var(--p)} .ct{border-left:4px solid var(--t)}
+.co{border-left:4px solid var(--o)} .cm{border-left:4px solid var(--m)}
+.card h3{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--p);margin-bottom:.75rem}
+
+p{margin-bottom:.9rem} p:last-child{margin-bottom:0}
+ul,ol{padding-left:1.3rem} li{margin-bottom:.3rem}
+
+.cita{border-left:3px solid var(--t);padding:.75rem 1.1rem;margin:1rem 0;background:var(--tc);border-radius:0 var(--r) var(--r) 0;font-style:italic;font-size:.94rem}
+.cita cite{display:block;font-style:normal;font-size:.78rem;color:var(--suave);margin-top:.4rem}
+
+.ttshint{font-size:.76rem;color:var(--suave);display:flex;align-items:center;gap:5px;margin-bottom:1rem}
+[data-tts]{cursor:pointer;border-radius:4px;transition:background .18s}
+[data-tts]:hover{background:rgba(184,92,56,.08)}
+[data-tts].hablando{background:rgba(184,92,56,.14);outline:1px dashed var(--t)}
+
+.qa{background:linear-gradient(135deg,#E3EDE6 0%,#F4EDD8 100%);border:1px solid var(--borde);border-radius:var(--r);padding:1.5rem 1.6rem;margin-bottom:1.3rem}
+.qa .qi{font-size:1.6rem;display:block;margin-bottom:.6rem}
+.qa p{font-family:'Playfair Display',serif;font-size:1.08rem;font-style:italic;color:var(--p)}
+
+.acord{margin-bottom:.55rem}
+.abtn{width:100%;background:var(--pc);border:1px solid var(--borde);border-radius:var(--r);padding:.88rem 1.1rem;text-align:left;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:600;color:var(--p);display:flex;align-items:center;justify-content:space-between;gap:.5rem;transition:background .2s}
+.abtn:hover{background:#c9ddd0}
+.abtn[aria-expanded="true"]{background:var(--p);color:#fff;border-radius:var(--r) var(--r) 0 0}
+.abtn .ch{transition:transform .25s;flex-shrink:0}
+.abtn[aria-expanded="true"] .ch{transform:rotate(180deg)}
+.abtn:focus-visible{outline:2px solid var(--t);outline-offset:2px}
+.apanel{display:none;background:var(--blanco);border:1px solid var(--borde);border-top:none;border-radius:0 0 var(--r) var(--r);padding:1.1rem 1.3rem}
+.apanel.open{display:block}
+
+.awrap{margin-bottom:1.8rem}
+.ahdr{background:linear-gradient(135deg,#9C3D1F 0%,#B85C38 100%);color:var(--blanco);border-radius:var(--r) var(--r) 0 0;padding:1.1rem 1.5rem}
+.ahdr .anum{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;opacity:.82;margin-bottom:.2rem}
+.ahdr h3{font-family:'Playfair Display',serif;font-size:1.32rem;color:#fff;margin:0}
+.ahdr .amet{font-size:.8rem;opacity:.85;margin-top:.3rem}
+.abody{background:var(--blanco);border:1px solid var(--borde);border-top:none;border-radius:0 0 var(--r) var(--r);padding:1.4rem 1.5rem}
+
+.tmr{display:flex;align-items:center;gap:.8rem;background:var(--pc);border-radius:var(--r);padding:.7rem 1.1rem;margin:1rem 0;flex-wrap:wrap}
+.tdisp{font-size:1.55rem;font-weight:700;color:var(--p);min-width:3.5rem;font-variant-numeric:tabular-nums}
+.tbtn2{background:var(--p);color:#fff;border:none;border-radius:7px;padding:6px 15px;font-size:.84rem;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;transition:background .2s}
+.tbtn2:hover{background:#14331f}
+.tbtn2.rst{background:var(--suave)} .tbtn2.rst:hover{background:var(--txt)}
+
+textarea.campo{width:100%;min-height:78px;border:1.5px solid var(--borde);border-radius:8px;padding:.7rem .95rem;font-family:'DM Sans',sans-serif;font-size:.9rem;background:var(--fondo);color:var(--txt);resize:vertical;margin:.4rem 0 .8rem;transition:border-color .2s}
+textarea.campo:focus{outline:none;border-color:var(--p);background:var(--blanco)}
+
+.fbbtn{background:none;border:1.5px solid var(--o);color:var(--o);border-radius:7px;padding:6px 15px;font-size:.84rem;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;transition:all .2s;margin-top:.4rem}
+.fbbtn:hover{background:var(--oc)}
+.fbbox{display:none;background:var(--oc);border:1px solid var(--o);border-radius:8px;padding:1rem 1.15rem;margin-top:.7rem;font-size:.9rem}
+.fbbox.vis{display:block}
+.fbbox p{margin-bottom:.6rem} .fbbox p:last-child{margin-bottom:0}
+
+.nbox{background:var(--oc);border:1px solid var(--o);border-radius:8px;padding:.85rem 1rem;margin:.9rem 0;font-size:.88rem;display:flex;gap:.6rem;align-items:flex-start}
+.ni{flex-shrink:0;font-size:1.1rem}
+
+.g2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;margin:1rem 0}
+.cbox{border-radius:8px;padding:1rem 1.1rem;font-size:.88rem}
+.cbox h4{font-size:.92rem;margin-bottom:.5rem}
+.cbox ul{padding-left:1.1rem;line-height:1.75}
+
+.sit{background:var(--blanco);border:1.5px solid var(--borde);border-radius:var(--r);overflow:hidden;margin-bottom:1rem}
+.shdr{padding:.8rem 1.1rem;display:flex;align-items:center;gap:.8rem;border-bottom:1px solid var(--borde)}
+.sletra{width:34px;height:34px;border-radius:50%;background:var(--t);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1rem;flex-shrink:0}
+.shdr h4{font-size:.95rem;font-weight:600;color:var(--txt);margin:0}
+.sbody{padding:1rem 1.1rem}
+.sbody p{font-size:.9rem}
+
+.fase{background:var(--blanco);border:1px solid var(--borde);border-radius:var(--r);margin-bottom:.9rem;overflow:hidden}
+.fhdr{display:flex;align-items:center;gap:.8rem;padding:.82rem 1.1rem;background:var(--pc);border-bottom:1px solid var(--borde)}
+.fnum{background:var(--p);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:700;flex-shrink:0}
+.fhdr h4{font-size:.95rem;font-weight:600;color:var(--p);margin:0}
+.fbody{padding:1rem 1.1rem}
+
+.espiral{background:var(--blanco);border:1px solid var(--borde);border-radius:var(--r);padding:.5rem 1rem;margin:1rem 0}
+.eitem{display:flex;gap:1rem;align-items:flex-start;padding:.85rem 0;border-bottom:1px solid var(--fondo)}
+.eitem:last-child{border-bottom:none}
+.eicon{width:38px;height:38px;border-radius:50%;background:var(--pc);border:2px solid var(--p);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.eitem h4{font-size:.93rem;font-weight:600;color:var(--p);margin-bottom:.2rem}
+.eitem p{font-size:.87rem;margin:0}
+
+.pmono{display:flex;gap:.9rem;align-items:flex-start;background:var(--blanco);border:1px solid var(--borde);border-radius:8px;padding:1rem;margin-bottom:.75rem}
+.pnum{background:var(--o);color:#fff;width:27px;height:27px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0;margin-top:2px}
+.plabel{font-size:.88rem;font-weight:700;color:var(--o);margin-bottom:.25rem}
+.pmono p{font-size:.88rem;margin:0}
+
+.qintro{background:linear-gradient(135deg,var(--mc),var(--pc));border:1px solid var(--borde);border-radius:var(--r);padding:1.2rem 1.4rem;margin-bottom:1.6rem}
+.qintro h3{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--m);margin-bottom:.6rem}
+.ngbox{display:none;margin-top:.9rem;background:var(--mc);border:1px solid var(--m);border-radius:7px;padding:.6rem 1rem;font-size:.84rem;color:var(--m)}
+
+.pq{background:var(--blanco);border:1px solid var(--borde);border-radius:var(--r);padding:1.2rem 1.3rem;margin-bottom:1rem}
+.pqn{font-size:.7rem;font-weight:700;color:var(--m);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.4rem}
+.pqt{font-size:.97rem;font-weight:500;color:var(--txt);margin-bottom:.9rem}
+.ops{display:flex;flex-direction:column;gap:.5rem}
+label.op{display:flex;align-items:flex-start;gap:.7rem;padding:.62rem .85rem;border:1.5px solid var(--borde);border-radius:8px;cursor:pointer;font-size:.9rem;line-height:1.5;transition:all .18s}
+label.op:hover{border-color:var(--m);background:var(--mc)}
+label.op input[type=radio]{margin-top:3px;flex-shrink:0;accent-color:var(--m)}
+label.op.ok{border-color:#2D6A4F;background:#E3EDE6}
+label.op.mal{border-color:#b03a2e;background:#fdecea}
+.qfb{display:none;padding:.72rem .95rem;border-radius:8px;font-size:.87rem;margin-top:.6rem}
+.qfb.vis{display:block}
+.qfb.ok{background:#E8F4ED;border:1px solid #2D6A4F;color:#1B4332}
+.qfb.mal{background:#fdecea;border:1px solid #b03a2e;color:#7b241c}
+
+.qacts{margin-top:1.5rem;display:flex;align-items:center;gap:.8rem;flex-wrap:wrap}
+.bcal{background:var(--m);color:#fff;border:none;border-radius:8px;padding:.82rem 2rem;font-size:1rem;font-family:'DM Sans',sans-serif;font-weight:700;cursor:pointer;transition:background .2s}
+.bcal:hover{background:#3a1855}
+.bcal:disabled{opacity:.5;cursor:not-allowed}
+.brein{background:none;border:1.5px solid var(--suave);color:var(--suave);border-radius:8px;padding:.7rem 1.5rem;font-size:.9rem;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .2s;display:none}
+.brein:hover{border-color:var(--txt);color:var(--txt)}
+.resq{display:none;background:var(--blanco);border:2px solid var(--m);border-radius:var(--r);padding:1.5rem 1.6rem;margin-top:1.5rem;text-align:center}
+.resq.vis{display:block}
+.rpunt{font-family:'Playfair Display',serif;font-size:2.6rem;font-weight:700;color:var(--m)}
+.rmsg{font-size:1rem;margin:.8rem 0}
+.rnota{display:inline-block;font-size:.82rem;background:var(--mc);color:var(--m);padding:4px 14px;border-radius:20px;margin-top:.4rem}
+
+.pclect{background:var(--blanco);border:1px solid var(--borde);border-radius:var(--r);margin-bottom:1.3rem;overflow:hidden}
+.pclhdr{background:var(--pc);padding:1rem 1.3rem;border-bottom:1px solid var(--borde)}
+.pclhdr .pcf{font-size:.72rem;font-weight:700;color:var(--p);text-transform:uppercase;letter-spacing:.08em}
+.pclhdr h3{font-family:'Playfair Display',serif;font-size:1.02rem;color:var(--p);margin-top:.2rem}
+.pclhdr .pca{font-size:.78rem;color:var(--suave);margin-top:.15rem}
+.pclbody{padding:1rem 1.3rem}
+.pcq{display:flex;gap:.8rem;align-items:flex-start;padding:.75rem 0;border-bottom:1px solid var(--fondo);font-size:.9rem;line-height:1.65}
+.pcq:last-child{border-bottom:none}
+.pcn{background:var(--p);color:#fff;width:23px;height:23px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;flex-shrink:0;margin-top:1px}
+.pcn.str{background:var(--t)}
+
+footer{background:var(--p);color:rgba(255,255,255,.72);text-align:center;padding:1.3rem 1rem;font-size:.8rem;margin-top:3rem}
+footer a{color:rgba(255,255,255,.88);text-decoration:none}
+
+@media(max-width:600px){
+  .tbtn{padding:.7rem .7rem;font-size:.74rem}
+  .ti{display:none}
+  main{padding:1.1rem .8rem 3rem}
+  .site-header h1{font-size:1.6rem}
+}
+</style>
+</head>
+<body>
+
+<a class="skip" href="#main">Ir al contenido principal</a>
+<a class="skip" href="#mod-7">Ir al quiz</a>
+
+<header class="site-header" role="banner">
+  <div class="hpat" aria-hidden="true"></div>
+  <span class="hbadge">Seminario de Investigación II &middot; Sesión 13 &middot; Última clase del semestre</span>
+  <h1>La raíz y <em>la acción</em></h1>
+  <p class="sub">Investigación-Acción-Participativa (IAP)</p>
+  <div class="hmeta">
+    <span>&#9201; 2 horas</span>
+    <span>&#128218; Séptimo semestre &middot; Psicología</span>
+    <span>&#127963; UdeC Facatativá</span>
+    <span>&#128197; Parcial: próxima semana</span>
+  </div>
+</header>
+
+<nav class="tnw" aria-label="Módulos de la sesión">
+  <div class="tnav" role="tablist">
+    <button class="tbtn active" role="tab" aria-selected="true" aria-controls="mod-0" data-idx="0"><span class="ti">📍</span>Apertura</button>
+    <button class="tbtn" role="tab" aria-selected="false" aria-controls="mod-1" data-idx="1"><span class="ti">📖</span>¿Qué es la IAP?</button>
+    <button class="tbtn" role="tab" aria-selected="false" aria-controls="mod-2" data-idx="2"><span class="ti">👁</span>Act.1: El ojo IAP</button>
+    <button class="tbtn" role="tab" aria-selected="false" aria-controls="mod-3" data-idx="3"><span class="ti">🧠</span>Presupuestos</button>
+    <button class="tbtn" role="tab" aria-selected="false" aria-controls="mod-4" data-idx="4"><span class="ti">🌀</span>Act.2: Piloto IAP</button>
+    <button class="tbtn" role="tab" aria-selected="false" aria-controls="mod-5" data-idx="5"><span class="ti">🗺</span>Metodología</button>
+    <button class="tbtn" role="tab" aria-selected="false" aria-controls="mod-6" data-idx="6"><span class="ti">📝</span>Act.3: Mi monografía</button>
+    <button class="tbtn" role="tab" aria-selected="false" aria-controls="mod-7" data-idx="7"><span class="ti">✅</span>Quiz</button>
+    <button class="tbtn" role="tab" aria-selected="false" aria-controls="mod-8" data-idx="8"><span class="ti">🏠</span>Para casa</button>
+  </div>
+</nav>
+
+<main id="main" tabindex="-1">
+
+<!-- ===== MÓDULO 0: APERTURA ===== -->
+<section id="mod-0" class="mod activo" role="tabpanel">
+<div class="mhdr">
+  <span class="mtag ta">📍 Apertura · 15 min</span>
+  <h2>Antes de empezar: tres tensiones</h2>
+  <p class="mtime">⏱ 15 minutos · Toda la clase</p>
+</div>
+<p class="ttshint">🔊 Toca cualquier párrafo para escucharlo en voz alta</p>
+
+<div class="qa">
+  <span class="qi" aria-hidden="true">🌱</span>
+  <p data-tts>Llegamos a la última clase del semestre. Antes de entrar al contenido, quiero que se queden con esta imagen: hay una diferencia enorme entre <em>estudiar a</em> una comunidad y <em>construir conocimiento con</em> una comunidad. ¿Cuál creen que es más transformadora? ¿Y cuál han practicado en sus investigaciones hasta ahora?</p>
+</div>
+
+<div class="card cv">
+  <h3>🎯 Para esta sesión</h3>
+  <p data-tts>Hoy vamos a explorar la <strong>Investigación-Acción-Participativa (IAP)</strong>, una de las metodologías más potentes de la investigación cualitativa. No solo cambia el método: cambia la relación entre quien investiga y quienes son investigados.</p>
+  <p data-tts>Las lecturas que trabajamos hoy —el Capítulo 5 de Bautista y el texto de Orlando Fals Borda— son la base del <strong>parcial final de la próxima semana</strong>. Como no tuvieron tiempo de leerlas antes, vamos a construir juntos el mapa conceptual en clase para que cuando lean en casa ya tengan el andamiaje claro.</p>
+</div>
+
+<div class="card ct">
+  <h3>⚡ Tres tensiones para activar el pensamiento</h3>
+  <p style="font-size:.88rem;color:var(--suave);margin-bottom:1rem;">Discutan en parejas (2 min cada una) antes de compartir en plenaria.</p>
+
+  <div class="acord">
+    <button class="abtn" aria-expanded="false" aria-controls="t1">
+      <span>Tensión 1: ¿Investigar <em>sobre</em> o investigar <em>con</em>?</span>
+      <span class="ch" aria-hidden="true">▾</span>
+    </button>
+    <div id="t1" class="apanel">
+      <p data-tts>La ciencia positivista clásica separó radicalmente al observador del observado. El investigador era neutral, externo, objetivo. La IAP dice que esa separación es una ilusión y además reproduce relaciones de poder. ¿Qué se pierde cuando investigamos <em>sobre</em> una comunidad sin que ella participe en las preguntas, en el análisis y en los resultados?</p>
+      <p data-tts>Fals Borda lo plantea con claridad: en la IAP, la comunidad no es objeto de estudio sino <strong>sujeto activo</strong> de la investigación. Eso cambia todo: quién hace las preguntas, quién interpreta, quién se beneficia del conocimiento producido.</p>
+    </div>
+  </div>
+
+  <div class="acord">
+    <button class="abtn" aria-expanded="false" aria-controls="t2">
+      <span>Tensión 2: ¿Es "científico" lo que produce la IAP?</span>
+      <span class="ch" aria-hidden="true">▾</span>
+    </button>
+    <div id="t2" class="apanel">
+      <p data-tts>Una crítica frecuente a la IAP es que sacrifica el rigor por el activismo. Si la comunidad participa en la producción del conocimiento, ¿no se contamina la objetividad? Fals Borda responde que el rigor no desaparece: se redefine. La validez ya no se mide por criterios externos estandarizados, sino por el <strong>sentido común de los grupos</strong>, sus vivencias y su reconocimiento en los resultados.</p>
+      <p data-tts>¿Puede ser riguroso un conocimiento que la propia comunidad valida? ¿O la validez siempre debe venir de afuera?</p>
+    </div>
+  </div>
+
+  <div class="acord">
+    <button class="abtn" aria-expanded="false" aria-controls="t3">
+      <span>Tensión 3: ¿Puede la psicología hacer IAP?</span>
+      <span class="ch" aria-hidden="true">▾</span>
+    </button>
+    <div id="t3" class="apanel">
+      <p data-tts>La IAP nació en la educación popular y la sociología crítica, no en la psicología. Pero Martín-Baró, Montero y otros autores latinoamericanos mostraron que la <strong>psicología comunitaria y de la liberación</strong> tiene mucho que ganar de este enfoque. ¿En qué contextos de su futura práctica profesional podría ser relevante la IAP? ¿Y en cuáles no aplicaría?</p>
+    </div>
+  </div>
+</div>
+
+<div class="card co">
+  <h3>📌 Lo que vamos a construir hoy</h3>
+  <ul style="font-size:.93rem;line-height:1.85;padding-left:1.2rem;">
+    <li>Comprender qué distingue a la IAP de otras metodologías cualitativas del semestre</li>
+    <li>Reconocer los cuatro presupuestos epistémicos que la fundamentan (Bautista, 2021)</li>
+    <li>Identificar sus fases metodológicas y sus criterios de validez</li>
+    <li>Experimentar un mini piloto IAP con nuestra propia aula como comunidad</li>
+    <li>Reflexionar sobre la relación entre la IAP y sus proyectos de monografía</li>
+  </ul>
+</div>
+</section>
+
+
+<!-- ===== MÓDULO 1: QUÉ ES LA IAP ===== -->
+<section id="mod-1" class="mod" role="tabpanel">
+<div class="mhdr">
+  <span class="mtag tt">📖 Teoría · 25 min</span>
+  <h2>¿Qué es la Investigación-Acción-Participativa?</h2>
+  <p class="mtime">⏱ 25 minutos · Explicación + lectura guiada</p>
+</div>
+<p class="ttshint">🔊 Toca cualquier párrafo para escucharlo</p>
+
+<div class="card cv">
+  <h3>Una metodología que rompe con la tradición</h3>
+  <p data-tts>La Investigación-Acción-Participativa no es simplemente un método de recolección de datos. Es una <strong>postura epistemológica</strong>: una forma distinta de entender quién produce el conocimiento, para qué sirve y a quién beneficia.</p>
+  <p data-tts>Bautista (2021) nos recuerda que la IAP surge del reconocimiento de que las comunidades no son receptores pasivos del saber académico. Tienen sus propios conocimientos, sus propias formas de entender el mundo, y la investigación debe partir de ahí, no imponerse sobre ellos.</p>
+</div>
+
+<div class="card co">
+  <h3>📜 Breve genealogía: ¿de dónde viene esto?</h3>
+
+  <div class="acord">
+    <button class="abtn" aria-expanded="false" aria-controls="g1">
+      <span>Kurt Lewin (1940s): el origen de la investigación-acción</span>
+      <span class="ch" aria-hidden="true">▾</span>
+    </button>
+    <div id="g1" class="apanel">
+      <p data-tts>Kurt Lewin, psicólogo social alemán, fue el primero en hablar de "investigación-acción" en los años 40. Su idea central: la investigación debe estar orientada al cambio social. No basta describir la realidad; hay que transformarla. Estableció el ciclo reflexión → acción → reflexión que sigue siendo la columna vertebral de la metodología.</p>
+      <p data-tts>Sin embargo, el modelo de Lewin todavía mantenía al investigador externo como agente central. Era la acción del experto <em>sobre</em> la comunidad, no <em>con</em> ella. Ese paso lo darían otros.</p>
+    </div>
+  </div>
+
+  <div class="acord">
+    <button class="abtn" aria-expanded="false" aria-controls="g2">
+      <span>Paulo Freire (1970s): la concientización y el saber popular</span>
+      <span class="ch" aria-hidden="true">▾</span>
+    </button>
+    <div id="g2" class="apanel">
+      <p data-tts>Paulo Freire revolucionó la educación latinoamericana con la idea de que el conocimiento no puede depositarse en las personas como si fueran recipientes vacíos —lo que llamó "educación bancaria"—. El aprendizaje y la investigación deben partir del saber que ya tiene la gente, de su experiencia concreta.</p>
+      <p data-tts>Para la IAP, Freire aporta el concepto de <strong>concientización</strong>: el proceso por el cual las personas pasan de una visión ingenua de su realidad a comprender críticamente las causas estructurales de sus problemas. La investigación se convierte en un acto político de liberación.</p>
+      <p data-tts>Bautista (2021) señala que Freire aportó además las <strong>cinco etapas</strong> del proceso participativo: observar la realidad, reflexionar sobre ella, problematizarla, actuar para transformarla y evaluar los resultados de esa acción.</p>
+    </div>
+  </div>
+
+  <div class="acord">
+    <button class="abtn" aria-expanded="false" aria-controls="g3">
+      <span>Orlando Fals Borda (Colombia, 1970s): la IAP llega a América Latina</span>
+      <span class="ch" aria-hidden="true">▾</span>
+    </button>
+    <div id="g3" class="apanel">
+      <p data-tts>Orlando Fals Borda fue el gran sistematizador de la IAP en Colombia. Sociólogo y activista, fundó en 1971 la <em>Rosca de Investigación y Acción Social</em>, un colectivo que abandonó la academia institucional para trabajar con comunidades campesinas del Caribe colombiano.</p>
+      <p data-tts>Fals Borda documenta algo fascinante: en 1970, de manera casi simultánea, grupos de investigadores en varios continentes —sin conocerse entre sí— llegaron a planteamientos muy similares sobre la investigación participativa. Llamó a esto <strong>"telepatía inducida"</strong>: no fue casualidad sino la respuesta colectiva al agotamiento del positivismo y las injusticias que ese modelo ignoraba.</p>
+      <p data-tts>Su contribución más importante fue el concepto de <strong>"inserción"</strong>: el investigador no solo visita la comunidad, sino que se integra en ella. Y el conocimiento producido regresa a través de la <strong>"devolución sistemática"</strong>: en formatos accesibles a distintos niveles de alfabetización.</p>
+    </div>
+  </div>
+
+  <div class="acord">
+    <button class="abtn" aria-expanded="false" aria-controls="g4">
+      <span>La IAP en la psicología latinoamericana</span>
+      <span class="ch" aria-hidden="true">▾</span>
+    </button>
+    <div id="g4" class="apanel">
+      <p data-tts>Bautista (2021) destaca que en Colombia la IAP tiene raíces profundas gracias a Fals Borda, pero también a través de <strong>Ignacio Martín-Baró</strong> y <strong>Maritza Montero</strong>, que desde la psicología de la liberación y la psicología comunitaria adoptaron sus principios.</p>
+      <p data-tts>Para Martín-Baró, la psicología latinoamericana debía salir de los laboratorios y entrar en los barrios, en las comunidades afectadas por la violencia y la pobreza. La investigación no podía ser un lujo académico: debía servir a quienes más lo necesitaban. Ese es, en esencia, el espíritu de la IAP.</p>
+    </div>
+  </div>
+</div>
+
+<div class="card ct">
+  <h3>🔑 Investigación-Acción vs. Investigación-Acción-Participativa</h3>
+  <p data-tts>Merino y Raya (citados en Bautista, 2021) establecen una distinción fundamental para el parcial:</p>
+  <div class="g2" style="margin-top:1rem;">
+    <div class="cbox" style="background:var(--pc);">
+      <h4 style="color:var(--p);">Investigación-Acción (IA)</h4>
+      <ul style="line-height:1.75;">
+        <li>El investigador externo identifica el problema</li>
+        <li>La comunidad participa en la <em>solución</em></li>
+        <li>El saber experto es central</li>
+        <li>Orientada a la eficiencia del cambio</li>
+        <li>Ej.: un experto mejora protocolos con ayuda del personal</li>
+      </ul>
+    </div>
+    <div class="cbox" style="background:var(--tc);">
+      <h4 style="color:var(--t);">Investigación-Acción-Participativa (IAP)</h4>
+      <ul style="line-height:1.75;">
+        <li>La comunidad define el problema <em>desde el inicio</em></li>
+        <li>Comunidad y facilitador co-construyen todo</li>
+        <li>El saber popular es igualmente legítimo</li>
+        <li>Orientada a la transformación y la justicia</li>
+        <li>Ej.: comunidad campesina investiga el monocultivo en su salud</li>
+      </ul>
+    </div>
+  </div>
+  <div class="cita" style="margin-top:1rem;">"En la IAP la comunidad se convierte en sujeto activo, no solo en destinataria de los resultados de la investigación."<cite>Bautista (2021), parafraseando a Merino y Raya</cite></div>
+</div>
+
+<div class="card cv">
+  <h3>🌐 1970: el año bisagra</h3>
+  <p data-tts>Fals Borda documenta que en 1970, de manera simultánea y sin comunicación entre sí, grupos en Colombia, Tanzania, India, Estados Unidos y Europa llegaron a conclusiones similares sobre la necesidad de una investigación comprometida con las comunidades. La "telepatía inducida" no fue magia: fue la respuesta colectiva al agotamiento del positivismo y a las injusticias que ese modelo ignoraba sistemáticamente.</p>
+  <p data-tts>Esto nos dice algo importante sobre la historia del conocimiento: las condiciones históricas pueden hacer inevitable que ciertas ideas emerjan. La IAP no fue inventada por una sola persona genial: fue construida por muchas personas que compartían una misma inconformidad con el mundo.</p>
+</div>
+</section>
+
+
+<!-- ===== MÓDULO 2: ACTIVIDAD 1 ===== -->
+<section id="mod-2" class="mod" role="tabpanel">
+<div class="mhdr">
+  <span class="mtag tact">👁 Actividad 1 · 20 min</span>
+  <h2>El ojo IAP: ¿aplica o no aplica?</h2>
+  <p class="mtime">⏱ 20 minutos · Trabajo en parejas</p>
+</div>
+
+<div class="awrap">
+  <div class="ahdr">
+    <p class="anum">Actividad Cooperativa 1 de 3</p>
+    <h3>El ojo IAP</h3>
+    <p class="amet">👥 En parejas · ⏱ 20 minutos · 📍 Presencial</p>
+  </div>
+  <div class="abody">
+    <p data-tts>Ahora que tienen una primera comprensión de qué es la IAP, vamos a ponerla a prueba. A continuación hay cuatro situaciones reales de investigación en contextos colombianos. Con su pareja analicen si aplica o no la IAP y, sobre todo, por qué. No busco una respuesta de sí o no: busco el razonamiento.</p>
+    <p data-tts>Para cada situación respondan: ¿Hay una comunidad como sujeto activo? ¿Hay un problema sentido por la comunidad? ¿El conocimiento producido regresaría a ella? ¿Existe potencial de transformación colectiva?</p>
+
+    <div class="tmr">
+      <span aria-hidden="true">⏱</span>
+      <span class="tdisp" id="td-a1" aria-live="polite">20:00</span>
+      <button class="tbtn2" onclick="toggleTimer('a1',20)">▶ Iniciar</button>
+      <button class="tbtn2 rst" onclick="resetTimer('a1',20)">↺ Reiniciar</button>
+    </div>
+
+    <div class="sit">
+      <div class="shdr"><div class="sletra">A</div><h4>Barrio El Paraíso, Soacha · Jóvenes en riesgo y SPA</h4></div>
+      <div class="sbody">
+        <p data-tts>Un estudiante de último semestre de psicología de la UdeC va a hacer su monografía en el barrio El Paraíso de Soacha, donde viven muchos jóvenes desplazados de distintas regiones. Hay alta incidencia de consumo de SPA y violencia intrafamiliar. El estudiante quiere entender por qué los jóvenes consumen y proponer una intervención comunitaria. Tiene 8 meses para el trabajo de campo.</p>
+        <textarea class="campo" placeholder="¿Aplica la IAP? ¿Por qué? Analicen los cuatro criterios juntos..." rows="3" aria-label="Análisis situación A"></textarea>
+        <button class="fbbtn" onclick="tfb('fba')">🔍 Ver análisis</button>
+        <div id="fba" class="fbbox">
+          <p><strong>✅ La IAP es muy pertinente aquí.</strong> Esta situación tiene los ingredientes clásicos: una comunidad con un problema que la afecta directamente; un contexto de vulnerabilidad donde el saber popular es fundamental para entender las causas reales; y un problema que requiere acción transformadora, no solo descripción.</p>
+          <p>El reto principal es el tiempo: 8 meses es poco para una IAP genuina. Pero si desde el inicio los jóvenes participan en el diseño, se puede hacer un trabajo participativo sólido. La clave sería que <em>ellos</em> definan sus problemas prioritarios. ¿El consumo de SPA es realmente el problema central para ellos? Quizás es la ausencia de oportunidades o el desplazamiento forzado. La IAP ayuda a no imponer categorías desde afuera.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="sit">
+      <div class="shdr"><div class="sletra">B</div><h4>Profesora universitaria de Bogotá · Mejora de su práctica docente</h4></div>
+      <div class="sbody">
+        <p data-tts>Una profesora universitaria de Bogotá quiere mejorar su práctica docente. Implementa nuevas estrategias pedagógicas durante un semestre, reflexiona sobre los resultados, ajusta su método y vuelve a aplicarlo. Al final escribe un artículo sobre cómo cambió su práctica y qué aprendió del proceso.</p>
+        <textarea class="campo" placeholder="¿Aplica la IAP? ¿Por qué? Analicen juntos..." rows="3" aria-label="Análisis situación B"></textarea>
+        <button class="fbbtn" onclick="tfb('fbb')">🔍 Ver análisis</button>
+        <div id="fbb" class="fbbox">
+          <p><strong>⚠️ Esto es Investigación-Acción (IA), no IAP.</strong> El proceso de la profesora es valioso —observa, actúa, reflexiona, vuelve a actuar—, pero hay un elemento ausente: la participación de la comunidad como sujeto. Los estudiantes son los "afectados" por las decisiones pedagógicas, pero ¿participan en la identificación del problema? ¿En el diseño de las estrategias? ¿En el análisis de los resultados?</p>
+          <p>Si los estudiantes fueran parte activa de todo ese proceso, estaríamos hablando de IAP. La diferencia es sutil pero fundamental: ¿quién tiene la voz sobre cuál es el problema y cómo se soluciona?</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="sit">
+      <div class="shdr"><div class="sletra">C</div><h4>Empresa de Bogotá · Alta rotación de personal</h4></div>
+      <div class="sbody">
+        <p data-tts>Un psicólogo organizacional de una empresa mediana de Bogotá detecta que la rotación de personal es muy alta (60% en un año) y que los empleados están desmotivados. La gerencia le pide que investigue qué pasa y proponga soluciones. Quiere involucrar a los trabajadores en el diagnóstico y en la construcción de propuestas. La empresa pagará el proceso.</p>
+        <textarea class="campo" placeholder="¿Aplica la IAP? Identifiquen las tensiones éticas del caso..." rows="3" aria-label="Análisis situación C"></textarea>
+        <button class="fbbtn" onclick="tfb('fbc')">🔍 Ver análisis</button>
+        <div id="fbc" class="fbbox">
+          <p><strong>⚠️ Hay tensiones éticas profundas que cuestionan si puede ser IAP genuina.</strong> Hay participación de los trabajadores, hay un problema sentido y hay orientación a la acción. Pero el problema central es: ¿quién financia y quién define los límites del proceso?</p>
+          <p>Si la empresa paga y la gerencia define lo que se puede cambiar, la participación de los trabajadores puede convertirse en lo que Fals Borda llamaría un <strong>simulacro de participación</strong>: una técnica para legitimar decisiones ya tomadas. ¿Puede haber IAP cuando la comunidad no controla el uso del conocimiento producido? ¿Qué pasa si el diagnóstico señala problemas estructurales que la gerencia no quiere cambiar? Esta situación ilustra que la IAP requiere condiciones de autonomía que en contextos corporativos son difíciles de garantizar.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="sit">
+      <div class="shdr"><div class="sletra">D</div><h4>Su propia investigación</h4></div>
+      <div class="sbody">
+        <p data-tts>Ahora hagan el ejercicio con el proyecto de monografía de uno de los dos. Analicen usando los mismos criterios: ¿Hay una comunidad como sujeto? ¿El problema es sentido por esa comunidad? ¿Podría el conocimiento regresar a ella? ¿Hay potencial transformador? No importa si su enfoque actual no es IAP: lo que importa es ser conscientes de las diferencias.</p>
+        <textarea class="campo" placeholder="Describe el proyecto y analiza: ¿qué tendría que cambiar para que fuera IAP? ¿Qué se ganaría? ¿Qué se perdería?" rows="5" aria-label="Análisis propio proyecto"></textarea>
+        <button class="fbbtn" onclick="tfb('fbd')">🔍 Ver criterios de análisis</button>
+        <div id="fbd" class="fbbox">
+          <p><strong>Cuatro preguntas clave para evaluar el potencial IAP de tu proyecto:</strong></p>
+          <ol style="padding-left:1.2rem;line-height:1.85;margin-top:.5rem;font-size:.88rem;">
+            <li>¿Tu pregunta de investigación la identificaste tú o la identificó la comunidad?</li>
+            <li>¿Los resultados de tu investigación pueden cambiar algo concreto para los participantes?</li>
+            <li>¿Podrían los participantes entender, criticar y usar tus resultados?</li>
+            <li>¿Tu diseño metodológico permite que la comunidad sea más que una fuente de datos?</li>
+          </ol>
+          <p style="margin-top:.5rem;font-size:.88rem;">Si respondieron "no" a la mayoría, no es un problema: simplemente su metodología no es IAP, y eso está bien. No todas las investigaciones deben serlo. Lo importante es ser consciente de qué implica cada elección metodológica.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="nbox">
+      <span class="ni">📢</span>
+      <p><strong>Plenaria (5 min):</strong> Vamos a compartir los análisis de las situaciones B y C, que son las más complejas. ¿Llegaron a las mismas conclusiones que yo, o ven algo distinto? La diversidad de interpretaciones es exactamente lo que la IAP valora.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+
+<!-- ===== MÓDULO 3: PRESUPUESTOS ===== -->
+<section id="mod-3" class="mod" role="tabpanel">
+<div class="mhdr">
+  <span class="mtag tt">🧠 Teoría · 15 min</span>
+  <h2>Los presupuestos epistémicos de la IAP</h2>
+  <p class="mtime">⏱ 15 minutos · Explicación teórica</p>
+</div>
+<p class="ttshint">🔊 Toca cualquier párrafo para escucharlo</p>
+
+<div class="card cv">
+  <p data-tts>Bautista (2021) identifica cuatro presupuestos epistémicos que fundamentan la IAP. No son simples supuestos técnicos: son compromisos filosóficos sobre qué es el conocimiento, quién puede producirlo y para qué sirve. Son clave para el parcial y para entender por qué la IAP es tan diferente de otras metodologías.</p>
+</div>
+
+<div class="acord">
+  <button class="abtn" aria-expanded="false" aria-controls="pe1">
+    <span>1. La relación sujeto-objeto se transforma en sujeto-sujeto</span>
+    <span class="ch" aria-hidden="true">▾</span>
+  </button>
+  <div id="pe1" class="apanel">
+    <p data-tts>En la investigación positivista clásica hay un sujeto que conoce (el investigador) y un objeto que es conocido (la comunidad). La IAP subvierte esta relación: <strong>todos son sujetos</strong> del proceso de conocimiento.</p>
+    <p data-tts>Fals Borda retoma de Agnes Heller el concepto de <strong>"reciprocidad simétrica"</strong>: la relación entre investigador y comunidad debe ser horizontal, de mutuo aprendizaje. Esto no significa que el investigador abandone su formación académica, sino que la pone al servicio del proceso colectivo sin imponerla.</p>
+    <div class="cita">"La simetría no significa que todos sepan lo mismo, sino que todos tienen un saber igualmente legítimo y necesario para comprender la realidad."<cite>Paráfrasis de Fals Borda, basada en Heller</cite></div>
+  </div>
+</div>
+
+<div class="acord">
+  <button class="abtn" aria-expanded="false" aria-controls="pe2">
+    <span>2. La concientización como proceso epistemológico</span>
+    <span class="ch" aria-hidden="true">▾</span>
+  </button>
+  <div id="pe2" class="apanel">
+    <p data-tts>Retomando a Freire, Bautista (2021) señala que la IAP no solo busca producir conocimiento: busca que los participantes <strong>transformen su comprensión de la realidad</strong>. La concientización no es solo un resultado deseable, sino un criterio de validez: si al final la comunidad no ha ganado nuevas herramientas para entender y transformar su situación, algo salió mal.</p>
+    <p data-tts>Esto implica que el conocimiento no puede ser solo académico, escrito en lenguaje técnico y publicado en revistas que la comunidad nunca leerá. Fals Borda habla de la <strong>"devolución sistemática"</strong>: el conocimiento debe regresar en formatos y lenguajes que la comunidad pueda usar.</p>
+  </div>
+</div>
+
+<div class="acord">
+  <button class="abtn" aria-expanded="false" aria-controls="pe3">
+    <span>3. La participación como condición de verdad, no solo de legitimidad</span>
+    <span class="ch" aria-hidden="true">▾</span>
+  </button>
+  <div id="pe3" class="apanel">
+    <p data-tts>Este es quizás el presupuesto más radical. En la IAP, la participación de la comunidad no es solo una cuestión ética (aunque también lo es): es una <strong>condición epistemológica</strong>. Sin la participación plena de quienes viven el problema, el conocimiento producido estará incompleto y probablemente equivocado.</p>
+    <p data-tts>Bautista distingue entre <strong>participación real</strong> y <strong>simulacro de participación</strong>. En el simulacro, se convoca a la comunidad para validar lo que el investigador ya decidió. En la participación real, la comunidad tiene poder efectivo sobre el proceso: puede cuestionar, proponer y rechazar interpretaciones.</p>
+    <div class="nbox" style="margin-top:.8rem;"><span class="ni">⚠️</span><p><strong>Para el parcial:</strong> ¿Cuántos proyectos que se llaman "participativos" son en realidad simulacros? ¿Cómo pueden distinguirlo cuando lean artículos de investigación?</p></div>
+  </div>
+</div>
+
+<div class="acord">
+  <button class="abtn" aria-expanded="false" aria-controls="pe4">
+    <span>4. El saber popular como fuente legítima de conocimiento</span>
+    <span class="ch" aria-hidden="true">▾</span>
+  </button>
+  <div id="pe4" class="apanel">
+    <p data-tts>La IAP reconoce que las comunidades tienen saberes acumulados a lo largo de generaciones: sobre su territorio, sus relaciones, sus cuerpos, sus formas de resolver conflictos. Estos saberes no son "datos ingenuos" que el investigador debe "cientifizar": son conocimientos igualmente válidos que los académicos, aunque producidos de manera diferente.</p>
+    <p data-tts>Fals Borda es explícito: el rigor en la IAP no se mide por criterios externos impuestos desde la academia, sino por el <strong>sentido común de los grupos</strong>, sus vivencias y el reconocimiento que ellos mismos hagan de los resultados como verdaderos y útiles. Si la comunidad dice "eso no es lo que nos pasa", el investigador debe escuchar.</p>
+    <div class="cita">"Los criterios de rigor de la IAP son el sentido común de los grupos de referencia locales, las vivencias compartidas y la validación por quienes viven el problema."<cite>Paráfrasis de Fals Borda</cite></div>
+  </div>
+</div>
+
+<div class="card ct" style="margin-top:1.5rem;">
+  <h3>🔗 Conexión con otras metodologías del semestre</h3>
+  <p data-tts>La IAP comparte con la etnografía la importancia de la inmersión. Comparte con la fenomenología el respeto por la experiencia vivida. Pero se diferencia de ambas en algo fundamental: su <strong>orientación transformadora</strong>. No busca solo comprender la realidad: busca cambiarla, y lo hace <em>con</em> los que la viven.</p>
+  <p data-tts>Para el parcial, deben poder explicar estas diferencias con claridad. No basta decir que "la IAP es participativa": todas las metodologías cualitativas tienen algún nivel de participación. La diferencia está en quién tiene el poder de decisión sobre el proceso y en el compromiso explícito con la transformación.</p>
+</div>
+</section>
+
+
+<!-- ===== MÓDULO 4: PILOTO IAP ===== -->
+<section id="mod-4" class="mod" role="tabpanel">
+<div class="mhdr">
+  <span class="mtag tact">🌀 Actividad 2 · 25 min</span>
+  <h2>Piloto IAP: nuestra aula como comunidad</h2>
+  <p class="mtime">⏱ 25 minutos · Grupos de 5-6 personas</p>
+</div>
+
+<div class="awrap">
+  <div class="ahdr">
+    <p class="anum">Actividad Cooperativa 2 de 3</p>
+    <h3>Piloto IAP en el aula</h3>
+    <p class="amet">👥 Grupos de 5-6 personas · ⏱ 25 minutos · 🌀 Ciclo IAP comprimido</p>
+  </div>
+  <div class="abody">
+    <p data-tts>Esta es la actividad central de la sesión. Vamos a vivir un mini ciclo de IAP usando nuestra propia aula como comunidad. Nosotros —los estudiantes de psicología de séptimo semestre de la UdeC Facatativá— somos la comunidad. Vamos a investigar un problema real que nos afecta a todos.</p>
+    <div class="nbox"><span class="ni">🎯</span><p><strong>¿Por qué hacemos esto?</strong> No hay mejor manera de entender la IAP que experimentarla. Cuando lean el texto de Fals Borda en casa, este ejercicio les dará un referente concreto. Y para el parcial, poder describir un proceso IAP desde adentro es invaluable.</p></div>
+
+    <div class="fase">
+      <div class="fhdr"><div class="fnum">1</div><h4>Fase 1 · Identificación del problema sentido (5 min)</h4></div>
+      <div class="fbody">
+        <p data-tts>En IAP, el punto de partida es siempre un <strong>problema sentido por la comunidad</strong>, no uno identificado desde afuera. Como somos la comunidad, identificamos colectivamente qué problema de nuestra experiencia universitaria queremos investigar.</p>
+        <div class="tmr">
+          <span aria-hidden="true">⏱</span>
+          <span class="tdisp" id="td-f1" aria-live="polite">05:00</span>
+          <button class="tbtn2" onclick="toggleTimer('f1',5)">▶ Iniciar</button>
+          <button class="tbtn2 rst" onclick="resetTimer('f1',5)">↺ Reiniciar</button>
+        </div>
+        <p style="font-size:.9rem;margin-bottom:.8rem;"><strong>Elijan uno de estos problemas o propongan el propio:</strong></p>
+        <div class="g2">
+          <div style="background:var(--pc);border-radius:8px;padding:.9rem;font-size:.88rem;"><strong style="color:var(--p);">Opción 1:</strong> La experiencia de ansiedad académica en los últimos semestres de psicología en la UdeC</div>
+          <div style="background:var(--tc);border-radius:8px;padding:.9rem;font-size:.88rem;"><strong style="color:var(--t);">Opción 2:</strong> Las barreras para hacer investigación rigurosa con recursos limitados</div>
+          <div style="background:var(--oc);border-radius:8px;padding:.9rem;font-size:.88rem;"><strong style="color:var(--o);">Opción 3:</strong> La desconexión entre lo que aprendemos y lo que necesita la comunidad de Facatativá</div>
+          <div style="background:var(--mc);border-radius:8px;padding:.9rem;font-size:.88rem;"><strong style="color:var(--m);">Opción 4:</strong> Propuesta propia del grupo — argumenten por qué lo sienten como problema común</div>
+        </div>
+        <textarea class="campo" placeholder="¿Qué problema eligieron? ¿Por qué lo sienten como propio? ¿Todos en el grupo lo reconocen como real?" rows="3" aria-label="Problema identificado"></textarea>
+      </div>
+    </div>
+
+    <div class="fase">
+      <div class="fhdr"><div class="fnum">2</div><h4>Fase 2 · Diagnóstico participativo rápido (8 min)</h4></div>
+      <div class="fbody">
+        <p data-tts>En IAP, el diagnóstico no lo hace el investigador solo: lo construye la comunidad desde su propia experiencia. El diagnóstico es la sistematización del saber colectivo del grupo.</p>
+        <div class="tmr">
+          <span aria-hidden="true">⏱</span>
+          <span class="tdisp" id="td-f2" aria-live="polite">08:00</span>
+          <button class="tbtn2" onclick="toggleTimer('f2',8)">▶ Iniciar</button>
+          <button class="tbtn2 rst" onclick="resetTimer('f2',8)">↺ Reiniciar</button>
+        </div>
+        <p style="font-weight:600;font-size:.9rem;margin-bottom:.6rem;">Cada persona responde individualmente (2 min), luego comparten en grupo (6 min):</p>
+        <label style="font-size:.9rem;font-weight:500;display:block;margin-bottom:.2rem;">¿Cómo has vivido tú este problema? Sé concreto/a:</label>
+        <textarea class="campo" placeholder="Una situación específica de este semestre..." rows="3" aria-label="Experiencia personal"></textarea>
+        <label style="font-size:.9rem;font-weight:500;display:block;margin-bottom:.2rem;">¿Qué factores lo generan o lo mantienen?</label>
+        <textarea class="campo" placeholder="Factores individuales, institucionales, sociales, económicos..." rows="2" aria-label="Factores"></textarea>
+        <label style="font-size:.9rem;font-weight:500;display:block;margin-bottom:.2rem;">¿Qué recursos tiene nuestra comunidad para abordarlo?</label>
+        <textarea class="campo" placeholder="Conocimientos, habilidades, redes, espacios, tiempo colectivo..." rows="2" aria-label="Recursos"></textarea>
+        <label style="font-size:.9rem;font-weight:500;display:block;margin-bottom:.2rem;">¿Qué obstáculos existen para cambiar esta situación?</label>
+        <textarea class="campo" placeholder="Obstáculos internos al grupo y externos (institucionales, estructurales)..." rows="2" aria-label="Obstáculos"></textarea>
+      </div>
+    </div>
+
+    <div class="fase">
+      <div class="fhdr"><div class="fnum">3</div><h4>Fase 3 · Propuesta de acción colectiva (7 min)</h4></div>
+      <div class="fbody">
+        <p data-tts>En IAP, el conocimiento no termina en un informe: se convierte en acción. La propuesta debe ser construida colectivamente, realista y concreta.</p>
+        <div class="tmr">
+          <span aria-hidden="true">⏱</span>
+          <span class="tdisp" id="td-f3" aria-live="polite">07:00</span>
+          <button class="tbtn2" onclick="toggleTimer('f3',7)">▶ Iniciar</button>
+          <button class="tbtn2 rst" onclick="resetTimer('f3',7)">↺ Reiniciar</button>
+        </div>
+        <label style="font-size:.9rem;font-weight:500;display:block;margin-bottom:.2rem;">¿Qué acción concreta propone su grupo para transformar el problema?</label>
+        <textarea class="campo" placeholder="¿Qué harían, quién lo haría, cuándo, con qué recursos?" rows="4" aria-label="Propuesta de acción"></textarea>
+        <label style="font-size:.9rem;font-weight:500;display:block;margin-bottom:.2rem;">¿Cómo sabrían que la acción fue efectiva?</label>
+        <textarea class="campo" placeholder="Indicadores que la propia comunidad pueda evaluar..." rows="2" aria-label="Indicadores"></textarea>
+      </div>
+    </div>
+
+    <div class="fase">
+      <div class="fhdr"><div class="fnum">4</div><h4>Fase 4 · Reflexión metodológica en plenaria (5 min)</h4></div>
+      <div class="fbody">
+        <p data-tts>La IAP siempre incluye una reflexión metodológica: no solo sobre los resultados sino sobre el proceso mismo. ¿Qué vivimos al investigar desde adentro?</p>
+        <textarea class="campo" placeholder="1. ¿Qué diferencia notaron entre este proceso y cómo han hecho investigación antes?" rows="2" aria-label="Diferencia metodológica"></textarea>
+        <textarea class="campo" placeholder="2. ¿Qué saberes del grupo emergieron que un investigador externo nunca habría capturado?" rows="2" aria-label="Saberes emergentes"></textarea>
+        <textarea class="campo" placeholder="3. ¿Sintieron que su participación fue real o que algo la limitó? ¿Qué haría falta para que fuera más genuina?" rows="2" aria-label="Evaluación participación"></textarea>
+        <button class="fbbtn" onclick="tfb('fbpiloto')">🔍 Ver reflexión metodológica</button>
+        <div id="fbpiloto" class="fbbox">
+          <p><strong>Lo que acaban de hacer es un ciclo comprimido de IAP.</strong> En una investigación real, cada fase duraría semanas o meses. Pero la estructura es la misma: problema sentido → diagnóstico colectivo → acción transformadora → evaluación participativa.</p>
+          <p>Y el principio es siempre el mismo: el conocimiento lo producen quienes viven el problema, no quienes los observan desde afuera. Fals Borda diría que lo que acaban de hacer es exactamente lo que intentó sistematizar durante décadas: convertir la experiencia cotidiana en conocimiento riguroso sin perder el vínculo con quienes la viven.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+
+<!-- ===== MÓDULO 5: METODOLOGÍA ===== -->
+<section id="mod-5" class="mod" role="tabpanel">
+<div class="mhdr">
+  <span class="mtag tt">🗺 Metodología · 15 min</span>
+  <h2>El proceso metodológico de la IAP</h2>
+  <p class="mtime">⏱ 15 minutos · Explicación teórica</p>
+</div>
+<p class="ttshint">🔊 Toca cualquier párrafo para escucharlo</p>
+
+<div class="card cv">
+  <p data-tts>Bautista (2021) retoma el modelo de Bisquerra para describir las fases del proceso IAP. Es importante entender que estas fases no son una secuencia lineal rígida: se parecen más a una <strong>espiral</strong> que se repite y profundiza. Cada ciclo produce conocimiento que alimenta el siguiente.</p>
+</div>
+
+<div class="espiral">
+  <div class="eitem">
+    <div class="eicon" aria-hidden="true">🔍</div>
+    <div><h4>1. Problematización</h4>
+    <p data-tts>El punto de partida es identificar y definir el problema de manera colectiva con la comunidad. No es una pregunta que trae el investigador: emerge del diálogo. Esta fase puede durar meses y requiere generar confianza genuina entre investigador y comunidad.</p></div>
+  </div>
+  <div class="eitem">
+    <div class="eicon" aria-hidden="true">🗺</div>
+    <div><h4>2. Diagnóstico participativo</h4>
+    <p data-tts>Se construye colectivamente un mapa de la situación: causas, factores, recursos, actores. Se usan técnicas participativas como mapeos comunitarios, líneas del tiempo, grupos de discusión y talleres. El diagnóstico no lo hace el investigador solo: lo construyen juntos.</p></div>
+  </div>
+  <div class="eitem">
+    <div class="eicon" aria-hidden="true">💡</div>
+    <div><h4>3. Diseño de la propuesta de acción</h4>
+    <p data-tts>Con base en el diagnóstico, la comunidad y el investigador co-diseñan una propuesta transformadora. El diseño debe ser realista y surgir de las capacidades reales de la comunidad, no de los deseos del investigador.</p></div>
+  </div>
+  <div class="eitem">
+    <div class="eicon" aria-hidden="true">⚡</div>
+    <div><h4>4. Aplicación de la propuesta</h4>
+    <p data-tts>Se implementa la acción diseñada. El investigador acompaña el proceso, pero no lo dirige. La comunidad lidera su propia transformación. Se documenta todo: logros, obstáculos, aprendizajes inesperados.</p></div>
+  </div>
+  <div class="eitem">
+    <div class="eicon" aria-hidden="true">🔄</div>
+    <div><h4>5. Evaluación participativa</h4>
+    <p data-tts>Los criterios de éxito los define la comunidad. Si la evaluación revela nuevos problemas o que el inicial no se resolvió completamente, se inicia un nuevo ciclo de la espiral. Por eso es espiral, no escalera.</p></div>
+  </div>
+  <div class="eitem">
+    <div class="eicon" aria-hidden="true">📝</div>
+    <div><h4>6. Sistematización y devolución</h4>
+    <p data-tts>Fals Borda habla de "devolución sistemática": hay formatos para la comunidad (cartillas, videos, talleres, murales), para la academia (artículos, tesis) y para la política pública (informes). Cada audiencia recibe el conocimiento en un lenguaje que puede usar.</p></div>
+  </div>
+</div>
+
+<div class="card ct" style="margin-top:1rem;">
+  <h3>⚖️ La validez en la IAP</h3>
+  <p data-tts>Bautista (2021) plantea la pregunta central: ¿cómo se garantiza el rigor en una investigación donde los participantes son jueces de sus propios resultados? La respuesta de la IAP es que la validez se construye a través de la <strong>empatía y la participación plena</strong> de los sujetos con los fines de la investigación.</p>
+
+  <div class="acord">
+    <button class="abtn" aria-expanded="false" aria-controls="val1">
+      <span>Criterios de validez en la IAP</span>
+      <span class="ch" aria-hidden="true">▾</span>
+    </button>
+    <div id="val1" class="apanel">
+      <p data-tts>El rigor en la IAP no se mide con criterios positivistas. Se mide por:</p>
+      <ul style="font-size:.9rem;line-height:1.85;margin:.5rem 0;padding-left:1.2rem;">
+        <li><strong>Credibilidad:</strong> ¿Los participantes reconocen los resultados como verdaderos y fieles a su experiencia?</li>
+        <li><strong>Transferibilidad:</strong> ¿Los aprendizajes pueden ser útiles en contextos similares?</li>
+        <li><strong>Consistencia:</strong> ¿El proceso fue transparente, documentado y coherente con sus principios?</li>
+        <li><strong>Confirmabilidad:</strong> ¿Los resultados reflejan la perspectiva de la comunidad y no solo la del investigador?</li>
+      </ul>
+      <p data-tts>Fals Borda añade que el criterio último es el <strong>sentido común de los grupos de referencia locales</strong>. Si la comunidad dice "esto es verdad, esto nos representa", el conocimiento es válido. Si dice "esto no es lo que vivimos", el investigador está equivocado, sin importar cuán sofisticado sea su método.</p>
+    </div>
+  </div>
+
+  <div class="acord">
+    <button class="abtn" aria-expanded="false" aria-controls="val2">
+      <span>El concepto de "inserción" en Fals Borda</span>
+      <span class="ch" aria-hidden="true">▾</span>
+    </button>
+    <div id="val2" class="apanel">
+      <p data-tts>Fals Borda desarrolló el concepto de <strong>"inserción"</strong> para describir la relación que debe tener el investigador IAP con la comunidad. No es solo visitar, no es solo observar: es comprometerse genuinamente con la vida de la comunidad, compartir sus luchas, sus tiempos, sus espacios.</p>
+      <p data-tts>Cuando fundó la Rosca de Investigación y Acción Social en 1971, él y sus colegas dejaron sus posiciones académicas y se instalaron en comunidades campesinas del Caribe colombiano. Esa inserción no era solo una técnica: era un compromiso político y ético. La validez del conocimiento que produjeron dependía de esa inserción.</p>
+      <p data-tts>Para una monografía de pregrado, la inserción tiene límites prácticos obvios. Pero el principio sigue siendo válido: ¿cuánto tiempo están dispuestos a dar a la comunidad? ¿Con qué profundidad van a conocerla? ¿Están dispuestos a que sus preguntas cambien en el proceso?</p>
+    </div>
+  </div>
+</div>
+</section>
+
+
+<!-- ===== MÓDULO 6: ACTIVIDAD 3 ===== -->
+<section id="mod-6" class="mod" role="tabpanel">
+<div class="mhdr">
+  <span class="mtag tact">📝 Actividad 3 · 15 min</span>
+  <h2>IAP y mi monografía</h2>
+  <p class="mtime">⏱ 15 minutos · Trabajo en parejas</p>
+</div>
+
+<div class="awrap">
+  <div class="ahdr">
+    <p class="anum">Actividad Cooperativa 3 de 3</p>
+    <h3>IAP y mi monografía: diálogo metodológico</h3>
+    <p class="amet">👥 En parejas · ⏱ 15 minutos · 🔍 Reflexión aplicada</p>
+  </div>
+  <div class="abody">
+    <p data-tts>Vamos a conectar todo lo que trabajamos hoy con sus proyectos de monografía. No importa si su metodología actual no es IAP: lo que importa es entender qué ganaría y qué perdería su investigación si lo fuera.</p>
+    <p data-tts>Trabajen en parejas. Cada uno responde sobre su propio proyecto (8 min), luego comparan sus análisis (7 min).</p>
+
+    <div class="tmr">
+      <span aria-hidden="true">⏱</span>
+      <span class="tdisp" id="td-a3" aria-live="polite">15:00</span>
+      <button class="tbtn2" onclick="toggleTimer('a3',15)">▶ Iniciar</button>
+      <button class="tbtn2 rst" onclick="resetTimer('a3',15)">↺ Reiniciar</button>
+    </div>
+
+    <div class="pmono">
+      <div class="pnum" aria-hidden="true">1</div>
+      <div style="flex:1;"><p class="plabel">Mi pregunta de investigación</p>
+      <textarea class="campo" placeholder="Escribe tu pregunta de investigación actual..." rows="2" aria-label="Pregunta de investigación"></textarea></div>
+    </div>
+
+    <div class="pmono">
+      <div class="pnum" aria-hidden="true">2</div>
+      <div style="flex:1;"><p class="plabel">Mi enfoque metodológico actual</p>
+      <textarea class="campo" placeholder="¿Qué metodología estás usando y por qué la elegiste?" rows="2" aria-label="Enfoque metodológico"></textarea></div>
+    </div>
+
+    <div class="pmono">
+      <div class="pnum" aria-hidden="true">3</div>
+      <div style="flex:1;"><p class="plabel">¿Podría la IAP responder mi pregunta?</p>
+      <textarea class="campo" placeholder="Analiza: ¿Hay una comunidad como sujeto? ¿El problema es sentido por esa comunidad? ¿Hay potencial transformador? ¿Qué cambiaría en tu pregunta si usaras IAP?" rows="4" aria-label="Análisis de aplicabilidad IAP"></textarea>
+      <button class="fbbtn" onclick="tfb('fbmono3')">🔍 Ver criterios de análisis</button>
+      <div id="fbmono3" class="fbbox">
+        <p><strong>La IAP aplica cuando:</strong> hay una comunidad con un problema que la afecta directamente; esa comunidad tiene capacidad y disposición de participar activamente; el objetivo no es solo describir sino transformar; y el conocimiento producido tiene utilidad directa para la comunidad.</p>
+        <p><strong>La IAP no aplica cuando:</strong> el objetivo es principalmente teórico o explicativo; la "comunidad" es en realidad una muestra de conveniencia; el tiempo disponible no permite una inserción real; o la naturaleza del problema no requiere participación colectiva para ser comprendido.</p>
+      </div>
+      </div>
+    </div>
+
+    <div class="pmono">
+      <div class="pnum" aria-hidden="true">4</div>
+      <div style="flex:1;"><p class="plabel">Si la IAP no aplica ahora: ¿para qué me sirve conocerla?</p>
+      <textarea class="campo" placeholder="¿En qué momentos de tu vida profesional como psicólogo/a podrías usar la IAP? ¿Con qué poblaciones? ¿En qué contextos?" rows="3" aria-label="Uso futuro de la IAP"></textarea></div>
+    </div>
+
+    <div class="pmono">
+      <div class="pnum" aria-hidden="true">5</div>
+      <div style="flex:1;"><p class="plabel">Los verbos de mis objetivos</p>
+      <textarea class="campo" placeholder="Revisa tus objetivos específicos: ¿incluyen verbos como 'transformar', 'co-construir', 'concientizar'? ¿O son más descriptivos: 'identificar', 'describir', 'analizar'? ¿Eso es coherente con tu metodología?" rows="3" aria-label="Análisis de objetivos"></textarea></div>
+    </div>
+
+    <div class="pmono">
+      <div class="pnum" aria-hidden="true">6</div>
+      <div style="flex:1;"><p class="plabel">En pareja: ¿quién tiene más potencial IAP?</p>
+      <textarea class="campo" placeholder="Comparen sus dos proyectos: ¿cuál tiene más elementos IAP? ¿Qué tendría que cambiar el otro? ¿El que 'no tiene potencial IAP' está eligiendo conscientemente una metodología diferente, o simplemente no lo ha pensado?" rows="3" aria-label="Comparación en pareja"></textarea></div>
+    </div>
+
+    <div class="nbox"><span class="ni">📌</span><p><strong>Para el parcial:</strong> Este ejercicio de comparar metodologías —cuándo aplica cada una, qué gana y qué pierde— es exactamente el tipo de análisis que voy a pedirles. No basta saber la definición de IAP: deben poder ubicarla en el mapa metodológico del semestre.</p></div>
+  </div>
+</div>
+</section>
+
+
+<!-- ===== MÓDULO 7: QUIZ ===== -->
+<section id="mod-7" class="mod" role="tabpanel">
+<div class="mhdr">
+  <span class="mtag tq">✅ Quiz · 10 preguntas</span>
+  <h2>Quiz de la sesión</h2>
+  <p class="mtime">⏱ 10-15 minutos · Individual</p>
+</div>
+
+<div class="qintro">
+  <h3>📋 Instrucciones</h3>
+  <p data-tts>Este quiz evalúa los contenidos trabajados en la sesión de hoy. Responde todas las preguntas antes de calificar: el resultado y la retroalimentación aparecen al final. <strong>La primera nota que obtengas quedará guardada</strong> en tu dispositivo. Puedes reiniciar el quiz, pero solo la primera nota se conserva.</p>
+  <div class="ngbox" id="ngbox"></div>
+</div>
+
+<div id="qcont">
+
+<div class="pq">
+  <p class="pqn">Pregunta 1 de 10</p>
+  <p class="pqt">¿A qué autor se le atribuye el origen del concepto de "investigación-acción" en la década de 1940?</p>
+  <div class="ops" role="radiogroup" aria-label="Opciones pregunta 1">
+    <label class="op"><input type="radio" name="q1" value="a"> <span>a) Paulo Freire</span></label>
+    <label class="op"><input type="radio" name="q1" value="b"> <span>b) Orlando Fals Borda</span></label>
+    <label class="op"><input type="radio" name="q1" value="c"> <span>c) Kurt Lewin</span></label>
+    <label class="op"><input type="radio" name="q1" value="d"> <span>d) Saul Alinsky</span></label>
+  </div>
+  <div id="qf1" class="qfb" role="alert" aria-live="polite"></div>
+</div>
+
+<div class="pq">
+  <p class="pqn">Pregunta 2 de 10</p>
+  <p class="pqt">Según Merino y Raya (citados en Bautista, 2021), ¿cuál es la diferencia fundamental entre la Investigación-Acción (IA) y la Investigación-Acción-Participativa (IAP)?</p>
+  <div class="ops" role="radiogroup" aria-label="Opciones pregunta 2">
+    <label class="op"><input type="radio" name="q2" value="a"> <span>a) La IA es cuantitativa y la IAP es cualitativa</span></label>
+    <label class="op"><input type="radio" name="q2" value="b"> <span>b) En la IAP la comunidad es sujeto activo que define el problema desde el inicio, no solo participante en la solución</span></label>
+    <label class="op"><input type="radio" name="q2" value="c"> <span>c) La IAP es más rigurosa porque usa más técnicas de recolección de datos</span></label>
+    <label class="op"><input type="radio" name="q2" value="d"> <span>d) La IA requiere más tiempo que la IAP para completarse</span></label>
+  </div>
+  <div id="qf2" class="qfb" role="alert" aria-live="polite"></div>
+</div>
+
+<div class="pq">
+  <p class="pqn">Pregunta 3 de 10</p>
+  <p class="pqt">¿Cuál es el ciclo fundamental que propone Lewin y que la IAP retoma como estructura metodológica básica?</p>
+  <div class="ops" role="radiogroup" aria-label="Opciones pregunta 3">
+    <label class="op"><input type="radio" name="q3" value="a"> <span>a) Observación → descripción → análisis → publicación</span></label>
+    <label class="op"><input type="radio" name="q3" value="b"> <span>b) Reflexión → acción → reflexión (espiral continua)</span></label>
+    <label class="op"><input type="radio" name="q3" value="c"> <span>c) Hipótesis → verificación → conclusión</span></label>
+    <label class="op"><input type="radio" name="q3" value="d"> <span>d) Diagnóstico → tratamiento → evaluación</span></label>
+  </div>
+  <div id="qf3" class="qfb" role="alert" aria-live="polite"></div>
+</div>
+
+<div class="pq">
+  <p class="pqn">Pregunta 4 de 10</p>
+  <p class="pqt">¿Qué concepto usa Orlando Fals Borda para describir la relación de compromiso profundo del investigador con la comunidad, que va más allá de la simple observación?</p>
+  <div class="ops" role="radiogroup" aria-label="Opciones pregunta 4">
+    <label class="op"><input type="radio" name="q4" value="a"> <span>a) Objetivación</span></label>
+    <label class="op"><input type="radio" name="q4" value="b"> <span>b) Inserción</span></label>
+    <label class="op"><input type="radio" name="q4" value="c"> <span>c) Triangulación</span></label>
+    <label class="op"><input type="radio" name="q4" value="d"> <span>d) Saturación</span></label>
+  </div>
+  <div id="qf4" class="qfb" role="alert" aria-live="polite"></div>
+</div>
+
+<div class="pq">
+  <p class="pqn">Pregunta 5 de 10</p>
+  <p class="pqt">En la IAP, ¿qué papel juega el saber popular de la comunidad en relación con el saber académico del investigador?</p>
+  <div class="ops" role="radiogroup" aria-label="Opciones pregunta 5">
+    <label class="op"><input type="radio" name="q5" value="a"> <span>a) El saber popular es útil solo como punto de partida, pero debe ser corregido por el saber académico</span></label>
+    <label class="op"><input type="radio" name="q5" value="b"> <span>b) El saber popular es irrelevante: lo que importa es el análisis experto</span></label>
+    <label class="op"><input type="radio" name="q5" value="c"> <span>c) El saber popular es igualmente legítimo y es fuente indispensable del conocimiento producido</span></label>
+    <label class="op"><input type="radio" name="q5" value="d"> <span>d) El saber popular sustituye completamente al saber académico en la IAP</span></label>
+  </div>
+  <div id="qf5" class="qfb" role="alert" aria-live="polite"></div>
+</div>
+
+<div class="pq">
+  <p class="pqn">Pregunta 6 de 10</p>
+  <p class="pqt">Según Bautista (2021), ¿cómo se construye la validez en la IAP?</p>
+  <div class="ops" role="radiogroup" aria-label="Opciones pregunta 6">
+    <label class="op"><input type="radio" name="q6" value="a"> <span>a) A través de muestras estadísticamente representativas</span></label>
+    <label class="op"><input type="radio" name="q6" value="b"> <span>b) Mediante la confiabilidad inter-jueces y la replicabilidad del estudio</span></label>
+    <label class="op"><input type="radio" name="q6" value="c"> <span>c) A través de la empatía y la participación plena de los sujetos con los fines de la investigación</span></label>
+    <label class="op"><input type="radio" name="q6" value="d"> <span>d) Por medio de la revisión de pares académicos externos a la comunidad</span></label>
+  </div>
+  <div id="qf6" class="qfb" role="alert" aria-live="polite"></div>
+</div>
+
+<div class="pq">
+  <p class="pqn">Pregunta 7 de 10</p>
+  <p class="pqt">¿Cuál es la primera fase del proceso IAP según el modelo de Bisquerra retomado por Bautista (2021)?</p>
+  <div class="ops" role="radiogroup" aria-label="Opciones pregunta 7">
+    <label class="op"><input type="radio" name="q7" value="a"> <span>a) Problematización colectiva del problema</span></label>
+    <label class="op"><input type="radio" name="q7" value="b"> <span>b) Diseño de instrumentos de recolección</span></label>
+    <label class="op"><input type="radio" name="q7" value="c"> <span>c) Redacción del informe final</span></label>
+    <label class="op"><input type="radio" name="q7" value="d"> <span>d) Selección de la muestra teórica</span></label>
+  </div>
+  <div id="qf7" class="qfb" role="alert" aria-live="polite"></div>
+</div>
+
+<div class="pq">
+  <p class="pqn">Pregunta 8 de 10</p>
+  <p class="pqt">¿Qué aporta la psicología de la liberación de Martín-Baró a la IAP, según Bautista (2021)?</p>
+  <div class="ops" role="radiogroup" aria-label="Opciones pregunta 8">
+    <label class="op"><input type="radio" name="q8" value="a"> <span>a) Un modelo estadístico más sofisticado para analizar datos comunitarios</span></label>
+    <label class="op"><input type="radio" name="q8" value="b"> <span>b) Una perspectiva que sitúa la psicología al servicio de las comunidades marginadas, saliendo del laboratorio</span></label>
+    <label class="op"><input type="radio" name="q8" value="c"> <span>c) El desarrollo de escalas psicométricas validadas para contextos latinoamericanos</span></label>
+    <label class="op"><input type="radio" name="q8" value="d"> <span>d) La creación de un método de entrevista estructurada para comunidades rurales</span></label>
+  </div>
+  <div id="qf8" class="qfb" role="alert" aria-live="polite"></div>
+</div>
+
+<div class="pq">
+  <p class="pqn">Pregunta 9 de 10</p>
+  <p class="pqt">¿Qué caracteriza a la IAP frente a otras metodologías cualitativas como la fenomenología o la etnografía?</p>
+  <div class="ops" role="radiogroup" aria-label="Opciones pregunta 9">
+    <label class="op"><input type="radio" name="q9" value="a"> <span>a) Usa mayor cantidad de técnicas de recolección de datos</span></label>
+    <label class="op"><input type="radio" name="q9" value="b"> <span>b) Requiere más tiempo en el campo que cualquier otra metodología</span></label>
+    <label class="op"><input type="radio" name="q9" value="c"> <span>c) Produce resultados más generalizables a otras poblaciones</span></label>
+    <label class="op"><input type="radio" name="q9" value="d"> <span>d) Su orientación transformadora: no solo busca comprender la realidad sino cambiarla con y para la comunidad</span></label>
+  </div>
+  <div id="qf9" class="qfb" role="alert" aria-live="polite"></div>
+</div>
+
+<div class="pq">
+  <p class="pqn">Pregunta 10 de 10</p>
+  <p class="pqt">Fals Borda usó el término "telepatía inducida" para describir un fenómeno histórico. ¿A qué se refiere?</p>
+  <div class="ops" role="radiogroup" aria-label="Opciones pregunta 10">
+    <label class="op"><input type="radio" name="q10" value="a"> <span>a) La emergencia simultánea de planteamientos similares sobre la investigación participativa en varios continentes en 1970, sin comunicación entre los grupos</span></label>
+    <label class="op"><input type="radio" name="q10" value="b"> <span>b) La capacidad de los investigadores IAP de anticipar los problemas de la comunidad antes de iniciar el trabajo de campo</span></label>
+    <label class="op"><input type="radio" name="q10" value="c"> <span>c) Un método para facilitar la comunicación entre grupos de diferentes regiones durante el trabajo de campo</span></label>
+    <label class="op"><input type="radio" name="q10" value="d"> <span>d) La tendencia de las comunidades a adivinar las hipótesis del investigador y actuar en consecuencia</span></label>
+  </div>
+  <div id="qf10" class="qfb" role="alert" aria-live="polite"></div>
+</div>
+
+</div>
+
+<div class="qacts">
+  <button class="bcal" id="bcal" onclick="calificar()">📊 Ver resultados y retroalimentación</button>
+  <button class="brein" id="brein" onclick="reiniciar()">↺ Reiniciar quiz</button>
+</div>
+<div class="resq" id="resq" role="alert" aria-live="polite">
+  <div class="rpunt" id="rpunt"></div>
+  <p class="rmsg" id="rmsg"></p>
+  <div id="rnota"></div>
+</div>
+</section>
+
+
+<!-- ===== MÓDULO 8: PARA CASA ===== -->
+<section id="mod-8" class="mod" role="tabpanel">
+<div class="mhdr">
+  <span class="mtag ta">🏠 Para casa</span>
+  <h2>Preguntas de estudio para el parcial</h2>
+  <p class="mtime">📅 El parcial es la próxima semana · Estas lecturas entran completas</p>
+</div>
+
+<div class="card cv">
+  <p data-tts>Estas no son actividades para entregar. Son preguntas de estudio: las que yo haría si quisiera asegurarme de entender los textos antes del parcial. Léelas antes de abrir los artículos, léelas mientras lees, y léelas de nuevo al terminar. Si puedes responderlas con precisión, estás listo/a.</p>
+  <p data-tts>Lo que trabajamos hoy en clase es el andamiaje conceptual. Los textos son la profundidad. Necesitas los dos para el parcial.</p>
+</div>
+
+<div class="pclect">
+  <div class="pclhdr">
+    <p class="pcf">📗 Lectura 1</p>
+    <h3>Bautista, N.P. (2021) — Capítulo 5: Investigación-Acción-Participativa</h3>
+    <p class="pca">Proceso de la investigación cualitativa. Manual Moderno</p>
+  </div>
+  <div class="pclbody">
+    <div class="pcq"><div class="pcn">1</div><p>¿Cuál es la diferencia que establece Bautista entre la Investigación-Acción (IA) y la Investigación-Acción-Participativa (IAP)? ¿Por qué esa diferencia es epistemológica y no solo metodológica?</p></div>
+    <div class="pcq"><div class="pcn">2</div><p>Explica el rol de Paulo Freire en la genealogía de la IAP. ¿Qué entiende Freire por "concientización" y cuáles son las cinco etapas del proceso participativo que describe?</p></div>
+    <div class="pcq"><div class="pcn">3</div><p>¿Cuáles son los cuatro presupuestos epistémicos de la IAP según Bautista? Explica cada uno con un ejemplo de su posible aplicación en psicología comunitaria.</p></div>
+    <div class="pcq"><div class="pcn">4</div><p>¿Qué distingue la "participación real" del "simulacro de participación"? Propón un ejemplo de cada uno en un contexto de investigación en psicología.</p></div>
+    <div class="pcq"><div class="pcn">5</div><p>Describe las seis fases del proceso IAP según el modelo de Bisquerra retomado por Bautista. ¿Por qué se habla de una "espiral" y no de una secuencia lineal?</p></div>
+    <div class="pcq"><div class="pcn">6</div><p>¿Cómo se construye la validez en la IAP? ¿En qué se diferencia de los criterios de validez de la investigación cuantitativa y de la investigación cualitativa convencional?</p></div>
+    <div class="pcq"><div class="pcn">7</div><p>¿Qué contribuciones hacen Ignacio Martín-Baró y Maritza Montero a la articulación entre la psicología y la IAP? ¿Qué es la psicología de la liberación y qué relación tiene con esta metodología?</p></div>
+  </div>
+</div>
+
+<div class="pclect">
+  <div class="pclhdr">
+    <p class="pcf">📘 Lectura 2</p>
+    <h3>Fals Borda, O. — Orígenes universales y retos actuales de la IAP</h3>
+    <p class="pca">Análisis Político — UNAL-IEPRI</p>
+  </div>
+  <div class="pclbody">
+    <div class="pcq"><div class="pcn">1</div><p>¿Por qué Fals Borda abandonó la academia institucional y fundó la Rosca de Investigación y Acción Social? ¿Qué ruptura epistemológica y ética representa esa decisión?</p></div>
+    <div class="pcq"><div class="pcn">2</div><p>¿Qué significa "telepatía inducida" según Fals Borda? ¿Qué nos dice ese fenómeno sobre la relación entre contexto histórico y producción de conocimiento?</p></div>
+    <div class="pcq"><div class="pcn">3</div><p>Explica el concepto de "inserción" en la IAP. ¿Qué exige del investigador? ¿En qué se diferencia de la observación participante de la etnografía convencional?</p></div>
+    <div class="pcq"><div class="pcn">4</div><p>¿Cómo entiende Fals Borda el rigor y la validez en la IAP? ¿Qué papel juegan el sentido común de los grupos locales y las vivencias compartidas en la construcción de ese rigor?</p></div>
+    <div class="pcq"><div class="pcn">5</div><p>¿Cuáles son los principales retos que Fals Borda identifica para el futuro de la IAP? Menciona al menos tres y explica por qué los considera desafíos no resueltos.</p></div>
+    <div class="pcq"><div class="pcn">6</div><p>¿Qué relación establece Fals Borda entre la IAP y la democracia participativa? ¿Por qué considera que la IAP tiene implicaciones políticas más allá de la metodología de investigación?</p></div>
+  </div>
+</div>
+
+<div class="card ct">
+  <h3>🔗 Pregunta integradora (para el parcial)</h3>
+  <div class="pcq" style="border:none;padding:0;">
+    <div class="pcn str">★</div>
+    <div>
+      <p><strong>¿En qué se diferencia la IAP de las otras metodologías cualitativas que estudiamos durante el semestre (grupos de discusión, etnografía, fenomenología, estudio de caso)?</strong></p>
+      <p style="font-size:.88rem;margin-top:.5rem;color:var(--suave);">Para responder bien esta pregunta necesitas: (a) describir las diferencias epistemológicas —qué concepción de conocimiento tiene cada una—; (b) describir las diferencias metodológicas —cómo se hace la investigación—; y (c) identificar cuándo la IAP sería la opción más coherente en psicología y cuándo no lo sería. Esta pregunta integra todo el semestre.</p>
+    </div>
+  </div>
+</div>
+
+<div class="card co" style="margin-top:1rem;">
+  <h3>📅 Recuerda</h3>
+  <ul style="font-size:.92rem;line-height:1.9;padding-left:1.2rem;">
+    <li>El parcial es la <strong>próxima semana</strong>. Estas dos lecturas entran completas.</li>
+    <li>No tienes que memorizar: tienes que <strong>entender y saber explicar</strong>.</li>
+    <li>Lee con las preguntas de estudio en mano: tu lectura será mucho más eficiente.</li>
+    <li>Si algo no entiendes al leer, escríbelo y pregúntame. Aún estamos a tiempo.</li>
+    <li>Esta herramienta queda disponible para que repases la teoría cuando quieras.</li>
+  </ul>
+</div>
+</section>
+
+</main>
+
+<footer>
+  <p>Seminario de Investigación II &middot; Séptimo semestre &middot; Psicología &middot; UdeC Facatativá &middot; 2025</p>
+  <p style="margin-top:.3rem;font-size:.75rem;">Pedro Luis Ravelo Rivera &middot; <a href="mailto:pravelo@ucundinamarca.edu.co">pravelo@ucundinamarca.edu.co</a></p>
+</footer>
+
+<script>
+// ─── TABS ───
+const tbns = document.querySelectorAll('.tbtn');
+const mods = document.querySelectorAll('.mod');
+
+function activar(i) {
+  tbns.forEach((b,j) => { b.classList.toggle('active',i===j); b.setAttribute('aria-selected',i===j?'true':'false'); });
+  mods.forEach((m,j) => m.classList.toggle('activo',i===j));
+  tbns[i].scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+}
+tbns.forEach((b,i) => {
+  b.addEventListener('click', () => activar(i));
+  b.addEventListener('keydown', e => {
+    if(e.key==='ArrowRight'){e.preventDefault();activar(Math.min(i+1,tbns.length-1));}
+    if(e.key==='ArrowLeft'){e.preventDefault();activar(Math.max(i-1,0));}
+    if(e.key==='Home'){e.preventDefault();activar(0);}
+    if(e.key==='End'){e.preventDefault();activar(tbns.length-1);}
+  });
+});
+
+// ─── ACORDEONES ───
+document.querySelectorAll('.abtn').forEach(b => {
+  b.addEventListener('click', () => {
+    const exp = b.getAttribute('aria-expanded')==='true';
+    const p = document.getElementById(b.getAttribute('aria-controls'));
+    b.setAttribute('aria-expanded', !exp);
+    if(p) p.classList.toggle('open', !exp);
+  });
+});
+
+// ─── FEEDBACK TOGGLE ───
+function tfb(id) {
+  const box = document.getElementById(id);
+  if(!box) return;
+  const vis = box.classList.toggle('vis');
+  const btn = document.querySelector('button[onclick="tfb(\''+id+'\')"]');
+  if(btn) {
+    btn.setAttribute('aria-expanded', vis ? 'true' : 'false');
+    const isRef = btn.textContent.includes('reflexión');
+    const isCri = btn.textContent.includes('criterios') || btn.textContent.includes('Criterios');
+    if(vis) {
+      btn.textContent = isRef ? '🔒 Ocultar reflexión' : isCri ? '🔒 Ocultar criterios' : '🔒 Ocultar análisis';
+    } else {
+      btn.textContent = isRef ? '🔍 Ver reflexión metodológica' : isCri ? '🔍 Ver criterios de análisis' : '🔍 Ver análisis';
+    }
+  }
+}
+
+// ─── TIMERS ───
+const tms = {};
+function toggleTimer(id, mins) {
+  if(tms[id] && tms[id].running) {
+    clearInterval(tms[id].iv);
+    tms[id].running = false;
+    document.querySelector('[onclick="toggleTimer(\''+id+'\','+mins+')"]').textContent = '▶ Continuar';
+  } else {
+    if(!tms[id]) tms[id] = {rem: mins*60, running:false};
+    tms[id].running = true;
+    document.querySelector('[onclick="toggleTimer(\''+id+'\','+mins+')"]').textContent = '⏸ Pausar';
+    tms[id].iv = setInterval(() => {
+      tms[id].rem--;
+      const d = document.getElementById('td-'+id);
+      if(d) { const m=Math.floor(tms[id].rem/60), s=tms[id].rem%60; d.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`; }
+      if(tms[id].rem <= 0) {
+        clearInterval(tms[id].iv); tms[id].running=false;
+        const d=document.getElementById('td-'+id); if(d) d.textContent='¡Tiempo!';
+        const b=document.querySelector('[onclick="toggleTimer(\''+id+'\','+mins+')"]'); if(b) b.textContent='✅ Fin';
+      }
+    }, 1000);
+  }
+}
+function resetTimer(id, mins) {
+  if(tms[id]) { clearInterval(tms[id].iv); tms[id].rem=mins*60; tms[id].running=false; }
+  const d=document.getElementById('td-'+id); if(d) d.textContent=`${String(mins).padStart(2,'0')}:00`;
+  const b=document.querySelector('[onclick="toggleTimer(\''+id+'\','+mins+')"]'); if(b) b.textContent='▶ Iniciar';
+}
+
+// ─── TTS ───
+const sy = window.speechSynthesis;
+document.querySelectorAll('[data-tts]').forEach(el => {
+  el.setAttribute('tabindex','0');
+  el.setAttribute('role','button');
+  el.setAttribute('aria-label','Toca para escuchar este texto');
+  const fn = () => {
+    if(sy.speaking && el.classList.contains('hablando')) { sy.cancel(); el.classList.remove('hablando'); return; }
+    sy.cancel();
+    document.querySelectorAll('.hablando').forEach(e=>e.classList.remove('hablando'));
+    const u = new SpeechSynthesisUtterance(el.textContent.trim());
+    u.lang='es-CO'; u.rate=0.95; el.classList.add('hablando');
+    u.onend=()=>el.classList.remove('hablando');
+    u.onerror=()=>el.classList.remove('hablando');
+    sy.speak(u);
+  };
+  el.addEventListener('click', fn);
+  el.addEventListener('keydown', e => { if(e.key==='Enter'||e.key===' '){e.preventDefault();fn();} });
+});
+
+// ─── QUIZ ───
+const QKEY = 'iap_s13_quiz_v1';
+const RESP = {q1:'c',q2:'b',q3:'b',q4:'b',q5:'c',q6:'c',q7:'a',q8:'b',q9:'d',q10:'a'};
+const FB = {
+  q1:  {ok:'✅ Correcto. Kurt Lewin es considerado el padre de la investigación-acción, con sus trabajos en psicología social de los años 40.',
+         mal:'❌ No es correcto. Lewin es el pionero de la investigación-acción en los años 40. Freire y Fals Borda vinieron después y añadieron la dimensión participativa y crítica.'},
+  q2:  {ok:'✅ Correcto. En la IAP, la comunidad no es solo participante en la solución: define el problema desde el inicio y tiene poder sobre todo el proceso.',
+         mal:'❌ Incorrecto. La distinción no tiene que ver con cuantitativa/cualitativa ni con el tiempo. La diferencia clave es el rol de la comunidad: sujeto activo en la IAP, participante en la solución en la IA.'},
+  q3:  {ok:'✅ Correcto. Lewin propuso la espiral reflexión-acción-reflexión como estructura metodológica que la IAP adoptó y expandió.',
+         mal:'❌ No es correcto. El ciclo fundamental de Lewin es reflexión → acción → reflexión, una espiral continua donde el conocimiento y la acción se retroalimentan permanentemente.'},
+  q4:  {ok:'✅ Correcto. La "inserción" es el concepto de Fals Borda para describir el compromiso profundo del investigador con la comunidad: compartir su vida cotidiana, sus luchas, sus tiempos.',
+         mal:'❌ Incorrecto. El concepto es "inserción": no es solo visitar sino integrarse genuinamente a la comunidad, compartir sus espacios, tiempos y luchas.'},
+  q5:  {ok:'✅ Correcto. El saber popular es una fuente igualmente legítima de conocimiento en la IAP. No es un dato ingenuo que deba ser "corregido" por la ciencia.',
+         mal:'❌ Incorrecto. La IAP reconoce al saber popular como igualmente legítimo al saber académico. Fals Borda es explícito: el rigor se mide por el sentido común de los grupos locales y sus vivencias.'},
+  q6:  {ok:'✅ Correcto. La validez en la IAP se construye a través de la empatía y la participación plena de los sujetos con los fines de la investigación.',
+         mal:'❌ Incorrecto. La IAP tiene criterios de validez propios: empatía y participación plena de los sujetos. Los criterios estadísticos y la revisión por pares externos son de otras tradiciones.'},
+  q7:  {ok:'✅ Correcto. La primera fase es la problematización: la identificación y definición colectiva del problema con la comunidad.',
+         mal:'❌ Incorrecto. La primera fase es la problematización: el problema emerge del diálogo con la comunidad, no del diseño de instrumentos.'},
+  q8:  {ok:'✅ Correcto. Martín-Baró planteó que la psicología latinoamericana debía salir de los laboratorios y ponerse al servicio de las comunidades marginadas.',
+         mal:'❌ Incorrecto. La contribución de Martín-Baró fue política y ética: situar la psicología al servicio de las comunidades más necesitadas, saliendo de los marcos académicos convencionales.'},
+  q9:  {ok:'✅ Correcto. La orientación transformadora es lo que distingue fundamentalmente a la IAP: no solo busca comprender la realidad sino cambiarla con y para la comunidad.',
+         mal:'❌ Incorrecto. La característica distintiva de la IAP no es técnica (más instrumentos, más tiempo) sino su compromiso explícito con la transformación de la realidad.'},
+  q10: {ok:'✅ Correcto. "Telepatía inducida" describe la emergencia simultánea de la IAP en varios continentes en 1970, sin que los grupos se conocieran entre sí.',
+         mal:'❌ Incorrecto. "Telepatía inducida" describe la emergencia simultánea y paralela de planteamientos similares sobre la investigación participativa en varios continentes en 1970, sin comunicación entre los grupos.'}
+};
+
+function calificar() {
+  let ok=0, all=true;
+  ['q1','q2','q3','q4','q5','q6','q7','q8','q9','q10'].forEach(q => {
+    const sel = document.querySelector('input[name="'+q+'"]:checked');
+    if(!sel){all=false;return;}
+    const cor = RESP[q]; const es = sel.value===cor;
+    if(es) ok++;
+    document.querySelectorAll('input[name="'+q+'"]').forEach(inp => {
+      const lbl = inp.closest('label');
+      if(inp.value===cor) lbl.classList.add('ok');
+      else if(inp===sel&&!es) lbl.classList.add('mal');
+      inp.disabled=true;
+    });
+    const fb=document.getElementById('qf'+q.slice(1));
+    if(fb){fb.textContent=es?FB[q].ok:FB[q].mal;fb.className='qfb vis '+(es?'ok':'mal');}
+  });
+  if(!all){alert('Por favor responde todas las preguntas antes de calificar.');return;}
+
+  const pct=Math.round(ok/10*100);
+  let msg='';
+  if(pct>=90) msg='🌟 ¡Excelente! Dominas los conceptos clave de la IAP. Vas muy bien para el parcial.';
+  else if(pct>=80) msg='✅ ¡Muy bien! Tienes una comprensión sólida. Repasa los conceptos en los que fallaste.';
+  else if(pct>=60) msg='📚 Bien, pero hay conceptos importantes que necesitas reforzar antes del parcial.';
+  else if(pct>=40) msg='⚠️ Debes repasar con cuidado las lecturas. Presta atención a los presupuestos epistémicos y la diferencia IA-IAP.';
+  else msg='🔴 Es importante que leas los textos con detenimiento. Usa las preguntas de estudio del módulo "Para casa" como guía.';
+
+  document.getElementById('rpunt').textContent=`${ok}/10 — ${pct}%`;
+  document.getElementById('rmsg').textContent=msg;
+
+  const ex=localStorage.getItem(QKEY);
+  let html='';
+  if(!ex){
+    const dat={score:pct,correctas:ok,date:new Date().toLocaleDateString('es-CO',{day:'2-digit',month:'long',year:'numeric'})};
+    localStorage.setItem(QKEY,JSON.stringify(dat));
+    html='<span class="rnota">🔒 Primera nota guardada: <strong>'+pct+'%</strong> ('+dat.date+')</span>';
+  } else {
+    const dat=JSON.parse(ex);
+    html='<span class="rnota">📌 Tu primera nota fue: <strong>'+dat.score+'%</strong> ('+dat.date+') · Esta es tu nota registrada.</span>';
+  }
+  document.getElementById('rnota').innerHTML=html;
+  document.getElementById('resq').classList.add('vis');
+  document.getElementById('resq').scrollIntoView({behavior:'smooth',block:'nearest'});
+  document.getElementById('bcal').disabled=true;
+  document.getElementById('brein').style.display='inline-block';
+}
+
+function reiniciar() {
+  document.querySelectorAll('label.op').forEach(l=>l.classList.remove('ok','mal'));
+  document.querySelectorAll('input[type=radio]').forEach(i=>{i.checked=false;i.disabled=false;});
+  document.querySelectorAll('.qfb').forEach(f=>{f.className='qfb';f.textContent='';});
+  document.getElementById('resq').classList.remove('vis');
+  document.getElementById('bcal').disabled=false;
+  document.getElementById('brein').style.display='none';
+}
+
+(function checkNota(){
+  const ex=localStorage.getItem(QKEY);
+  const ng=document.getElementById('ngbox');
+  if(ex&&ng){
+    const d=JSON.parse(ex);
+    ng.style.display='block';
+    ng.innerHTML='📌 Ya tienes una nota guardada en este dispositivo: <strong>'+d.score+'%</strong> obtenida el '+d.date+'. Puedes hacer el quiz de nuevo, pero tu nota registrada no cambiará.';
+  }
+})();
+</script>
+</body>
+</html>
