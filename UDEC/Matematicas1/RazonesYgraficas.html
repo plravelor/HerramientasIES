@@ -896,7 +896,7 @@ body{font-family:var(--ff-b);color:var(--ink);background:var(--bg);font-size:14.
 <div class="svg-wrap"><div class="svg-title">Fondos de Medicare 2004–2013 — Miller §1.4 Ej.6</div><svg id="lineMed" viewBox="0 0 400 200" style="width:100%;max-width:400px;display:block;margin:0 auto;"></svg></div>
 <div class="steps-box" id="sr_med">
   <div class="step show" id="med_s1"><div class="step-n">Tipo A: Leer un valor (método X→curva→Y)</div><p class="p" style="font-size:.84rem;">Localiza el año en X → vertical hasta la curva → horizontal hasta Y → lee el valor. Ej: fondos 2005 ≈ $25 mil millones.</p><div class="step-eq">X → ↑ → curva → ← → Y</div></div>
-  <div class="step" id="med_s2"><div class="step-n">Tipo B: Identificar tendencias (pendiente)</div><p class="p" style="font-size:.84rem;">¿Dónde sube la curva? Solo de 2004 a 2005. Luego desciente continuamente hasta 2013.</p></div>
+  <div class="step" id="med_s2"><div class="step-n">Tipo B: Identificar tendencias (pendiente)</div><p class="p" style="font-size:.84rem;">¿Dónde sube la curva? Solo de 2004 a 2005. Luego desciende continuamente hasta 2013.</p></div>
   <div class="step" id="med_s3"><div class="step-n">Tipo C: Proyecciones — cruce del cero</div><p class="p" style="font-size:.84rem;">¿En qué año cruza la curva la línea del 0? → En 2011, primer déficit proyectado.</p></div>
 </div>
 <div class="brow"><button class="btn btn-out" id="btn_med" onclick="nextSR('med',3)">Ver tipo de pregunta 1</button></div>
@@ -1048,7 +1048,7 @@ body{font-family:var(--ff-b);color:var(--ink);background:var(--bg);font-size:14.
   <div class="coop-hdr"><span class="coop-badge">AC1</span><div class="coop-title">El Consultor de Precios — Proporciones en el mercado</div><span class="coop-time">⏱ 18 min</span></div>
   <div class="coop-marco"><strong>Johnson &amp; Johnson (1994):</strong> Interdependencia positiva de recursos — cada integrante tiene datos que los demás no tienen.</div>
   <div class="roles"><span class="role">🧮 Calculista</span><span class="role">🔍 Verificador</span><span class="role">📊 Analista</span><span class="role">🎤 Vocero</span></div>
-  <div class="coop-step"><div class="cs-n">1</div><div><strong>Individual (5 min):</strong> El docente asigna UN proveedor por integrante. Calcula el precio unitario de cada producto en tu proveedor.</div></div>
+  <div class="coop-step"><div class="cs-n">1</div><div><strong>Individual (5 min):</strong> Cada integrante toma UN proveedor. Calcula el precio unitario de cada producto en tu proveedor.</div></div>
   <table class="tbl" style="font-size:.78rem;">
     <tr><th>Producto</th><th>Prov. A</th><th>Prov. B</th><th>Prov. C</th><th>✓ Mejor</th></tr>
     <tr><td class="l">Café 500g</td><td>$9.800</td><td>$9.200</td><td>$10.100</td><td id="ac1_a">—</td></tr>
@@ -1059,7 +1059,7 @@ body{font-family:var(--ff-b);color:var(--ink);background:var(--bg);font-size:14.
   <div class="brow"><button class="btn btn-out-p" onclick="calcAC1()">Ver canasta óptima</button></div>
   <div id="ac1res" style="display:none;margin-top:8px;"></div>
   <div class="coop-step"><div class="cs-n">2</div><div><strong>Grupal (8 min):</strong> ¿Cuál proveedor conviene por producto? ¿Si compran todo en uno, cuál minimiza el total? Usando proporción: si necesitan 30 canastas para un evento, ¿cuál es el presupuesto?</div></div>
-  <div class="coop-step"><div class="cs-n">3</div><div><strong>Plenaria (5 min):</strong> El Vocero presenta la recomendación con la proporción para las 30 canastas.</div></div>
+  <div class="coop-step"><div class="cs-n">3</div><div><strong>Plenaria (5 min):</strong> El vocero del grupo presenta la recomendación con la proporción para las 30 canastas.</div></div>
   <div class="coop-meta"><strong>Metacognición (Dunlosky, 2013):</strong> ¿Cuándo en tu vida cotidiana usas o podrías usar proporciones para tomar decisiones de compra?</div>
 </div>
 </div></div>
@@ -1115,7 +1115,7 @@ body{font-family:var(--ff-b);color:var(--ink);background:var(--bg);font-size:14.
   </div>
   <div class="coop-step"><div class="cs-n">2</div><div><strong>Grupal (10 min):</strong> Fiscal acusa errores. Defensor argumenta. Analista calcula el valor correcto. Redactor escribe el titular corregido.</div></div>
   <div class="coop-step"><div class="cs-n">3</div><div><strong>Plenaria (6 min):</strong> Veredicto del grupo de cada titular.</div></div>
-  <div class="coop-meta"><strong>Para el docente:</strong> A: error → 1.400/12.750×100 = 11%. B: correcto — sí existe >100%. C: error — $100→$65→$58.50; descuento real = 41.5%. D: correcto — x = 250 estudiantes.</div>
+  <div class="coop-meta"><strong>Claves para verificar:</strong> A: error → 1.400/12.750×100 = 11%. B: correcto — sí existe >100%. C: error — $100→$65→$58.50; descuento real = 41.5%. D: correcto — x = 250 estudiantes.</div>
 </div>
 </div></div>
 
@@ -1163,7 +1163,58 @@ body{font-family:var(--ff-b);color:var(--ink);background:var(--bg);font-size:14.
   <div class="coop-step"><div class="cs-n">1</div><div><strong>Individual (6 min):</strong> Cada integrante toma 1-2 materias. Despeja NF mínimo: 0.40×P1 + 0.40×P2 + 0.20×x ≥ 3.0 → x ≥ ?</div></div>
   <div class="coop-step"><div class="cs-n">2</div><div><strong>Grupal (10 min):</strong> a) NF mínimos de cada materia. b) ¿Cumple la beca con esas notas? c) Regla de tres: examen dura 90 min, 30 preguntas, Camilo estudia 45 min por tema, 8 temas → ¿cuántas horas totales?</div></div>
   <div class="coop-step"><div class="cs-n">3</div><div><strong>Plenaria (6 min):</strong> Presentador expone notas mínimas, P.P. resultante, ¿cumple beca? y recomendación.</div></div>
-  <div class="coop-meta"><strong>Para el docente:</strong> Estadística: 0.40×3.2+0.40×3.8+0.20x≥3.0 → 2.8+0.20x≥3.0 → x≥1.0. Metodología: 2.2+0.20x≥3.0 → x≥4.0 (¡difícil!).</div>
+  <div class="coop-meta"><strong>Claves para verificar:</strong> Estadística: 0.40×3.2+0.40×3.8+0.20x≥3.0 → 2.8+0.20x≥3.0 → x≥1.0. Metodología: 2.2+0.20x≥3.0 → x≥4.0 (¡difícil!).</div>
+</div>
+</div></div>
+
+
+<!-- T11: QUIZ -->
+<div class="mod" id="t11"><div class="wrap">
+<div class="badges"><span class="badge badge-coop">📝 Autoevaluación</span><span class="badge badge-miller">15 preguntas</span></div>
+<div class="section-title">Quiz de cierre — preparación Parcial 2</div>
+<div class="section-sub">Responde todas las preguntas. Al enviar, verás retroalimentación pregunta por pregunta.</div>
+<div class="qz-hdr"><div><div class="qz-lbl">Modo práctica</div><div class="qz-sub">Una sola respuesta por pregunta · puedes revisar las pestañas antes de enviar</div></div><span class="badge badge-coop">Sin nota</span></div>
+<div id="qzContainer"></div>
+<div class="brow"><button class="btn btn-amber" id="btnQZ" onclick="submitQZ()" disabled>Enviar respuestas y ver retroalimentación</button></div>
+<div class="score-box" id="scorebox">
+  <div class="card-label">Resultado</div>
+  <div class="section-title" style="margin-bottom:8px;">Puntaje del intento</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0;">
+    <div class="callout callout-navy"><strong>Primer intento:</strong><br><span id="sc1">—</span></div>
+    <div class="callout callout-green"><strong>Último intento:</strong><br><span id="sc2">—</span></div>
+  </div>
+  <div class="callout callout-purple" id="scmsg">—</div>
+</div>
+</div></div>
+
+<!-- T12: CASA -->
+<div class="mod" id="t12"><div class="wrap">
+<div class="badges"><span class="badge badge-miller">🏠 Trabajo en casa</span><span class="badge badge-navy">Antes del Parcial 2</span></div>
+<div class="section-title">Para estudiar después de la sesión</div>
+<div class="section-sub">Prioriza práctica breve, verificación de errores y lectura crítica de gráficas.</div>
+<div class="hw">
+  <div class="hw-day">1</div>
+  <div class="hw-title">Repasa las gráficas de Miller</div>
+  <ul class="hw-list">
+    <li><span class="hw-ref">§10.1</span> Explica con tus palabras cuándo usar barras, histograma, circular, lineal, polígono y tallo-hoja.</li>
+    <li><span class="hw-ref">§1.4</span> Revisa una gráfica de una noticia y aplica la checklist: ejes, escala, período, proporciones y causalidad.</li>
+  </ul>
+</div>
+<div class="hw">
+  <div class="hw-day">2</div>
+  <div class="hw-title">Practica razones, proporciones y porcentajes</div>
+  <ul class="hw-list">
+    <li><span class="hw-ref">§5.5</span> Haz 5 ejercicios de porcentaje: aumento, disminución, descuento y parte de un total.</li>
+    <li><span class="hw-ref">§6.3</span> Haz 5 ejercicios de regla de tres directa y verifica siempre las unidades antes de dividir.</li>
+  </ul>
+</div>
+<div class="hw">
+  <div class="hw-day">3</div>
+  <div class="hw-title">Cierra con el quiz</div>
+  <ul class="hw-list">
+    <li>Vuelve a la pestaña 📝 Quiz, responde sin mirar apuntes y revisa solo las preguntas que fallaste.</li>
+    <li>En cada error, escribe qué confundiste: tipo de dato, escala de gráfica, proporción, porcentaje o regla de tres.</li>
+  </ul>
 </div>
 </div></div>
 
@@ -1191,7 +1242,9 @@ const SURVEYS={
     opts:['Cafetería','Biblioteca','Bienestar Univ.','Salas de cómputo','Áreas verdes','Ninguno'],
     counts:[17,11,6,9,8,2],n:20}
 };
-let activeSurvey=localStorage.getItem('cls10v4_survey')||null;
+function storageGet(key){try{return window.localStorage.getItem(key);}catch(e){return null;}}
+function storageSet(key,value){try{window.localStorage.setItem(key,value);}catch(e){}}
+let activeSurvey=storageGet('cls10v4_survey')||null;
 const tempCounts={};
 
 // ===== TABS =====
@@ -1205,7 +1258,9 @@ document.querySelectorAll('.tab').forEach(t=>{
     document.querySelectorAll('.mod').forEach(x=>x.classList.remove('on'));
     t.classList.add('on');
     const mid=t.dataset.mod;
-    document.getElementById(mid).classList.add('on');
+    const modEl=document.getElementById(mid);
+    if(!modEl)return;
+    modEl.classList.add('on');
     const sec=tabSec[mid]||'a';
     const lbl=document.getElementById('secLabel');
     lbl.className='sec-label '+(sec==='b'?'sl-b':sec==='q'?'sl-q':'sl-a');
@@ -1220,7 +1275,7 @@ function tog(hdr){hdr.closest('.acc').classList.toggle('open');}
 
 // ===== SURVEY FUNCTIONS =====
 function pickSurvey(id){
-  activeSurvey=id;localStorage.setItem('cls10v4_survey',id);
+  activeSurvey=id;storageSet('cls10v4_survey',id);
   const s=SURVEYS[id];tempCounts[id]=[...s.counts];
   document.querySelectorAll('.survey-btn').forEach(b=>b.classList.toggle('sel',b.dataset.sid===id));
   const conf=document.getElementById('surveyConfirm');
@@ -1377,7 +1432,26 @@ function chkT2(inp,rid){const v=parseFloat(inp.value);if(isNaN(v))return;const o
 
 // ===== STEP REVEAL =====
 const SRS={};
-function nextSR(id,total){if(!SRS[id])SRS[id]=0;SRS[id]++;const el=document.getElementById(id+'_s'+SRS[id]);if(el)el.classList.add('show');const btn=document.getElementById('btn_'+id);if(btn)btn.textContent=SRS[id]>=total?'✓ Completo':'Ver paso '+(SRS[id]+1);}
+function nextSR(id,total){
+  const box=document.getElementById('sr_'+id);
+  if(SRS[id]===undefined){SRS[id]=box?box.querySelectorAll('.step.show').length:0;}
+  if(SRS[id]>=total)return;
+  SRS[id]++;
+  const el=document.getElementById(id+'_s'+SRS[id]);
+  if(el)el.classList.add('show');
+  const btn=document.getElementById('btn_'+id);
+  if(btn)btn.textContent=SRS[id]>=total?'✓ Completo':'Ver paso '+(SRS[id]+1);
+}
+function initStepButtons(){
+  document.querySelectorAll('.steps-box[id^="sr_"]').forEach(box=>{
+    const id=box.id.replace('sr_','');
+    const total=box.querySelectorAll('.step').length;
+    const shown=box.querySelectorAll('.step.show').length;
+    SRS[id]=shown;
+    const btn=document.getElementById('btn_'+id);
+    if(btn)btn.textContent=shown>=total?'✓ Completo':'Ver paso '+(shown+1);
+  });
+}
 
 // ===== STATIC CHARTS =====
 function drawH1(){const s=document.getElementById('hist1');if(!s)return;const d=[4,7,6,3,3,2];const W=380,H=185,ml=40,mr=8,mt=10,mb=40,cw=W-ml-mr,ch=H-mt-mb,bw=cw/d.length,mx=8;const cols=['#1B3A6B','#1B3A6B','#0A6E5F','#0A6E5F','#A84A00','#A84A00'];let o='';[0,2,4,6,8].forEach(v=>{const y=mt+ch-v*(ch/mx);o+=`<line x1="${ml}" y1="${y}" x2="${W-mr}" y2="${y}" stroke="#E6E4DC" stroke-width="${v===0?1.5:.7}"/><text x="${ml-4}" y="${y+4}" text-anchor="end" font-size="9" fill="#B0B2CC">${v}</text>`;});d.forEach((f,i)=>{const x=ml+i*bw,bh=f*(ch/mx),y=mt+ch-bh;o+=`<rect x="${x}" y="${y}" width="${bw-1}" height="${bh}" fill="${cols[i]}" opacity=".85" rx="1"/><text x="${x+bw/2}" y="${y-3}" text-anchor="middle" font-size="9" fill="${cols[i]}">${f}</text><text x="${x+bw/2}" y="${H-mb+16}" text-anchor="middle" font-size="9" fill="#767898">${i+1}</text>`;});s.innerHTML=o;}
@@ -1389,8 +1463,76 @@ function buildPie(){const pcts=[30,25,15,10,10,10],cols=['#1B3A6B','#0A6E5F','#A
 // ===== drawBarMoto continues below (was split) =====
 function drawBarMoto(){const s=document.getElementById('barMoto');if(!s)return;const d=[{y:1998,v:15},{y:1999,v:22},{y:2000,v:40},{y:2001,v:45},{y:2002,v:60},{y:2003,v:70},{y:2004,v:85}];const W=390,H=190,ml=42,mr=8,mt=10,mb=44,cw=W-ml-mr,ch=H-mt-mb,bw=(cw/d.length)*.62,gap=(cw/d.length)*.38,mx=90;let o='';[0,20,40,60,80].forEach(v=>{const y=mt+ch-v*(ch/mx);o+=`<line x1="${ml}" y1="${y}" x2="${W-mr}" y2="${y}" stroke="#E6E4DC" stroke-width="${v===0?1.5:.7}"/><text x="${ml-4}" y="${y+4}" text-anchor="end" font-size="8.5" fill="#B0B2CC">${v}k</text>`;});const l50=mt+ch-50*(ch/mx);o+=`<line x1="${ml}" y1="${l50}" x2="${W-mr}" y2="${l50}" stroke="#A84A00" stroke-width="1" stroke-dasharray="5,3" opacity=".7"/>`;d.forEach((p,i)=>{const x=ml+i*(cw/d.length)+gap/2,bh=p.v*(ch/mx),y=mt+ch-bh,col=p.v>50?'#A84A00':'#1B3A6B';o+=`<rect x="${x}" y="${y}" width="${bw}" height="${bh}" fill="${col}" opacity=".85" rx="2"/><text x="${x+bw/2}" y="${y-3}" text-anchor="middle" font-size="8.5" fill="${col}">${p.v}k</text><text x="${x+bw/2}" y="${H-mb+16}" text-anchor="middle" font-size="8.5" fill="#767898">${p.y}</text>`;});s.innerHTML=o;}
 
+
+function drawLineCheri(){
+  const s=document.getElementById('lineCheri');if(!s)return;
+  const W=400,H=205,ml=44,mr=72,mt=14,mb=42,cw=W-ml-mr,ch=H-mt-mb;
+  const sem=[1,2,3,4,5,6,7,8];
+  const alimentos=[35,33,31,29,27,25,23,22];
+  const renta=[20,23,26,29,32,35,38,41];
+  const libros=[18,17,16,15,14,13,12,11];
+  const mn=0,mx=45;
+  const xp=i=>ml+i*(cw/(sem.length-1));
+  const yp=v=>mt+ch-(v-mn)*(ch/(mx-mn));
+  const series=[
+    {name:'Alimentos',data:alimentos,col:'#1B3A6B'},
+    {name:'Renta',data:renta,col:'#A84A00'},
+    {name:'Libros',data:libros,col:'#0A6E5F'}
+  ];
+  let o='';
+  [0,10,20,30,40].forEach(v=>{const y=yp(v);o+=`<line x1="${ml}" y1="${y}" x2="${W-mr}" y2="${y}" stroke="#E6E4DC" stroke-width="${v===0?1.5:.7}"/><text x="${ml-5}" y="${y+4}" text-anchor="end" font-size="9" fill="#B0B2CC">${v}%</text>`;});
+  sem.forEach((v,i)=>{o+=`<text x="${xp(i)}" y="${H-mb+18}" text-anchor="middle" font-size="9" fill="#767898">${v}</text>`;});
+  o+=`<text x="${ml+cw/2}" y="${H-5}" text-anchor="middle" font-size="9" fill="#767898">Semestre</text><text x="14" y="${mt+ch/2}" text-anchor="middle" font-size="9" fill="#767898" transform="rotate(-90 14 ${mt+ch/2})">% del gasto</text>`;
+  series.forEach(ser=>{
+    const pts=ser.data.map((v,i)=>`${xp(i)},${yp(v)}`).join(' ');
+    o+=`<polyline points="${pts}" fill="none" stroke="${ser.col}" stroke-width="2.3" stroke-linejoin="round"/>`;
+    ser.data.forEach((v,i)=>{o+=`<circle cx="${xp(i)}" cy="${yp(v)}" r="3" fill="${ser.col}"/>`;});
+  });
+  const cx=xp(3),cy=yp(29);
+  o+=`<circle cx="${cx}" cy="${cy}" r="5" fill="#fff" stroke="#4A1E7A" stroke-width="2"/><text x="${cx+7}" y="${cy-7}" font-size="9" fill="#4A1E7A" font-weight="700">Cruce: semestre 4</text>`;
+  const lx=W-mr+10,ly=24;
+  series.forEach((ser,i)=>{o+=`<line x1="${lx}" y1="${ly+i*18}" x2="${lx+16}" y2="${ly+i*18}" stroke="${ser.col}" stroke-width="2.5"/><circle cx="${lx+8}" cy="${ly+i*18}" r="3" fill="${ser.col}"/><text x="${lx+21}" y="${ly+i*18+4}" font-size="9" fill="#1A1C2C">${ser.name}</text>`;});
+  s.innerHTML=o;
+}
+
+function drawMed(){
+  const s=document.getElementById('lineMed');if(!s)return;
+  const W=400,H=200,ml=46,mr=16,mt=12,mb=42,cw=W-ml-mr,ch=H-mt-mb;
+  const years=[2004,2005,2006,2007,2008,2009,2010,2011,2012,2013];
+  const vals=[15,25,18,12,7,4,1,-2,-5,-8];
+  const mn=-10,mx=30;
+  const xp=i=>ml+i*(cw/(years.length-1));
+  const yp=v=>mt+ch-(v-mn)*(ch/(mx-mn));
+  let o='';
+  [-10,0,10,20,30].forEach(v=>{const y=yp(v);o+=`<line x1="${ml}" y1="${y}" x2="${W-mr}" y2="${y}" stroke="${v===0?'#A84A00':'#E6E4DC'}" stroke-width="${v===0?1.4:.7}" stroke-dasharray="${v===0?'5,3':'0'}"/><text x="${ml-5}" y="${y+4}" text-anchor="end" font-size="9" fill="#B0B2CC">${v}</text>`;});
+  years.forEach((yr,i)=>{if(i%1===0)o+=`<text x="${xp(i)}" y="${H-mb+16}" text-anchor="middle" font-size="8" fill="#767898">${String(yr).slice(2)}</text>`;});
+  const pts=vals.map((v,i)=>`${xp(i)},${yp(v)}`).join(' ');
+  o+=`<polyline points="${pts}" fill="none" stroke="#1B3A6B" stroke-width="2.4" stroke-linejoin="round"/>`;
+  vals.forEach((v,i)=>{const col=v<0?'#8B1A1A':'#1B3A6B';o+=`<circle cx="${xp(i)}" cy="${yp(v)}" r="3.2" fill="${col}"/>`;if(i===1||i===7||i===9)o+=`<text x="${xp(i)}" y="${yp(v)-8}" text-anchor="middle" font-size="8.5" fill="${col}" font-weight="700">${v}</text>`;});
+  o+=`<text x="${ml+cw/2}" y="${H-5}" text-anchor="middle" font-size="9" fill="#767898">Año (2004–2013)</text><text x="14" y="${mt+ch/2}" text-anchor="middle" font-size="9" fill="#767898" transform="rotate(-90 14 ${mt+ch/2})">Balance estimado (miles de millones)</text>`;
+  o+=`<text x="${xp(7)+6}" y="${yp(0)-6}" font-size="9" fill="#A84A00" font-weight="700">Cruza 0 en 2011</text>`;
+  s.innerHTML=o;
+}
+
+function drawHonestTrunc(){
+  const d=[98,99,100,102],labs=['Año 1','Año 2','Año 3','Año 4'];
+  function bars(id,minY,maxY,title){
+    const s=document.getElementById(id);if(!s)return;
+    const W=155,H=130,ml=30,mr=8,mt=10,mb=30,cw=W-ml-mr,ch=H-mt-mb,bw=(cw/d.length)*.58,gap=(cw/d.length)*.42;
+    const yp=v=>mt+ch-(v-minY)*(ch/(maxY-minY));
+    let o='';
+    const ticks=id==='hon1'?[0,50,100]:[97,99,101,103];
+    ticks.forEach(v=>{const y=yp(v);o+=`<line x1="${ml}" y1="${y}" x2="${W-mr}" y2="${y}" stroke="#E6E4DC" stroke-width="${v===minY?1.5:.7}"/><text x="${ml-4}" y="${y+4}" text-anchor="end" font-size="7.5" fill="#B0B2CC">${v}</text>`;});
+    d.forEach((v,i)=>{const x=ml+i*(cw/d.length)+gap/2,y=yp(v),bh=mt+ch-y;const col=id==='hon1'?'#1A5C34':'#8B1A1A';o+=`<rect x="${x}" y="${y}" width="${bw}" height="${bh}" fill="${col}" opacity=".82" rx="2"/><text x="${x+bw/2}" y="${y-4}" text-anchor="middle" font-size="8" fill="${col}" font-weight="700">${v}</text><text x="${x+bw/2}" y="${H-mb+14}" text-anchor="middle" font-size="7" fill="#767898">${i+1}</text>`;});
+    o+=`<text x="${W/2}" y="${H-4}" text-anchor="middle" font-size="7.5" fill="#767898">${title}</text>`;
+    s.innerHTML=o;
+  }
+  bars('hon1',0,110,'Eje Y desde 0');
+  bars('trnc1',97,103,'Eje Y desde 97');
+}
+
 // ===== DISCOUNT GRID =====
-function renderPctGrid(){const g=document.getElementById('pGrid100');if(!g)return;for(let i=0;i<100;i++){const d=document.createElement('div');d.className='pcell';g.appendChild(d);}updD(35);}
+function renderPctGrid(){const g=document.getElementById('pGrid100');if(!g)return;g.innerHTML='';for(let i=0;i<100;i++){const d=document.createElement('div');d.className='pcell';g.appendChild(d);}updD(35);}
 function updD(v){v=parseInt(v);document.getElementById('dLbl').textContent=v+'%';document.getElementById('pLbl').textContent=(100-v)+'%';document.getElementById('dFml').textContent=`Precio final = Precio × (1 − ${(v/100).toFixed(2)}) = Precio × ${(1-v/100).toFixed(2)}`;document.querySelectorAll('.pcell').forEach((c,i)=>{c.style.background=i<v?'#A84A00':'#1B3A6B';c.style.opacity=i<v?'.45':'.85';});}
 
 // ===== PRICE UNIT =====
@@ -1403,27 +1545,9 @@ function calcAC1(){const pa=[9800,3500,2900,6400],pb=[9200,3700,2750,5900],pc=[1
 const defMats=['Matemáticas I','Psicología','Estadística','Inglés'],defCred=[4,3,3,2];
 function addWA(mat='',cr=2,nota=''){const c=document.getElementById('waRows');if(!c)return;const r=document.createElement('div');r.className='calc-row';r.innerHTML=`<input class="c-inp wide" placeholder="Materia" value="${mat}"><input class="c-inp" type="number" min="0" max="5" step="0.1" placeholder="Nota" value="${nota}" oninput="updWARow(this)"><input class="c-inp" type="number" min="1" max="8" placeholder="Cr" value="${cr}" oninput="updWARow(this)"><span class="c-prod">—</span>`;c.appendChild(r);}
 function updWARow(inp){const r=inp.closest('.calc-row');const n=parseFloat(r.querySelectorAll('input')[1].value),cr=parseFloat(r.querySelectorAll('input')[2].value);r.querySelector('.c-prod').textContent=(!isNaN(n)&&!isNaN(cr))?(n*cr).toFixed(2):'—';}
-function initWA(){defMats.forEach((m,i)=>addWA(m,defCred[i],''));}
+function initWA(){const c=document.getElementById('waRows');if(c)c.innerHTML='';defMats.forEach((m,i)=>addWA(m,defCred[i],''));}
 function calcWA(){let sNC=0,sC=0;document.querySelectorAll('#waRows .calc-row').forEach(r=>{const inps=r.querySelectorAll('input');const n=parseFloat(inps[1].value),cr=parseFloat(inps[2].value);if(!isNaN(n)&&!isNaN(cr)){sNC+=n*cr;sC+=cr;}});if(!sC)return;const pp=(sNC/sC).toFixed(2);document.getElementById('waResult').style.display='block';document.getElementById('waVal').textContent=pp+' / 5.0';document.getElementById('waBd').textContent=`Σ(nota×créd) = ${sNC.toFixed(2)} ÷ Σcréd = ${sC} = ${pp}`;}
 
-// ===== INIT =====
-document.addEventListener('DOMContentLoaded',()=>{
-  if(activeSurvey&&SURVEYS[activeSurvey]){
-    tempCounts[activeSurvey]=[...SURVEYS[activeSurvey].counts];
-    document.querySelectorAll('.survey-btn').forEach(b=>b.classList.toggle('sel',b.dataset.sid===activeSurvey));
-    const s=SURVEYS[activeSurvey];
-    document.getElementById('surveyConfirm').classList.add('show');
-    document.getElementById('surveyConfirmText').innerHTML=`✓ Encuesta: <strong>${s.emoji} ${s.title}</strong>`;
-    document.getElementById('surveyUpdateBtn').style.display='flex';
-    renderEditor(activeSurvey);updateBanner();
-  }
-  drawOpeningCharts();drawMiniCharts();
-  drawH1();drawP1();drawH2();drawP2();buildPie();
-  drawBarMoto();drawLineCheri();drawMed();drawHonestTrunc();
-  renderPctGrid();renderVC();initWA();renderQZ();
-  if(activeSurvey)drawGroupCharts();
-});
-// ===== (existing duplicate drawBarMoto etc below are now replaced — skip them) =====
 // ===== MODULE QUESTIONS =====
 const QA={
   T1Q1:{a:'B',fb:'La variable "medio de transporte" tiene valores que son categorías (Bus, Carro, Moto…), no cantidades numéricas. Cualitativa. El hecho de que se cuenten cuántas personas usan cada medio no la hace cuantitativa — lo que se cuenta son las personas, no la variable.'},
@@ -1462,7 +1586,13 @@ document.addEventListener('click',e=>{
       fb.innerHTML='<strong>✓ Correcto.</strong> '+QA[qid].fb;
     } else {
       const corOpt=cont.querySelector(`.qo[data-v="${cor}"]`);
-      const corText=corOpt?corOpt.textContent.trim():'';
+      let corText='';
+      if(corOpt){
+        const clone=corOpt.cloneNode(true);
+        const lab=clone.querySelector('.qo-l');
+        if(lab)lab.remove();
+        corText=clone.textContent.trim();
+      }
       fb.innerHTML=`<strong>✗ Incorrecto.</strong> La respuesta correcta era <strong>${cor})</strong> ${corText}<br><br>📚 ${QA[qid].fb}`;
     }
   }
@@ -1542,16 +1672,16 @@ function submitQZ(){
       if(isOk){
         fb.textContent=q.fb;
       } else {
-        const corText=opts[q.a].textContent.trim();
-        fb.innerHTML=`<strong>✗ Incorrecto.</strong> La respuesta correcta era <strong>${String.fromCharCode(65+q.a)}</strong>: ${corText}<br><br>${q.fb}`;
+        const corText=opts[q.a].textContent.trim().replace(/^[A-D]\)\s*/, '');
+        fb.innerHTML=`<strong>✗ Incorrecto.</strong> La respuesta correcta era <strong>${String.fromCharCode(65+q.a)})</strong> ${corText}<br><br>${q.fb}`;
       }
     }
   });
   const pct=Math.round(ok/QZD.length*100),sc=ok+'/'+QZD.length+' ('+pct+'%)';
   const KEY='cls10v4_qz';
-  let first=localStorage.getItem(KEY+'_f');
-  if(!first){first=sc;localStorage.setItem(KEY+'_f',first);}
-  localStorage.setItem(KEY+'_l',sc);
+  let first=storageGet(KEY+'_f');
+  if(!first){first=sc;storageSet(KEY+'_f',first);}
+  storageSet(KEY+'_l',sc);
   document.getElementById('sc1').textContent=first;
   document.getElementById('sc2').textContent=sc;
   const msgs=['Revisa las pestañas donde fallaste antes del parcial.','Buen trabajo. Refuerza los conceptos con errores.','¡Excelente! Revisa los que fallaste igualmente.','¡Perfecto! Dominas toda la sesión.'];
@@ -1583,6 +1713,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   drawHonestTrunc();
   renderPctGrid();
   renderVC();
+  initStepButtons();
   initWA();
   renderQZ();
   // Draw group charts if survey was saved
