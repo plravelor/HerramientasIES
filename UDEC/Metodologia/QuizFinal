@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz de Repaso · Tercer Parcial · Diseños I</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:      #1E3A5F;
+    --navy-dark: #122340;
+    --navy-mid:  #2E5080;
+    --green:     #1B5E3B;
+    --green-lt:  #2E7D52;
+    --amber:     #C67C00;
+    --amber-lt:  #F5A623;
+    --bg:        #F4F6F9;
+    --surface:   #FFFFFF;
+    --text:      #1A1A2E;
+    --muted:     #6B7280;
+    --correct-bg:#ECFDF5;
+    --correct-bd:#16A34A;
+    --wrong-bg:  #FEF2F2;
+    --wrong-bd:  #DC2626;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding-bottom: 3rem;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy-mid) 100%);
+    padding: 2rem 1.25rem 1.75rem;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 220px; height: 220px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.04);
+  }
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; left: 30%;
+    width: 320px; height: 320px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.03);
+  }
+  .header-inner { max-width: 720px; margin: 0 auto; position: relative; z-index: 1; }
+  .course-tag {
+    display: inline-block;
+    background: rgba(255,255,255,.12);
+    color: rgba(255,255,255,.85);
+    font-size: .72rem;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    padding: .3rem .75rem;
+    border-radius: 20px;
+    margin-bottom: .9rem;
+  }
+  header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(1.6rem, 5vw, 2.2rem);
+    color: #FFFFFF;
+    line-height: 1.2;
+    margin-bottom: .6rem;
+  }
+  header p {
+    color: rgba(255,255,255,.7);
+    font-size: .9rem;
+    line-height: 1.5;
+  }
+  .meta-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    margin-top: 1.1rem;
+  }
+  .pill {
+    background: rgba(255,255,255,.1);
+    border: 1px solid rgba(255,255,255,.18);
+    color: rgba(255,255,255,.9);
+    font-size: .75rem;
+    font-weight: 500;
+    padding: .25rem .7rem;
+    border-radius: 12px;
+  }
+
+  /* ── SAVED SCORE BANNER ── */
+  #saved-banner {
+    display: none;
+    max-width: 720px;
+    margin: 1.5rem auto 0;
+    padding: 0 1rem;
+  }
+  .saved-card {
+    background: var(--navy);
+    border-radius: 14px;
+    padding: 1.4rem 1.6rem;
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    box-shadow: 0 4px 20px rgba(30,58,95,.25);
+  }
+  .saved-icon { font-size: 2.2rem; flex-shrink: 0; }
+  .saved-text { color: #fff; }
+  .saved-text strong {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.5rem;
+    display: block;
+    margin-bottom: .15rem;
+  }
+  .saved-text span { font-size: .85rem; opacity: .75; }
+  .saved-nota {
+    margin-left: auto;
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .saved-nota .nota-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2.8rem;
+    font-weight: 400;
+    color: var(--amber-lt);
+    line-height: 1;
+  }
+  .saved-nota .nota-den {
+    font-size: .8rem;
+    color: rgba(255,255,255,.55);
+    margin-top: .1rem;
+  }
+
+  /* ── MAIN ── */
+  main {
+    max-width: 720px;
+    margin: 1.75rem auto 0;
+    padding: 0 1rem;
+  }
+
+  /* ── PROGRESS ── */
+  .progress-bar-wrap {
+    background: #E2E8F0;
+    border-radius: 6px;
+    height: 6px;
+    margin-bottom: 1.8rem;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--navy), var(--amber));
+    border-radius: 6px;
+    transition: width .4s ease;
+    width: 0%;
+  }
+  .progress-label {
+    font-size: .75rem;
+    color: var(--muted);
+    margin-bottom: .5rem;
+    font-weight: 500;
+  }
+
+  /* ── CARD ── */
+  .question-card {
+    background: var(--surface);
+    border-radius: 16px;
+    padding: 1.5rem 1.6rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,.06);
+    border: 2px solid transparent;
+    transition: border-color .3s, box-shadow .3s;
+  }
+  .question-card.answered-correct {
+    border-color: var(--correct-bd);
+    background: var(--correct-bg);
+  }
+  .question-card.answered-wrong {
+    border-color: var(--wrong-bd);
+    background: var(--wrong-bg);
+  }
+
+  .q-header {
+    display: flex;
+    align-items: flex-start;
+    gap: .9rem;
+    margin-bottom: 1rem;
+  }
+  .q-number {
+    min-width: 32px; height: 32px;
+    background: var(--navy);
+    color: #fff;
+    border-radius: 8px;
+    display: grid; place-items: center;
+    font-size: .8rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 1px;
+    transition: background .3s;
+  }
+  .answered-correct .q-number { background: var(--correct-bd); }
+  .answered-wrong .q-number   { background: var(--wrong-bd); }
+
+  .q-text {
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 1.55;
+    color: var(--text);
+  }
+  .q-tag {
+    font-size: .68rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--muted);
+    margin-bottom: .35rem;
+    display: block;
+  }
+
+  /* ── OPCIONES ── */
+  .options { display: flex; flex-direction: column; gap: .55rem; }
+
+  .option-label {
+    display: flex;
+    align-items: flex-start;
+    gap: .8rem;
+    cursor: pointer;
+    padding: .75rem 1rem;
+    border-radius: 10px;
+    border: 1.5px solid #E5E7EB;
+    transition: background .15s, border-color .15s;
+    position: relative;
+  }
+  .option-label:hover { background: #F8FAFC; border-color: #CBD5E1; }
+
+  .option-label input[type="radio"] { display: none; }
+
+  .option-bullet {
+    min-width: 22px; height: 22px;
+    border-radius: 50%;
+    border: 2px solid #CBD5E1;
+    display: grid; place-items: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+    transition: border-color .2s, background .2s;
+    font-size: .65rem;
+    font-weight: 700;
+    color: transparent;
+  }
+  .option-label:has(input:checked) .option-bullet {
+    border-color: var(--navy);
+    background: var(--navy);
+    color: #fff;
+  }
+  .option-label:has(input:checked) {
+    border-color: var(--navy);
+    background: rgba(30,58,95,.05);
+  }
+
+  /* Estados calificados */
+  .graded .option-label { cursor: default; pointer-events: none; }
+  .graded .option-label.opt-correct {
+    border-color: var(--correct-bd);
+    background: rgba(22,163,74,.08);
+  }
+  .graded .option-label.opt-selected-wrong {
+    border-color: var(--wrong-bd);
+    background: rgba(220,38,38,.08);
+  }
+  .graded .option-label.opt-correct .option-bullet {
+    border-color: var(--correct-bd);
+    background: var(--correct-bd);
+    color: #fff;
+  }
+  .graded .option-label.opt-selected-wrong .option-bullet {
+    border-color: var(--wrong-bd);
+    background: var(--wrong-bd);
+    color: #fff;
+  }
+
+  .option-text { font-size: .92rem; line-height: 1.45; color: #374151; }
+
+  /* ── FEEDBACK ── */
+  .feedback {
+    display: none;
+    margin-top: 1rem;
+    padding: .85rem 1rem;
+    border-radius: 10px;
+    font-size: .88rem;
+    line-height: 1.55;
+  }
+  .feedback.show { display: flex; gap: .65rem; align-items: flex-start; }
+  .feedback.correct-fb {
+    background: rgba(22,163,74,.1);
+    border-left: 3px solid var(--correct-bd);
+    color: #14532D;
+  }
+  .feedback.wrong-fb {
+    background: rgba(220,38,38,.08);
+    border-left: 3px solid var(--wrong-bd);
+    color: #7F1D1D;
+  }
+  .fb-icon { font-size: 1rem; flex-shrink: 0; margin-top: .1rem; }
+  .feedback strong { font-weight: 600; }
+
+  /* ── CALIFICAR ── */
+  .btn-wrap {
+    text-align: center;
+    margin: 2rem 0 1rem;
+  }
+  #btn-calificar {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
+    color: #fff;
+    border: none;
+    border-radius: 14px;
+    padding: 1rem 2.8rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 18px rgba(30,58,95,.35);
+    transition: transform .15s, box-shadow .15s, opacity .15s;
+    letter-spacing: .01em;
+  }
+  #btn-calificar:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(30,58,95,.45); }
+  #btn-calificar:active { transform: translateY(0); }
+  #btn-calificar:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+
+  /* ── RESULTADO ── */
+  #resultado {
+    display: none;
+    background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy-mid) 100%);
+    border-radius: 18px;
+    padding: 2rem 1.5rem;
+    text-align: center;
+    margin-bottom: 2rem;
+    box-shadow: 0 6px 30px rgba(30,58,95,.3);
+    animation: slideDown .4s ease;
+  }
+  #resultado.show { display: block; }
+  @keyframes slideDown {
+    from { opacity:0; transform:translateY(-16px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+  .resultado-emoji { font-size: 3rem; margin-bottom: .5rem; }
+  .resultado-titulo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.35rem;
+    color: #fff;
+    margin-bottom: 1.2rem;
+  }
+  .nota-grande {
+    font-family: 'DM Serif Display', serif;
+    font-size: 5rem;
+    font-weight: 400;
+    color: var(--amber-lt);
+    line-height: 1;
+  }
+  .nota-den-grande { color: rgba(255,255,255,.5); font-size: .9rem; margin-bottom: 1.1rem; }
+  .aciertos-text { color: rgba(255,255,255,.75); font-size: .9rem; }
+  .nota-guardada-msg {
+    margin-top: 1.1rem;
+    font-size: .78rem;
+    color: rgba(255,255,255,.5);
+    font-style: italic;
+  }
+  .resultado-mensaje {
+    margin-top: .8rem;
+    color: rgba(255,255,255,.85);
+    font-size: .92rem;
+    line-height: 1.5;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    color: var(--muted);
+    font-size: .75rem;
+    margin-top: 2.5rem;
+    padding: 0 1rem;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 480px) {
+    header { padding: 1.6rem 1rem 1.4rem; }
+    .question-card { padding: 1.2rem 1.1rem; }
+    .nota-grande { font-size: 4rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header>
+  <div class="header-inner">
+    <span class="course-tag">Diseños de Investigación I · Grupo 401 · 2026-I</span>
+    <h1>Quiz de Repaso<br>Tercer Corte</h1>
+    <p>10 preguntas sobre hipótesis, diseños, escalas, muestreo y estadística básica.</p>
+    <div class="meta-pills">
+      <span class="pill">10 preguntas</span>
+      <span class="pill">Nota sobre 5.0</span>
+      <span class="pill">Primera nota permanente</span>
+    </div>
+  </div>
+</header>
+
+<!-- ── BANNER NOTA GUARDADA ── -->
+<div id="saved-banner">
+  <div class="saved-card">
+    <div class="saved-icon">🔒</div>
+    <div class="saved-text">
+      <strong>Ya respondiste este quiz</strong>
+      <span>Tu primera nota quedó registrada y no puede modificarse.</span>
+    </div>
+    <div class="saved-nota">
+      <div class="nota-num" id="banner-nota">—</div>
+      <div class="nota-den">/ 5.0</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── MAIN ── -->
+<main>
+  <div class="progress-label" id="progress-label">Respondidas: 0 / 10</div>
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progress-bar"></div>
+  </div>
+
+  <!-- ── RESULTADO ── -->
+  <div id="resultado">
+    <div class="resultado-emoji" id="res-emoji"></div>
+    <div class="resultado-titulo" id="res-titulo"></div>
+    <div class="nota-grande" id="res-nota"></div>
+    <div class="nota-den-grande">/ 5.0</div>
+    <div class="aciertos-text" id="res-aciertos"></div>
+    <div class="resultado-mensaje" id="res-mensaje"></div>
+    <div class="nota-guardada-msg" id="res-guardada"></div>
+  </div>
+
+  <!-- ── PREGUNTAS ── -->
+  <form id="quiz-form" novalidate>
+
+    <!-- Q1 -->
+    <div class="question-card" id="card-1">
+      <div class="q-header">
+        <div class="q-number">1</div>
+        <div>
+          <span class="q-tag">Hipótesis</span>
+          <div class="q-text">¿Cuál característica es INDISPENSABLE para que un enunciado sea una hipótesis científica válida?</div>
+        </div>
+      </div>
+      <div class="options" role="radiogroup">
+        <label class="option-label">
+          <input type="radio" name="q1" value="a">
+          <span class="option-bullet">a</span>
+          <span class="option-text">Ser definitiva y no poder modificarse una vez formulada.</span>
+        </label>
+        <label class="option-label">
+          <input type="radio" name="q1" value="b">
+          <span class="option-bullet">b</span>
+          <span class="option-text">Formularse después de analizar los datos para que sea más precisa.</span>
+        </label>
+        <label class="option-label">
+          <input type="radio" name="q1" value="c">
+          <span class="option-bullet">c</span>
+          <span class="option-text">Ser falsable: en principio, poder ser refutada por evidencia empírica.</span>
+        </label>
+        <label class="option-label">
+          <input type="radio" name="q1" value="d">
+          <span class="option-bullet">d</span>
+          <span class="option-text">Incluir obligatoriamente al menos tres variables independientes.</span>
+        </label>
+      </div>
+      <div class="feedback" id="fb-1">
+        <span class="fb-icon"></span><span class="fb-text"></span>
+      </div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="question-card" id="card-2">
+      <div class="q-header">
+        <div class="q-number">2</div>
+        <div>
+          <span class="q-tag">Hipótesis</span>
+          <div class="q-text">¿Cuál es la diferencia fundamental entre H₀ y H₁?</div>
+        </div>
+      </div>
+      <div class="options" role="radiogroup">
+        <label class="option-label">
+          <input type="radio" name="q2" value="a">
+          <span class="option-bullet">a</span>
+          <span class="option-text">H₁ se formula primero; H₀ se escribe al final del estudio.</span>
+        </label>
+        <label class="option-label">
+          <input type="radio" name="q2" value="b">
+          <span class="option-bullet">b</span>
+          <span class="option-text">H₀ postula que no hay efecto o diferencia; H₁ predice que sí existe.</span>
+        </label>
+        <label class="option-label">
+          <input type="radio" name="q2" value="c">
+          <span class="option-bullet">c</span>
+          <span class="option-text">H₀ siempre se acepta al final como la hipótesis verdadera.</span>
+        </label>
+        <label class="option-label">
+          <input type="radio" name="q2" value="d">
+          <span class="option-bullet">d</span>
+          <span class="option-text">H₀ y H₁ son la misma hipótesis expresada de dos formas distintas.</span>
+        </label>
+      </div>
+      <div class="feedback" id="fb-2">
+        <span class="fb-icon"></span><span class="fb-text"></span>
+      </div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="question-card" id="card-3">
+      <div class="q-header">
+        <div class="q-number">3</div>
+        <div>
+          <span class="q-tag">Diseños de investigación</span>
+          <div class="q-text">Un investigador sortea al azar a 40 participantes en dos grupos: uno recibe un taller de manejo del estrés y el otro no. ¿Qué tipo de diseño es?</div>
+        </div>
+      </div>
+      <div class="options" role="radiogroup">
+        <label class="option-label">
+          <input type="radio" name="q3" value="a">
+          <span class="option-bullet">a</span>
+          <span class="option-text">Experimental, porque hay manipulación y asignación aleatoria.</span>
+        </label>
+        <label class="option-label">
+          <input type="radio" name="q3" value="b">
+          <span class="option-bullet">b</span>
+          <span class="option-text">Cuasiexperimental, porque los grupos pueden ser de tamaño diferente.</span>
+        </label>
+        <label class="option-label">
+          <input type="radio" name="q3" value="c">
+          <span class="option-bullet">c</span>
+          <span class="option-text">No experimental, porque trabaja con seres humanos y eso impide el control.</span>
+        </label>
+        <label class="option-label">
+          <input type="radio" name="q3" value="d">
+          <span class="option-bullet">d</span>
+          <span class="option-text">Correlacional, porque compara dos grupos distintos al mismo tiempo.</span>
+        </label>
+      </div>
+      <div class="feedback" id="fb-3">
+        <span class="fb-icon"></span><span class="fb-text"></span>
+      </div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="question-card" id="card-4">
+      <div class="q-header">
+        <div class="q-number">4</div>
+        <div>
+          <span class="q-tag">Diseños de investigación</span>
+          <div class="q-text">¿Qué garantiza la alta validez interna de un estudio?</div>
+        </div>
+      </div>
+      <div class="options" role="radiogroup">
+        <label class="option-label">
+          <input type="radio" name="q4" value="a">
+          <span class="option-bullet">a</span>
+          <span class="option-text">Que los resultados puedan generalizarse a toda la población colombiana.</span>
+        </label>
+        <label class="option-label">
+          <input type="radio" name="q4" value="b">
+          <span class="option-bullet">b</span>
+          <span class="option-text">Que el instrumento tenga buena consistencia interna (alfa de Cronbach alto).</span>
+        </label>
+        <label class="option-label">
+          <input type="radio" name="q4" value="c">
+          <span class="option-bullet">c</span>
+          <span class="option-text">Que el diseño controla las explicaciones alternativas sobre la relación VI → VD.</span>
+        </label>
+        <label class="option-label">
+          <input type="radio" name="q4" value="d">
+          <span class="option-bullet">d</span>
+          <span class="option-text">Que la muestra fue seleccionada de forma aleatoria y probabilística.</span>
+        </label>
+      </div>
+      <div class="feedback" id="fb-4">
+        <span class="fb-icon"></span><span class="fb-text"></span>
+      </div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="question-card" id="card-5">
+      <div class="q-header">
+        <div class="q-number">5</div>
+        <div>
+          <span class="q-tag">Escalas de medición</span>
+          <div class="q-text">La posición en un maratón (1°, 2°, 3°…) corresponde a la escala de medición:</div>
+        </div>
+      </div>
+      <div class="options" role="radiogroup">
+        <label class="option-label">
+          <input type="radio" name="q5" value="a">
+          <span class="option-bullet">a</span>
+          <span class="option-text">Nominal — porque son números que nombran posiciones.</span>
+        </label>
+        <label class="option-label">
+          <input type="radio" name="q5" value="b">
+          <span class="option-bullet">b</span>
+          <span class="option-text">Ordinal — porque establece un orden pero las distancias entre puestos no son iguales.</span>
+        </label>
+        <label class="option-label">
+          <input type="radio" name="q5" value="c">
+          <span class="option-bullet">c</span>
+          <span class="option-text">Intervalo — porque los números van de 1 en 1 con distancias iguales.</span>
+        </label>
+        <label class="option-label">
+          <input type="radio" name="q5" value="d">
+          <span class="option-bullet">d</span>
+          <span class="option-text">Razón — porque existe un puesto cero (nadie llegó).</span>
+        </label>
+      </div>
+      <div class="feedback" id="fb-5">
+        <span class="fb-icon"></span><span class="fb-text"></span>
+      </div>
+    </div>
+
+    <!-- Q6 -->
+    <div class="question-card" id="card-6">
+      <div class="q-header">
+        <div class="q-number">6</div>
+        <div>
+          <span class="q-tag">Confiabilidad y validez</span>
+          <div class="q-text">Una báscula siempre marca exactamente 3 kg más de lo real. ¿Cómo se describe este instrumento?</div>
+        </div>
+      </div>
+      <div class="options" role="radiogroup">
+        <label class="option-label">
+          <input type="radio" name="q6" value="a">
+          <span class="option-bullet">a</span>
+          <span class="option-text">Válido pero no confiable, porque siempre da el mismo resultado.</span>
+        </label>
+        <label class="option-label">
+          <input type="radio" name="q6" value="b">
+          <span class="option-bullet">b</span>
+          <span class="option-text">Confiable pero no válido, porque mide con consistencia pero no mide lo correcto.</span>
+        </label>
+        <label class="option-label">
+          <input type="radio" name="q6" value="c">
+          <span class="option-bullet">c</span>
+          <span class="option-text">Válido y confiable, porque da el mismo resultado cada vez que se usa.</span>
+        </label>
+        <label class="option-label">
+          <input type="radio" name="q6" value="d">
+          <span class="option-bullet">d</span>
+          <span class="option-text">Ni válido ni confiable, porque siempre introduce un error de medición.</span>
+        </label>
+      </div>
+      <div class="feedback" id="fb-6">
+        <span class="fb-icon"></span><span class="fb-text"></span>
+      </div>
+    </div>
+
+    <!-- Q7 -->
+    <div class="question-card" id="card-7">
+      <div class="q-header">
+        <div class="q-number">7</div>
+        <div>
+          <span class="q-tag">Muestreo</span>
+          <div class="q-text">Una investigadora encuesta a los primeros 60 estudiantes que encuentra en la cafetería de la universidad. ¿Qué tipo de muestreo usa?</div>
+        </div>
+      </div>
+      <div class="options" role="radiogroup">
+        <label class="option-label">
+          <input type="radio" name="q7" value="a">
+          <span class="option-bullet">a</span>
+          <span class="option-text">Estratificado, porque la cafetería agrupa a estudiantes de distintas carreras.</span>
+        </label>
+        <label class="option-label">
+          <input type="radio" name="q7" value="b">
+          <span class="option-bullet">b</span>
+          <span class="option-text">Sistemático, porque selecciona a uno de cada cierto número de estudiantes.</span>
+        </label>
+        <label class="option-label">
+          <input type="radio" name="q7" value="c">
+          <span class="option-bullet">c</span>
+          <span class="option-text">Por conveniencia, porque incluye a quien está accesible en ese momento y lugar.</span>
+        </label>
+        <label class="option-label">
+          <input type="radio" name="q7" value="d">
+          <span class="option-bullet">d</span>
+          <span class="option-text">Aleatorio simple, porque cualquier estudiante podría estar en la cafetería ese día.</span>
+        </label>
+      </div>
+      <div class="feedback" id="fb-7">
+        <span class="fb-icon"></span><span class="fb-text"></span>
+      </div>
+    </div>
+
+    <!-- Q8 -->
+    <div class="question-card" id="card-8">
+      <div class="q-header">
+        <div class="q-number">8</div>
+        <div>
+          <span class="q-tag">Estadística descriptiva</span>
+          <div class="q-text">Un grupo de 5 estudiantes obtuvo estos puntajes en un quiz: 10, 12, 13, 14, 90. ¿Qué medida representa mejor el desempeño típico del grupo?</div>
+        </div>
+      </div>
+      <div class="options" role="radiogroup">
+        <label class="option-label">
+          <input type="radio" name="q8" value="a">
+          <span class="option-bullet">a</span>
+          <span class="option-text">La moda, porque es el valor que más se repite en el grupo.</span>
+        </label>
+        <label class="option-label">
+          <input type="radio" name="q8" value="b">
+          <span class="option-bullet">b</span>
+          <span class="option-text">La media aritmética (27.8), porque usa todos los datos disponibles.</span>
+        </label>
+        <label class="option-label">
+          <input type="radio" name="q8" value="c">
+          <span class="option-bullet">c</span>
+          <span class="option-text">La desviación estándar, porque describe la variabilidad del grupo.</span>
+        </label>
+        <label class="option-label">
+          <input type="radio" name="q8" value="d">
+          <span class="option-bullet">d</span>
+          <span class="option-text">La mediana (13), porque no se distorsiona por el valor extremo de 90.</span>
+        </label>
+      </div>
+      <div class="feedback" id="fb-8">
+        <span class="fb-icon"></span><span class="fb-text"></span>
+      </div>
+    </div>
+
+    <!-- Q9 -->
+    <div class="question-card" id="card-9">
+      <div class="q-header">
+        <div class="q-number">9</div>
+        <div>
+          <span class="q-tag">Inferencia estadística</span>
+          <div class="q-text">Un estudio obtiene p = .01 (alfa = .05). ¿Qué conclusión es metodológicamente correcta?</div>
+        </div>
+      </div>
+      <div class="options" role="radiogroup">
+        <label class="option-label">
+          <input type="radio" name="q9" value="a">
+          <span class="option-bullet">a</span>
+          <span class="option-text">La hipótesis nula es verdadera porque p es un número pequeño.</span>
+        </label>
+        <label class="option-label">
+          <input type="radio" name="q9" value="b">
+          <span class="option-bullet">b</span>
+          <span class="option-text">Se rechaza H₀: es poco probable obtener ese resultado si no hubiera efecto real.</span>
+        </label>
+        <label class="option-label">
+          <input type="radio" name="q9" value="c">
+          <span class="option-bullet">c</span>
+          <span class="option-text">Hay solo un 1% de probabilidad de que la hipótesis de investigación sea cierta.</span>
+        </label>
+        <label class="option-label">
+          <input type="radio" name="q9" value="d">
+          <span class="option-bullet">d</span>
+          <span class="option-text">El efecto encontrado es clínicamente significativo y de magnitud grande.</span>
+        </label>
+      </div>
+      <div class="feedback" id="fb-9">
+        <span class="fb-icon"></span><span class="fb-text"></span>
+      </div>
+    </div>
+
+    <!-- Q10 -->
+    <div class="question-card" id="card-10">
+      <div class="q-header">
+        <div class="q-number">10</div>
+        <div>
+          <span class="q-tag">Correlación e interpretación</span>
+          <div class="q-text">Un estudio encuentra r = 0.78 entre horas de estudio y calificaciones finales. ¿Qué conclusión es correcta?</div>
+        </div>
+      </div>
+      <div class="options" role="radiogroup">
+        <label class="option-label">
+          <input type="radio" name="q10" value="a">
+          <span class="option-bullet">a</span>
+          <span class="option-text">Hay una asociación positiva fuerte; no se puede afirmar que estudiar más cause mejores notas.</span>
+        </label>
+        <label class="option-label">
+          <input type="radio" name="q10" value="b">
+          <span class="option-bullet">b</span>
+          <span class="option-text">Estudiar más horas causa directamente mejores calificaciones finales.</span>
+        </label>
+        <label class="option-label">
+          <input type="radio" name="q10" value="c">
+          <span class="option-bullet">c</span>
+          <span class="option-text">El 78% de los estudiantes que estudian más van a obtener mejores notas.</span>
+        </label>
+        <label class="option-label">
+          <input type="radio" name="q10" value="d">
+          <span class="option-bullet">d</span>
+          <span class="option-text">r = 0.78 prueba una relación de causalidad directa entre las dos variables.</span>
+        </label>
+      </div>
+      <div class="feedback" id="fb-10">
+        <span class="fb-icon"></span><span class="fb-text"></span>
+      </div>
+    </div>
+
+    <div class="btn-wrap">
+      <button type="button" id="btn-calificar">Calificar quiz</button>
+    </div>
+
+  </form>
+</main>
+
+<footer>
+  Diseños de Investigación I · Pedro Luis Ravelo Rivera · Universidad de Cundinamarca, Facatativá · 2026-I
+</footer>
+
+<script>
+  // ── CLAVE Y RETROALIMENTACIÓN ─────────────────────────────────────────────
+  const KEY = 'disenios_g401_quiz_p3_v1';
+
+  const respuestas = {
+    q1: 'c', q2: 'b', q3: 'a', q4: 'c', q5: 'b',
+    q6: 'b', q7: 'c', q8: 'd', q9: 'b', q10: 'a'
+  };
+
+  const feedback = {
+    q1: {
+      correct: '¡Correcto! La falsabilidad es el criterio central (Popper): si en principio no puede ser refutada por ninguna evidencia, no es científica. Las hipótesis no son definitivas y se formulan antes de recolectar datos.',
+      wrong: 'La respuesta correcta es c). Una hipótesis DEBE ser falsable: si ninguna evidencia posible pudiera refutarla, no puede ponerse a prueba empíricamente. Además se formula ANTES de analizar datos, y puede —y debe— estar abierta a revisión.'
+    },
+    q2: {
+      correct: '¡Correcto! H₀ es la hipótesis de nulidad (no hay efecto), H₁ es la hipótesis de investigación (sí hay efecto). Ambas se formulan antes de analizar los datos.',
+      wrong: 'La respuesta correcta es b). H₀ postula ausencia de efecto y se formula antes del análisis, no al final. Nunca se "acepta" definitivamente: en el mejor caso no se rechaza. H₁ predice que sí existe un efecto o diferencia.'
+    },
+    q3: {
+      correct: '¡Correcto! Los tres criterios del diseño experimental están presentes: (1) manipulación de la VI (taller sí/no), (2) comparación con grupo control y (3) asignación aleatoria.',
+      wrong: 'La respuesta correcta es a). Lo que define un experimento es la combinación de manipulación + aleatorización. El tamaño del grupo no determina el tipo de diseño, y trabajar con humanos no impide la experimentación en ciencias sociales.'
+    },
+    q4: {
+      correct: '¡Correcto! Validez interna significa que el diseño descarta explicaciones alternativas: si X cambió e Y cambió, ¿podemos concluir que X causó Y sin que haya otra variable explicativa?',
+      wrong: 'La respuesta correcta es c). Validez interna ≠ generalización (eso es externa) y ≠ consistencia del instrumento (eso es confiabilidad). La muestra probabilística contribuye a la validez externa, no a la interna.'
+    },
+    q5: {
+      correct: '¡Correcto! Ordinal: hay un orden claro (1° antes que 2°), pero la diferencia entre el 1° y el 2° no es la misma que entre el 9° y el 10°. No hay distancias iguales entre niveles.',
+      wrong: 'La respuesta correcta es b) ordinal. El orden existe (1°, 2°, 3°…), pero las distancias entre puestos no son iguales en tiempo ni esfuerzo. No es nominal porque sí hay jerarquía; no es intervalo/razón porque las distancias son arbitrarias.'
+    },
+    q6: {
+      correct: '¡Correcto! La báscula es muy confiable (siempre da el mismo error, de forma consistente), pero no es válida porque no mide el peso real. Confiabilidad ≠ validez.',
+      wrong: 'La respuesta correcta es b). "Siempre marca 3 kg más" es perfectamente consistente → alta confiabilidad. Pero no mide el peso real → no es válida. Un instrumento puede ser confiable sin ser válido, pero no al revés.'
+    },
+    q7: {
+      correct: '¡Correcto! Muestreo por conveniencia: se selecciona a quien está disponible y accesible. No hay marco muestral, no hay sorteo, no hay estratos formales.',
+      wrong: 'La respuesta correcta es c) conveniencia. Estar en la cafetería no equivale a un sorteo (aleatorio simple), ni a dividir por estratos (estratificado), ni a elegir cada k-ésima persona de una lista (sistemático). Solo implica accesibilidad.'
+    },
+    q8: {
+      correct: '¡Correcto! Con el valor atípico 90, la media sería 27.8 — un puntaje que nadie obtuvo. La mediana (valor central = 13) no se ve afectada por el outlier y representa genuinamente al grupo.',
+      wrong: 'La respuesta correcta es d) la mediana. La media (27.8) queda distorsionada por el 90 y no representa a nadie del grupo. La moda no existe si todos los valores son distintos. La desviación estándar describe dispersión, no el centro.'
+    },
+    q9: {
+      correct: '¡Correcto! p < α (0.01 < 0.05) significa que se rechaza H₀. Específicamente: si H₀ fuera verdadera, habría solo un 1% de probabilidad de obtener estos resultados por azar.',
+      wrong: 'La respuesta correcta es b). El valor p no dice que H₀ es verdadera ni que H₁ tiene cierto porcentaje de ser cierta. Dice: "dado que H₀ fuera verdadera, ¿cuán probable es este resultado?" Si p < α, rechazamos H₀. El p tampoco mide magnitud del efecto.'
+    },
+    q10: {
+      correct: '¡Correcto! r = 0.78 es una asociación positiva fuerte, pero la correlación no establece causalidad. Para afirmar que estudiar más causa mejores notas, se necesitaría un experimento con asignación aleatoria.',
+      wrong: 'La respuesta correcta es a). La correlación mide fuerza y dirección de asociación, no causalidad. r = 0.78 no dice que estudiar más "causa" mejor nota; podría haber una tercera variable (motivación, por ejemplo). r² ≈ 0.61 es la varianza compartida, no el porcentaje de estudiantes.'
+    }
+  };
+
+  // ── ESTADO ────────────────────────────────────────────────────────────────
+  const form    = document.getElementById('quiz-form');
+  const btnCalif = document.getElementById('btn-calificar');
+  const totalQs = 10;
+  let answered  = 0;
+  let graded    = false;
+
+  // ── PROGRESS ──────────────────────────────────────────────────────────────
+  function updateProgress() {
+    const count = Object.keys(respuestas).filter(q => form.querySelector(`[name="${q}"]:checked`)).length;
+    document.getElementById('progress-label').textContent = `Respondidas: ${count} / ${totalQs}`;
+    document.getElementById('progress-bar').style.width = `${(count/totalQs)*100}%`;
+  }
+
+  form.querySelectorAll('input[type="radio"]').forEach(radio => {
+    radio.addEventListener('change', updateProgress);
+  });
+
+  // ── CALIFICAR ─────────────────────────────────────────────────────────────
+  btnCalif.addEventListener('click', () => {
+    // Verificar que respondieron todo
+    const faltantes = Object.keys(respuestas).filter(q => !form.querySelector(`[name="${q}"]:checked`));
+    if (faltantes.length > 0) {
+      const nums = faltantes.map(q => q.replace('q','')).join(', ');
+      alert(`Falta responder la${faltantes.length > 1 ? 's' : ''} pregunta${faltantes.length > 1 ? 's' : ''} ${nums}. Respondé todas antes de calificar.`);
+      return;
+    }
+
+    // Calcular nota
+    let aciertos = 0;
+    Object.entries(respuestas).forEach(([q, correct]) => {
+      const sel = form.querySelector(`[name="${q}"]:checked`);
+      if (sel && sel.value === correct) aciertos++;
+    });
+
+    const nota = parseFloat(((aciertos / totalQs) * 5).toFixed(1));
+
+    // Guardar en localStorage solo si no hay nota previa
+    const stored = localStorage.getItem(KEY);
+    let esPrimera = false;
+    if (!stored) {
+      localStorage.setItem(KEY, JSON.stringify({ nota, aciertos, fecha: new Date().toLocaleDateString('es-CO') }));
+      esPrimera = true;
+    }
+
+    // Colorear preguntas
+    Object.entries(respuestas).forEach(([q, correct]) => {
+      const num = q.replace('q','');
+      const card = document.getElementById(`card-${num}`);
+      const fb   = document.getElementById(`fb-${num}`);
+      const sel  = form.querySelector(`[name="${q}"]:checked`);
+      const isOk = sel.value === correct;
+
+      card.classList.add('graded');
+      card.classList.add(isOk ? 'answered-correct' : 'answered-wrong');
+
+      // Marcar opciones
+      card.querySelectorAll('.option-label').forEach(lbl => {
+        const input = lbl.querySelector('input');
+        if (input.value === correct) lbl.classList.add('opt-correct');
+        else if (input.value === sel.value && !isOk) lbl.classList.add('opt-selected-wrong');
+      });
+
+      // Feedback
+      const fbData = feedback[q];
+      fb.classList.add('show', isOk ? 'correct-fb' : 'wrong-fb');
+      fb.querySelector('.fb-icon').textContent = isOk ? '✓' : '✗';
+      fb.querySelector('.fb-text').innerHTML = isOk ? fbData.correct : fbData.wrong;
+    });
+
+    // Mostrar resultado
+    const emojis = ['😕','🙁','😐','🙂','😊','😄','🥳','⭐','🌟','💫','🏆'];
+    const emojiIdx = Math.min(Math.round(aciertos), emojis.length - 1);
+    const mensajes = [
+      '', '',
+      'Repasá el material: hay conceptos clave que necesitan más práctica.',
+      'Vas por buen camino, pero hay áreas que vale la pena reforzar.',
+      'Buen dominio de los temas. Un poco más y tenés todo claro.',
+      'Excelente manejo del material del tercer corte. ¡Muy bien!',
+    ];
+    const midx = aciertos < 4 ? 2 : aciertos < 6 ? 3 : aciertos < 8 ? 4 : 5;
+
+    document.getElementById('res-emoji').textContent = emojis[emojiIdx];
+    document.getElementById('res-titulo').textContent = nota >= 3 ? '¡Quiz completado!' : 'Quiz completado';
+    document.getElementById('res-nota').textContent = nota.toFixed(1);
+    document.getElementById('res-aciertos').textContent = `${aciertos} de 10 respuestas correctas`;
+    document.getElementById('res-mensaje').textContent = mensajes[midx];
+    document.getElementById('res-guardada').textContent = esPrimera
+      ? '📌 Nota guardada. Si recargás la página, esta nota permanecerá registrada.'
+      : '🔒 Solo se guarda la primera nota. La nota que acabás de obtener no modifica la guardada.';
+
+    const resEl = document.getElementById('resultado');
+    resEl.classList.add('show');
+    resEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    // Deshabilitar
+    btnCalif.disabled = true;
+    form.querySelectorAll('input[type="radio"]').forEach(r => r.disabled = true);
+    graded = true;
+  });
+
+  // ── CARGAR NOTA GUARDADA ──────────────────────────────────────────────────
+  window.addEventListener('DOMContentLoaded', () => {
+    const stored = localStorage.getItem(KEY);
+    if (!stored) return;
+
+    let data;
+    try { data = JSON.parse(stored); } catch { return; }
+
+    // Mostrar banner
+    const banner = document.getElementById('saved-banner');
+    banner.style.display = 'block';
+    document.getElementById('banner-nota').textContent = data.nota.toFixed(1);
+
+    // Deshabilitar form
+    form.querySelectorAll('input[type="radio"]').forEach(r => r.disabled = true);
+    btnCalif.disabled = true;
+    btnCalif.textContent = 'Ya respondiste este quiz';
+
+    // Agregar nota al banner con detalles
+    const span = banner.querySelector('.saved-text span');
+    span.textContent = `Respondido el ${data.fecha || ''}. ${data.aciertos}/10 correctas. Primera nota permanente.`;
+  });
+</script>
+</body>
+</html>
