@@ -389,12 +389,396 @@
     padding: 0 1rem;
   }
 
+
+  /* ── PESTAÑAS ───────────────────────────────────────────────────────────── */
+  .tab-nav {
+    max-width: 960px;
+    margin: -0.35rem auto 0;
+    padding: 0 1rem;
+    display: flex;
+    gap: .5rem;
+    position: relative;
+    z-index: 5;
+  }
+  .tab-btn {
+    border: 0;
+    border-radius: 14px 14px 0 0;
+    padding: .85rem 1.25rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: .88rem;
+    font-weight: 700;
+    cursor: pointer;
+    background: rgba(255,255,255,.20);
+    color: rgba(255,255,255,.86);
+    box-shadow: 0 -1px 12px rgba(0,0,0,.08);
+    transition: transform .16s, background .16s, color .16s;
+  }
+  .tab-btn:hover {
+    transform: translateY(-2px);
+    background: rgba(255,255,255,.28);
+    color: #fff;
+  }
+  .tab-btn[aria-selected="true"] {
+    background: var(--bg);
+    color: var(--navy);
+    transform: translateY(2px);
+  }
+  .tab-btn:focus-visible {
+    outline: 3px solid var(--amber-lt);
+    outline-offset: 2px;
+  }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* ── LECTURA INICIAL · BACON + FEYNMAN ─────────────────────────────────── */
+  .reading-main {
+    max-width: 960px;
+    margin: 1.75rem auto 0;
+    padding: 0 1rem;
+  }
+  .reading-hero {
+    background: linear-gradient(135deg, #0F1F36 0%, var(--navy-mid) 70%, #3D5E8A 100%);
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 14px 45px rgba(18,35,64,.25);
+    color: #fff;
+    position: relative;
+  }
+  .reading-hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 12% 18%, rgba(245,166,35,.22), transparent 26%),
+      radial-gradient(circle at 92% 8%, rgba(255,255,255,.10), transparent 24%),
+      linear-gradient(120deg, transparent 0%, rgba(255,255,255,.06) 60%, transparent 100%);
+    pointer-events: none;
+  }
+  .reading-hero-inner {
+    position: relative;
+    padding: clamp(1.6rem, 4vw, 2.5rem);
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(260px, .7fr);
+    gap: 1.4rem;
+    align-items: center;
+  }
+  .reading-kicker {
+    display: inline-block;
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--amber-lt);
+    margin-bottom: .75rem;
+  }
+  .reading-hero h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    line-height: 1.02;
+    font-weight: 400;
+    margin-bottom: .85rem;
+  }
+  .reading-hero p {
+    color: rgba(255,255,255,.82);
+    line-height: 1.65;
+    font-size: .97rem;
+  }
+  .hero-stat {
+    background: rgba(255,255,255,.10);
+    border: 1px solid rgba(255,255,255,.16);
+    border-radius: 20px;
+    padding: 1.2rem;
+    backdrop-filter: blur(8px);
+  }
+  .hero-stat .stat-num {
+    display: block;
+    font-family: 'DM Serif Display', serif;
+    font-size: 3.4rem;
+    line-height: .9;
+    color: var(--amber-lt);
+  }
+  .hero-stat .stat-label {
+    display: block;
+    margin-top: .45rem;
+    font-size: .86rem;
+    color: rgba(255,255,255,.80);
+  }
+
+  .reading-section {
+    margin-top: 1.2rem;
+    background: var(--surface);
+    border-radius: 22px;
+    padding: clamp(1.25rem, 3vw, 1.8rem);
+    box-shadow: 0 4px 24px rgba(0,0,0,.07);
+  }
+  .section-eyebrow {
+    font-size: .72rem;
+    font-weight: 800;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: .4rem;
+  }
+  .reading-section h3 {
+    font-family: 'DM Serif Display', serif;
+    font-weight: 400;
+    color: var(--navy-dark);
+    font-size: clamp(1.35rem, 3vw, 1.85rem);
+    line-height: 1.15;
+    margin-bottom: .9rem;
+  }
+  .reading-section p {
+    color: #374151;
+    line-height: 1.75;
+    font-size: .96rem;
+    margin-bottom: .85rem;
+  }
+  .bacon-quote {
+    position: relative;
+    background: #FAFBFD;
+    border: 1px solid #E2E8F0;
+    border-left: 6px solid var(--amber);
+    border-radius: 18px;
+    padding: 1.4rem 1.45rem 1.2rem;
+    margin-top: .9rem;
+  }
+  .bacon-quote::before {
+    content: "“";
+    position: absolute;
+    top: -.65rem;
+    right: 1rem;
+    font-family: 'DM Serif Display', serif;
+    font-size: 7rem;
+    line-height: 1;
+    color: rgba(198,124,0,.12);
+  }
+  .bacon-quote p {
+    position: relative;
+    margin-bottom: 1rem;
+    color: #273449;
+  }
+  .bacon-quote p:last-of-type { margin-bottom: .4rem; }
+  .quote-credit {
+    display: block;
+    margin-top: 1rem;
+    color: var(--muted);
+    font-size: .82rem;
+    font-style: italic;
+    line-height: 1.5;
+  }
+  .feynman-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(250px, .75fr);
+    gap: 1rem;
+    align-items: stretch;
+  }
+  .context-card {
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 18px;
+    padding: 1rem;
+  }
+  .context-card strong {
+    color: var(--navy);
+  }
+  .timeline {
+    display: grid;
+    gap: .75rem;
+  }
+  .timeline-item {
+    display: grid;
+    grid-template-columns: 38px 1fr;
+    gap: .75rem;
+    align-items: start;
+  }
+  .timeline-dot {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    background: var(--navy);
+    color: #fff;
+    display: grid;
+    place-items: center;
+    font-weight: 800;
+    font-size: .84rem;
+  }
+  .timeline-text {
+    background: #fff;
+    border: 1px solid #E5E7EB;
+    border-radius: 14px;
+    padding: .75rem .85rem;
+    color: #374151;
+    line-height: 1.55;
+    font-size: .9rem;
+  }
+  .diagram {
+    margin-top: 1rem;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: .7rem;
+  }
+  .diagram-node {
+    position: relative;
+    background: #FFFFFF;
+    border: 1.5px solid #D6DEE9;
+    border-radius: 16px;
+    padding: .85rem .75rem;
+    min-height: 112px;
+    box-shadow: 0 3px 12px rgba(30,58,95,.06);
+  }
+  .diagram-node:not(:last-child)::after {
+    content: "→";
+    position: absolute;
+    right: -.62rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--amber);
+    font-weight: 900;
+    font-size: 1.05rem;
+    z-index: 2;
+  }
+  .diagram-label {
+    display: block;
+    font-size: .7rem;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--amber);
+    font-weight: 800;
+    margin-bottom: .3rem;
+  }
+  .diagram-node strong {
+    display: block;
+    color: var(--navy-dark);
+    font-size: .92rem;
+    line-height: 1.25;
+    margin-bottom: .25rem;
+  }
+  .diagram-node span:last-child {
+    color: var(--muted);
+    font-size: .78rem;
+    line-height: 1.35;
+  }
+  .feynman-line {
+    margin-top: 1rem;
+    background: linear-gradient(135deg, var(--navy-dark), var(--navy));
+    color: #fff;
+    border-radius: 18px;
+    padding: 1.15rem 1.25rem;
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(1.25rem, 3vw, 1.7rem);
+    line-height: 1.25;
+    box-shadow: 0 8px 28px rgba(30,58,95,.22);
+  }
+  .course-links {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: .7rem;
+    margin-top: 1rem;
+  }
+  .course-link {
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 16px;
+    padding: .9rem .75rem;
+  }
+  .course-link strong {
+    display: block;
+    color: var(--navy);
+    font-size: .86rem;
+    margin-bottom: .25rem;
+  }
+  .course-link span {
+    display: block;
+    color: var(--muted);
+    font-size: .77rem;
+    line-height: 1.35;
+  }
+  .start-quiz-card {
+    margin-top: 1.2rem;
+    background: var(--surface);
+    border: 2px solid rgba(198,124,0,.22);
+    border-radius: 22px;
+    padding: 1.25rem;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: center;
+    box-shadow: 0 4px 24px rgba(0,0,0,.06);
+  }
+  .start-quiz-card p {
+    color: #374151;
+    line-height: 1.55;
+    margin: 0;
+    font-size: .94rem;
+  }
+  .start-quiz-btn {
+    border: 0;
+    background: linear-gradient(135deg, var(--amber), var(--amber-lt));
+    color: #231500;
+    border-radius: 14px;
+    padding: .9rem 1.2rem;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 800;
+    cursor: pointer;
+    white-space: nowrap;
+    box-shadow: 0 4px 16px rgba(198,124,0,.25);
+  }
+  .start-quiz-btn:hover {
+    transform: translateY(-1px);
+  }
+
   /* ── RESPONSIVE ── */
   @media (max-width: 480px) {
     header { padding: 1.6rem 1rem 1.4rem; }
     .question-card { padding: 1.2rem 1.1rem; }
     .nota-grande { font-size: 4rem; }
   }
+
+  @media (max-width: 820px) {
+    .reading-hero-inner,
+    .feynman-grid {
+      grid-template-columns: 1fr;
+    }
+    .diagram,
+    .course-links {
+      grid-template-columns: 1fr;
+    }
+    .diagram-node:not(:last-child)::after {
+      content: "↓";
+      right: 50%;
+      top: auto;
+      bottom: -.8rem;
+      transform: translateX(50%);
+    }
+    .start-quiz-card {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .start-quiz-btn {
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .tab-nav {
+      gap: .35rem;
+    }
+    .tab-btn {
+      flex: 1;
+      padding: .75rem .65rem;
+      font-size: .8rem;
+    }
+    .reading-main {
+      margin-top: 1.25rem;
+    }
+    .bacon-quote {
+      padding: 1.15rem;
+    }
+    .hero-stat .stat-num {
+      font-size: 2.8rem;
+    }
+  }
+
 </style>
 </head>
 <body>
@@ -412,6 +796,224 @@
     </div>
   </div>
 </header>
+
+<nav class="tab-nav" role="tablist" aria-label="Secciones del quiz">
+  <button class="tab-btn" id="tab-lectura" role="tab" aria-selected="true" aria-controls="panel-lectura" tabindex="0" data-tab="lectura">
+    Lectura inicial
+  </button>
+  <button class="tab-btn" id="tab-quiz" role="tab" aria-selected="false" aria-controls="panel-quiz" tabindex="-1" data-tab="quiz">
+    Quiz de repaso
+  </button>
+</nav>
+
+<section id="panel-lectura" class="tab-panel active" role="tabpanel" aria-labelledby="tab-lectura">
+  <div class="reading-main">
+
+    <article class="reading-hero">
+      <div class="reading-hero-inner">
+        <div>
+          <span class="reading-kicker">Bacon · Feynman · Challenger</span>
+          <h2>La naturaleza no puede ser engañada</h2>
+          <p>
+            Antes de responder el quiz, lea este caso como una advertencia metodológica:
+            los datos no hablan solos. Una hipótesis puede ser razonable, una gráfica puede
+            parecer convincente y una institución puede sonar segura; aun así, la realidad
+            puede contradecirlas si el diseño no mira los casos correctos.
+          </p>
+        </div>
+        <div class="hero-stat" aria-label="Idea central de la lectura">
+          <span class="stat-num">1</span>
+          <span class="stat-label">
+            caso negativo puede pesar más que muchos ejemplos que parecen confirmar una creencia.
+          </span>
+        </div>
+      </div>
+    </article>
+
+    <section class="reading-section" aria-labelledby="bacon-title">
+      <div class="section-eyebrow">Aforismo de apertura</div>
+      <h3 id="bacon-title">Francis Bacon y el peligro de mirar solo lo que confirma</h3>
+
+      <blockquote class="bacon-quote">
+        <p>
+          “El entendimiento humano, una vez adoptadas ciertas opiniones, ya sea porque ya eran aceptadas y creídas,
+          o porque le agradan, atrae todo lo demás para apoyarlas y concordar con ellas.
+        </p>
+
+        <p>
+          Y aunque se encuentre con mayor número y peso de ejemplos contrarios, con gran y perjudicial prejuicio,
+          las ignorará, condenará o excluirá introduciendo alguna distinción, para que la autoridad de aquellas
+          suposiciones previas permanezca intacta e incólume.
+        </p>
+
+        <p>
+          Así que fue una buena respuesta la de aquel hombre al que, al mostrarle una imagen colgada en un templo
+          de quienes, tras hacer sus votos, habían escapado del naufragio, le preguntaron si no reconocía ahora
+          el poder de los dioses. Él preguntó a su vez: "¿Pero dónde están las imágenes de quienes perecieron
+          después de hacer sus votos?".
+        </p>
+
+        <p>
+          El mismo razonamiento puede verse en toda superstición, ya sea en la astrología, los sueños, los presagios,
+          la némesis y similares, en las que los hombres encuentran placenteras tales vanidades y toman nota de los
+          eventos cuando se cumplen, pero cuando no lo hacen (aunque esto sucede con mucha más frecuencia), los ignoran
+          y los pasan por alto.
+        </p>
+
+        <p>
+          Pero este mal acecha mucho más insidiosamente en las filosofías y las ciencias, en las que una opinión,
+          una vez adoptada, infecta y controla a todas las demás, aunque estas últimas puedan ser mucho más firmes
+          y mejores.
+        </p>
+
+        <p>
+          Además, incluso sin este placer y vanidad de los que he hablado, el entendimiento humano aún tiene este
+          defecto peculiar y perpetuo de ser más conmovido y excitado por las afirmaciones que por las negativas,
+          mientras que con razón y propiedad debería dar igual peso a ambas; más bien, de hecho, en todo axioma
+          verdaderamente constituido, un caso negativo tiene mayor peso.”
+        </p>
+
+        <cite class="quote-credit">
+          Francis Bacon, <em>Novum Organum: Aforismos sobre la interpretación de la naturaleza y el reino del hombre</em> (1620/1994).
+        </cite>
+      </blockquote>
+    </section>
+
+    <section class="reading-section" aria-labelledby="feynman-title">
+      <div class="section-eyebrow">Caso de estudio</div>
+      <h3 id="feynman-title">Feynman, el Challenger y la prueba del agua helada</h3>
+
+      <div class="feynman-grid">
+        <div>
+          <p>
+            El 28 de enero de 1986, el transbordador espacial <em>Challenger</em> explotó poco después de despegar.
+            Después del accidente, se creó una comisión presidencial para investigar lo ocurrido. Uno de sus miembros
+            fue Richard Feynman, físico y premio Nobel, quien encontró una tensión profunda entre dos formas de mirar
+            el problema: la de los ingenieros, que advertían fallas y riesgos concretos, y la de la administración,
+            que tendía a presentar el sistema como mucho más seguro de lo que la evidencia permitía afirmar.
+          </p>
+
+          <p>
+            Antes del lanzamiento, algunos ingenieros habían expresado preocupación por las bajas temperaturas.
+            El problema estaba en los anillos de sellado, conocidos como <em>O-rings</em>, que debían impedir el escape
+            de gases calientes en los cohetes impulsores. Si el frío afectaba su elasticidad, el sello podía fallar.
+            Pero la advertencia no logró imponerse. Parte del problema fue la manera como se interpretó la evidencia:
+            se miraron fallas anteriores como si el hecho de haber sobrevivido a ellas demostrara seguridad, cuando en
+            realidad eran señales de que algo no estaba funcionando como debía.
+          </p>
+
+          <p>
+            Durante una audiencia pública, Feynman hizo una demostración sencilla. Comprimió una muestra del material
+            del <em>O-ring</em> y la sumergió en agua helada. El material perdió resiliencia: no recuperó rápidamente
+            su forma. La prueba no reemplazaba todo el análisis técnico, pero mostraba algo decisivo: el frío no era
+            un detalle secundario, sino una variable capaz de alterar el funcionamiento del sistema. La demostración
+            volvió visible lo que la burocracia y la mala lectura de los datos habían intentado minimizar.
+          </p>
+        </div>
+
+        <aside class="context-card" aria-label="Secuencia del caso Challenger">
+          <div class="timeline">
+            <div class="timeline-item">
+              <div class="timeline-dot">1</div>
+              <div class="timeline-text"><strong>Advertencia:</strong> ingenieros señalan riesgo por temperatura baja.</div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot">2</div>
+              <div class="timeline-text"><strong>Decisión:</strong> la organización interpreta el riesgo como aceptable.</div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot">3</div>
+              <div class="timeline-text"><strong>Accidente:</strong> el sistema falla después del lanzamiento.</div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot">4</div>
+              <div class="timeline-text"><strong>Prueba:</strong> Feynman muestra el efecto del frío sobre el material.</div>
+            </div>
+          </div>
+        </aside>
+      </div>
+
+      <div class="diagram" aria-label="Diagrama metodológico del caso">
+        <div class="diagram-node">
+          <span class="diagram-label">Creencia previa</span>
+          <strong>“El sistema es seguro”</strong>
+          <span>La confianza institucional funciona como punto de partida.</span>
+        </div>
+        <div class="diagram-node">
+          <span class="diagram-label">Mala selección</span>
+          <strong>Casos incompletos</strong>
+          <span>Mirar solo ciertos vuelos puede ocultar el patrón relevante.</span>
+        </div>
+        <div class="diagram-node">
+          <span class="diagram-label">Variable crítica</span>
+          <strong>Temperatura</strong>
+          <span>El frío debía compararse con daño y ausencia de daño.</span>
+        </div>
+        <div class="diagram-node">
+          <span class="diagram-label">Mecanismo</span>
+          <strong>Elasticidad del O-ring</strong>
+          <span>La prueba física conecta asociación con explicación causal.</span>
+        </div>
+        <div class="diagram-node">
+          <span class="diagram-label">Lección</span>
+          <strong>La realidad corrige</strong>
+          <span>La naturaleza no negocia con la autoridad ni con la presentación pública.</span>
+        </div>
+      </div>
+
+      <div class="feynman-line">
+        “Para una tecnología exitosa, la realidad debe estar por encima de las relaciones públicas, porque la naturaleza no puede ser engañada.”
+      </div>
+    </section>
+
+    <section class="reading-section" aria-labelledby="curso-title">
+      <div class="section-eyebrow">Conexión con el curso</div>
+      <h3 id="curso-title">¿Por qué este caso abre un quiz de diseños cuantitativos?</h3>
+
+      <p>
+        Este caso resume varios temas del curso: hipótesis, porque había una predicción sobre el efecto del frío;
+        validez interna, porque era necesario evaluar si la temperatura podía explicar el daño; muestreo, porque no
+        basta mirar solo los casos donde ocurrió el problema; estadística descriptiva, porque una gráfica puede revelar
+        u ocultar un patrón; y causalidad, porque la asociación entre frío y daño necesitaba conectarse con un mecanismo
+        físico plausible.
+      </p>
+
+      <div class="course-links" aria-label="Temas del curso conectados con el caso">
+        <div class="course-link">
+          <strong>Hipótesis</strong>
+          <span>El frío puede afectar el sellado.</span>
+        </div>
+        <div class="course-link">
+          <strong>Validez interna</strong>
+          <span>Controlar explicaciones alternativas.</span>
+        </div>
+        <div class="course-link">
+          <strong>Muestreo</strong>
+          <span>Comparar casos con y sin falla.</span>
+        </div>
+        <div class="course-link">
+          <strong>Descripción</strong>
+          <span>Una gráfica puede ocultar o revelar.</span>
+        </div>
+        <div class="course-link">
+          <strong>Causalidad</strong>
+          <span>La asociación exige mecanismo.</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="start-quiz-card">
+      <p>
+        Después de la lectura, el quiz evalúa si puede aplicar estas ideas a hipótesis, diseños,
+        escalas, muestreo, estadística descriptiva e inferencia.
+      </p>
+      <button type="button" class="start-quiz-btn" data-open-tab="quiz">Ir al quiz</button>
+    </div>
+
+  </div>
+</section>
+
+<section id="panel-quiz" class="tab-panel" role="tabpanel" aria-labelledby="tab-quiz">
 
 <!-- ── BANNER NOTA GUARDADA ── -->
 <div id="saved-banner">
@@ -815,12 +1417,37 @@
 
   </form>
 </main>
+</section>
 
 <footer>
   Diseños de Investigación I · Pedro Luis Ravelo Rivera · Universidad de Cundinamarca, Facatativá · 2026-I
 </footer>
 
 <script>
+
+  // ── PESTAÑAS ──────────────────────────────────────────────────────────────
+  function activateTab(tabName) {
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      const isActive = btn.dataset.tab === tabName;
+      btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
+      btn.setAttribute('tabindex', isActive ? '0' : '-1');
+    });
+
+    document.querySelectorAll('.tab-panel').forEach(panel => {
+      panel.classList.toggle('active', panel.id === `panel-${tabName}`);
+    });
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => activateTab(btn.dataset.tab));
+  });
+
+  document.querySelectorAll('[data-open-tab]').forEach(btn => {
+    btn.addEventListener('click', () => activateTab(btn.dataset.openTab));
+  });
+
   // ── CLAVE Y RETROALIMENTACIÓN ─────────────────────────────────────────────
   const KEY = 'disenios_g401_quiz_p3_v1';
 
