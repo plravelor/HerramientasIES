@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz de Repaso · Parcial 3 · Seminario de Investigación II</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  /* ── TOKENS ──────────────────────────────────────────────────────── */
+  :root {
+    --verde:     #1A5C3A;
+    --verde-med: #2D7A52;
+    --verde-bg:  #E8F5E9;
+    --azul:      #1A3A5C;
+    --azul-bg:   #EBF3FB;
+    --purpura:   #3A1A5C;
+    --amber:     #7A5C00;
+    --amber-bg:  #FEF5E0;
+    --rojo:      #B71C1C;
+    --rojo-bg:   #FDEDEC;
+    --gris:      #F5F5F5;
+    --borde:     #D0D0D0;
+    --texto:     #1A1A1A;
+    --texto2:    #444;
+    --radio:     20px;
+    --sombra:    0 2px 16px rgba(26,92,58,.10);
+  }
+
+  /* ── RESET / BASE ────────────────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 16px;
+    color: var(--texto);
+    background: #F0F4F1;
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  /* ── SKIP LINK (accesibilidad) ───────────────────────────────────── */
+  .skip-link {
+    position: absolute; top: -999px; left: 0;
+    background: var(--verde); color: #fff;
+    padding: 8px 16px; font-weight: 600; z-index: 999;
+    border-radius: 0 0 8px 0;
+  }
+  .skip-link:focus { top: 0; }
+
+  /* ── CABECERA ─────────────────────────────────────────────────────── */
+  header {
+    background: var(--verde);
+    color: #fff;
+    padding: 32px 24px 24px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: "";
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(
+      45deg, transparent, transparent 18px,
+      rgba(255,255,255,.04) 18px, rgba(255,255,255,.04) 36px
+    );
+    pointer-events: none;
+  }
+  header h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    font-weight: 900;
+    letter-spacing: -.5px;
+    line-height: 1.2;
+    position: relative;
+  }
+  header p.meta {
+    margin-top: 8px;
+    font-size: .9rem;
+    opacity: .85;
+    position: relative;
+  }
+
+  /* ── AVISO NOTA YA GUARDADA ───────────────────────────────────────── */
+  #aviso-guardado {
+    display: none;
+    background: var(--amber-bg);
+    border-left: 5px solid var(--amber);
+    padding: 14px 20px;
+    margin: 20px auto;
+    max-width: 700px;
+    border-radius: 0 8px 8px 0;
+    font-size: .95rem;
+    color: var(--amber);
+    font-weight: 600;
+  }
+
+  /* ── CONTENEDOR PRINCIPAL ─────────────────────────────────────────── */
+  main {
+    max-width: 700px;
+    margin: 28px auto 60px;
+    padding: 0 16px;
+  }
+
+  /* ── INTRO ────────────────────────────────────────────────────────── */
+  .intro {
+    background: #fff;
+    border-radius: var(--radio);
+    padding: 22px 26px;
+    margin-bottom: 28px;
+    box-shadow: var(--sombra);
+    border-left: 5px solid var(--verde);
+    font-size: .95rem;
+    color: var(--texto2);
+  }
+  .intro strong { color: var(--verde); }
+
+  /* ── TARJETA DE PREGUNTA ─────────────────────────────────────────── */
+  .pregunta {
+    background: #fff;
+    border-radius: var(--radio);
+    padding: 24px 26px 20px;
+    margin-bottom: 20px;
+    box-shadow: var(--sombra);
+    border: 1.5px solid var(--borde);
+    transition: border-color .2s;
+  }
+  .pregunta:focus-within {
+    border-color: var(--verde);
+    box-shadow: 0 0 0 3px rgba(26,92,58,.15);
+  }
+
+  .pregunta-num {
+    display: inline-block;
+    background: var(--verde);
+    color: #fff;
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: .85rem;
+    padding: 2px 12px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+    letter-spacing: .5px;
+  }
+
+  .pregunta-tema {
+    display: inline-block;
+    background: var(--verde-bg);
+    color: var(--verde-med);
+    font-size: .78rem;
+    font-weight: 600;
+    padding: 2px 10px;
+    border-radius: 20px;
+    margin-left: 6px;
+    text-transform: uppercase;
+    letter-spacing: .4px;
+  }
+
+  .pregunta-texto {
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 1.55;
+    margin-bottom: 16px;
+    color: var(--texto);
+  }
+
+  /* ── OPCIONES ─────────────────────────────────────────────────────── */
+  .opciones { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+
+  .opcion label {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1.5px solid var(--borde);
+    cursor: pointer;
+    transition: background .15s, border-color .15s;
+    font-size: .95rem;
+    line-height: 1.45;
+  }
+  .opcion label:hover { background: var(--verde-bg); border-color: var(--verde-med); }
+
+  /* radio visual custom */
+  .opcion input[type="radio"] {
+    appearance: none; -webkit-appearance: none;
+    width: 20px; height: 20px; min-width: 20px;
+    border: 2px solid var(--borde);
+    border-radius: 50%;
+    margin-top: 1px;
+    transition: border-color .15s, background .15s;
+    cursor: pointer;
+    position: relative;
+  }
+  .opcion input[type="radio"]:checked {
+    border-color: var(--verde);
+    background: var(--verde);
+    box-shadow: inset 0 0 0 4px #fff;
+  }
+  .opcion input[type="radio"]:focus-visible {
+    outline: 3px solid var(--verde);
+    outline-offset: 2px;
+  }
+  .opcion label:has(input:checked) {
+    background: var(--verde-bg);
+    border-color: var(--verde);
+  }
+
+  /* ── ESTADOS POST-CALIFICAR ──────────────────────────────────────── */
+  .opcion label.correcta {
+    background: var(--verde-bg) !important;
+    border-color: var(--verde) !important;
+    font-weight: 600;
+  }
+  .opcion label.incorrecta {
+    background: var(--rojo-bg) !important;
+    border-color: var(--rojo) !important;
+  }
+  .opcion label.correcta::after  { content: " ✔"; color: var(--verde); font-weight: 700; }
+  .opcion label.incorrecta::after { content: " ✘"; color: var(--rojo); font-weight: 700; }
+
+  .retroalimentacion {
+    display: none;
+    margin-top: 14px;
+    padding: 12px 16px;
+    background: var(--azul-bg);
+    border-left: 4px solid var(--azul);
+    border-radius: 0 8px 8px 0;
+    font-size: .9rem;
+    color: var(--azul);
+    line-height: 1.5;
+  }
+  .retroalimentacion.visible { display: block; }
+
+  /* ── BOTÓN CALIFICAR ─────────────────────────────────────────────── */
+  .acciones {
+    text-align: center;
+    margin-top: 32px;
+  }
+  #btn-calificar {
+    background: var(--verde);
+    color: #fff;
+    border: none;
+    padding: 16px 48px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 50px;
+    cursor: pointer;
+    letter-spacing: .3px;
+    box-shadow: 0 4px 18px rgba(26,92,58,.30);
+    transition: background .18s, transform .12s, box-shadow .18s;
+  }
+  #btn-calificar:hover { background: var(--verde-med); transform: translateY(-2px); box-shadow: 0 6px 22px rgba(26,92,58,.35); }
+  #btn-calificar:active { transform: translateY(0); }
+  #btn-calificar:focus-visible { outline: 3px solid var(--verde); outline-offset: 3px; }
+  #btn-calificar:disabled {
+    background: #888;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+
+  /* ── PANEL DE RESULTADO ──────────────────────────────────────────── */
+  #resultado {
+    display: none;
+    margin-top: 28px;
+    background: #fff;
+    border-radius: var(--radio);
+    padding: 28px 26px;
+    text-align: center;
+    box-shadow: var(--sombra);
+    border: 2px solid var(--verde);
+  }
+  #resultado h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    color: var(--verde);
+    margin-bottom: 12px;
+  }
+  #nota-display {
+    font-family: 'Playfair Display', serif;
+    font-size: 4rem;
+    font-weight: 900;
+    line-height: 1;
+    margin: 8px 0 4px;
+  }
+  #nota-display.aprobado { color: var(--verde); }
+  #nota-display.riesgo   { color: var(--amber); }
+  #nota-display.reprobado { color: var(--rojo); }
+
+  #resultado .pts {
+    font-size: .95rem;
+    color: var(--texto2);
+    margin-bottom: 14px;
+  }
+  #mensaje-resultado {
+    font-size: 1rem;
+    color: var(--texto2);
+    line-height: 1.55;
+    margin-top: 6px;
+    padding: 12px;
+    background: var(--gris);
+    border-radius: 8px;
+  }
+  .guardada-badge {
+    display: inline-block;
+    background: var(--amber-bg);
+    color: var(--amber);
+    font-weight: 700;
+    font-size: .82rem;
+    padding: 4px 14px;
+    border-radius: 20px;
+    margin-top: 12px;
+    letter-spacing: .3px;
+  }
+
+  /* ── BARRA DE PROGRESO ───────────────────────────────────────────── */
+  .barra-wrap {
+    background: var(--borde);
+    border-radius: 8px;
+    height: 8px;
+    margin-top: 14px;
+    overflow: hidden;
+  }
+  .barra-fill {
+    height: 100%;
+    border-radius: 8px;
+    transition: width .5s ease;
+  }
+  .barra-fill.aprobado { background: var(--verde); }
+  .barra-fill.riesgo   { background: var(--amber); }
+  .barra-fill.reprobado { background: var(--rojo); }
+
+  /* ── PIE ──────────────────────────────────────────────────────────── */
+  footer {
+    text-align: center;
+    padding: 20px;
+    font-size: .82rem;
+    color: #888;
+  }
+
+  /* ── RESPONSIVE ───────────────────────────────────────────────────── */
+  @media (max-width: 480px) {
+    .pregunta { padding: 18px 16px; }
+    .opcion label { padding: 10px 12px; font-size: .9rem; }
+  }
+
+  /* ── PESTAÑAS ─────────────────────────────────────────────────────── */
+  .tab-nav {
+    display: flex;
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 0 16px;
+    gap: 6px;
+    position: relative;
+    top: -1px;
+  }
+  .tab-btn {
+    background: rgba(255,255,255,.18);
+    color: rgba(255,255,255,.85);
+    border: none;
+    padding: 10px 24px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: .92rem;
+    font-weight: 600;
+    border-radius: 10px 10px 0 0;
+    cursor: pointer;
+    letter-spacing: .2px;
+    transition: background .15s, color .15s;
+    position: relative;
+    bottom: -4px;
+  }
+  .tab-btn:hover { background: rgba(255,255,255,.28); color: #fff; }
+  .tab-btn[aria-selected="true"] {
+    background: #F0F4F1;
+    color: var(--verde);
+    bottom: -6px;
+    padding-bottom: 14px;
+  }
+  .tab-btn:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+
+  .tab-panel { display: none; }
+  .tab-panel.activo { display: block; }
+
+  /* ── POEMA ────────────────────────────────────────────────────────── */
+  .poema-wrap {
+    max-width: 700px;
+    margin: 28px auto 60px;
+    padding: 0 16px;
+  }
+  .poema-card {
+    background: #fff;
+    border-radius: var(--radio);
+    box-shadow: var(--sombra);
+    overflow: hidden;
+  }
+  .poema-cabecera {
+    background: var(--azul);
+    color: #fff;
+    padding: 28px 32px 22px;
+    position: relative;
+    overflow: hidden;
+  }
+  .poema-cabecera::before {
+    content: "\201C";
+    position: absolute;
+    right: 16px; top: -10px;
+    font-family: 'Playfair Display', serif;
+    font-size: 10rem;
+    color: rgba(255,255,255,.07);
+    line-height: 1;
+    pointer-events: none;
+  }
+  .poema-titulo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 900;
+    line-height: 1.2;
+    margin-bottom: 6px;
+  }
+  .poema-autor {
+    font-size: .9rem;
+    opacity: .8;
+    font-style: italic;
+  }
+  .poema-cuerpo {
+    padding: 30px 32px 28px;
+  }
+  .poema-contexto {
+    font-size: .9rem;
+    color: var(--texto2);
+    background: var(--azul-bg);
+    border-left: 4px solid var(--azul);
+    padding: 12px 16px;
+    border-radius: 0 8px 8px 0;
+    margin-bottom: 28px;
+    line-height: 1.6;
+  }
+  .poema-texto {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.12rem;
+    line-height: 1.9;
+    color: #1A1A1A;
+    white-space: pre-line;
+  }
+  .poema-texto em {
+    color: var(--azul);
+    font-style: italic;
+  }
+  .poema-nota {
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 1.5px solid var(--borde);
+    font-size: .88rem;
+    color: #666;
+    line-height: 1.6;
+  }
+  .poema-nota strong { color: var(--verde); }
+
+  /* destacar verso final */
+  .verso-final {
+    display: block;
+    margin-top: 18px;
+    font-size: 1.22rem;
+    font-weight: 700;
+    color: var(--azul);
+    letter-spacing: .2px;
+  }
+</style>
+</head>
+
+<body>
+<a href="#main-content" class="skip-link">Ir al contenido principal</a>
+
+<header role="banner">
+  <h1>Quiz de Repaso · Parcial Tercer Corte</h1>
+  <p class="meta">Seminario de Investigación II · PSI 701 · UDEC Facatativá · 2026-1</p>
+</header>
+
+<nav class="tab-nav" role="tablist" aria-label="Secciones del recurso">
+  <button class="tab-btn" id="tab-quiz" role="tab" aria-selected="true" aria-controls="panel-quiz" tabindex="0">
+    📝 Quiz de repaso
+  </button>
+  <button class="tab-btn" id="tab-poema" role="tab" aria-selected="false" aria-controls="panel-poema" tabindex="-1">
+    📖 Poema de Donne
+  </button>
+</nav>
+
+<div id="panel-quiz" class="tab-panel activo" role="tabpanel" aria-labelledby="tab-quiz">
+
+<div id="aviso-guardado" role="alert" aria-live="polite">
+  ⚠️ Ya tienes una nota guardada para este quiz. Se muestra tu primera calificación.
+</div>
+
+<main id="main-content">
+
+  <div class="intro" role="note">
+    Este quiz cubre los cuatro métodos del tercer corte: <strong>entrevista en profundidad, método biográfico, grupo de discusión e IAP</strong>. Son 10 preguntas. Cuando termines, haz clic en <strong>Calificar</strong> para ver tu nota. La primera nota que obtengas quedará guardada y no cambiará si vuelves a cargar la página.
+  </div>
+
+  <form id="quiz-form" novalidate aria-label="Quiz de repaso parcial 3">
+
+    <!-- P1 -->
+    <div class="pregunta" id="q1">
+      <span class="pregunta-num">Pregunta 1</span>
+      <span class="pregunta-tema">Entrevista en profundidad</span>
+      <p class="pregunta-texto">¿Cuál es la característica más importante de la entrevista en profundidad según Robles (2011), comparada con una entrevista estructurada?</p>
+      <ul class="opciones" role="radiogroup" aria-labelledby="q1-label">
+        <li class="opcion"><label><input type="radio" name="q1" value="a">Sigue un cuestionario fijo con preguntas en el mismo orden para todos los entrevistados.</label></li>
+        <li class="opcion"><label><input type="radio" name="q1" value="b">Es flexible y sigue el hilo del entrevistado: el investigador adapta las preguntas según lo que emerge en la conversación.</label></li>
+        <li class="opcion"><label><input type="radio" name="q1" value="c">Solo puede usarse en investigaciones clínicas con personas con diagnóstico psicológico.</label></li>
+        <li class="opcion"><label><input type="radio" name="q1" value="d">El entrevistador no puede intervenir ni hacer preguntas adicionales durante la sesión.</label></li>
+      </ul>
+      <div class="retroalimentacion" id="retro-q1" role="alert" aria-live="polite"></div>
+    </div>
+
+    <!-- P2 -->
+    <div class="pregunta" id="q2">
+      <span class="pregunta-num">Pregunta 2</span>
+      <span class="pregunta-tema">Grupo de discusión</span>
+      <p class="pregunta-texto">¿Qué captura el grupo de discusión que lo diferencia del grupo focal, según Canales Cerón (2006)?</p>
+      <ul class="opciones" role="radiogroup" aria-labelledby="q2-label">
+        <li class="opcion"><label><input type="radio" name="q2" value="a">Las experiencias personales y vivencias concretas de cada participante.</label></li>
+        <li class="opcion"><label><input type="radio" name="q2" value="b">El discurso social sobre el deber ser: lo que el grupo considera que "se debería" hacer o pensar.</label></li>
+        <li class="opcion"><label><input type="radio" name="q2" value="c">Las prácticas cotidianas de los participantes en su vida familiar o laboral.</label></li>
+        <li class="opcion"><label><input type="radio" name="q2" value="d">Las opiniones individuales que cada persona tiene sobre un tema de actualidad.</label></li>
+      </ul>
+      <div class="retroalimentacion" id="retro-q2" role="alert" aria-live="polite"></div>
+    </div>
+
+    <!-- P3 -->
+    <div class="pregunta" id="q3">
+      <span class="pregunta-num">Pregunta 3</span>
+      <span class="pregunta-tema">Método biográfico</span>
+      <p class="pregunta-texto">¿Qué quería decir Bourdieu con la expresión "ilusión biográfica"?</p>
+      <ul class="opciones" role="radiogroup" aria-labelledby="q3-label">
+        <li class="opcion"><label><input type="radio" name="q3" value="a">Que los sujetos mienten conscientemente en sus relatos de vida.</label></li>
+        <li class="opcion"><label><input type="radio" name="q3" value="b">La tendencia a construir una vida como trayectoria coherente y lineal, cuando en realidad está llena de rupturas, casualidades y contradicciones.</label></li>
+        <li class="opcion"><label><input type="radio" name="q3" value="c">Que el método biográfico solo sirve para estudiar personas famosas o históricamente relevantes.</label></li>
+        <li class="opcion"><label><input type="radio" name="q3" value="d">Que el investigador siempre se equivoca al interpretar el relato del sujeto.</label></li>
+      </ul>
+      <div class="retroalimentacion" id="retro-q3" role="alert" aria-live="polite"></div>
+    </div>
+
+    <!-- P4 -->
+    <div class="pregunta" id="q4">
+      <span class="pregunta-num">Pregunta 4</span>
+      <span class="pregunta-tema">IAP</span>
+      <p class="pregunta-texto">¿Cuál es la diferencia fundamental entre la investigación-acción (IA) clásica y la investigación-acción participativa (IAP)?</p>
+      <ul class="opciones" role="radiogroup" aria-labelledby="q4-label">
+        <li class="opcion"><label><input type="radio" name="q4" value="a">La IA usa métodos cuantitativos y la IAP solo usa métodos cualitativos.</label></li>
+        <li class="opcion"><label><input type="radio" name="q4" value="b">En la IAP la comunidad define el problema desde el inicio y tiene voz epistémica en todo el proceso; en la IA la comunidad participa principalmente en la acción pero no en la definición del problema.</label></li>
+        <li class="opcion"><label><input type="radio" name="q4" value="c">La IAP no puede usar entrevistas; solo usa talleres y reuniones comunitarias.</label></li>
+        <li class="opcion"><label><input type="radio" name="q4" value="d">La IA siempre dura más tiempo que la IAP porque requiere más rigor metodológico.</label></li>
+      </ul>
+      <div class="retroalimentacion" id="retro-q4" role="alert" aria-live="polite"></div>
+    </div>
+
+    <!-- P5 -->
+    <div class="pregunta" id="q5">
+      <span class="pregunta-num">Pregunta 5</span>
+      <span class="pregunta-tema">Grupo de discusión</span>
+      <p class="pregunta-texto">Para que un grupo de discusión produzca un discurso social válido, Canales Cerón recomienda que los participantes:</p>
+      <ul class="opciones" role="radiogroup" aria-labelledby="q5-label">
+        <li class="opcion"><label><input type="radio" name="q5" value="a">Sean amigos cercanos o compañeros de clase que ya tengan confianza entre sí.</label></li>
+        <li class="opcion"><label><input type="radio" name="q5" value="b">Sean entre 5 y 8 personas que no se conozcan entre sí y tengan una posición social semejante frente al tema.</label></li>
+        <li class="opcion"><label><input type="radio" name="q5" value="c">Sean más de 10 personas para garantizar diversidad de opiniones.</label></li>
+        <li class="opcion"><label><input type="radio" name="q5" value="d">Incluyan expertos y no expertos mezclados para enriquecer el debate.</label></li>
+      </ul>
+      <div class="retroalimentacion" id="retro-q5" role="alert" aria-live="polite"></div>
+    </div>
+
+    <!-- P6 -->
+    <div class="pregunta" id="q6">
+      <span class="pregunta-num">Pregunta 6</span>
+      <span class="pregunta-tema">Método biográfico</span>
+      <p class="pregunta-texto">¿Cuál es la diferencia principal entre una "historia de vida" y un "relato de vida"?</p>
+      <ul class="opciones" role="radiogroup" aria-labelledby="q6-label">
+        <li class="opcion"><label><input type="radio" name="q6" value="a">Son exactamente lo mismo: los dos términos se usan como sinónimos en la literatura.</label></li>
+        <li class="opcion"><label><input type="radio" name="q6" value="b">La historia de vida integra la voz del sujeto con fuentes documentales y otros testimonios; el relato de vida es exclusivamente la narración del propio sujeto.</label></li>
+        <li class="opcion"><label><input type="radio" name="q6" value="c">El relato de vida es siempre más largo y detallado que la historia de vida.</label></li>
+        <li class="opcion"><label><input type="radio" name="q6" value="d">La historia de vida solo estudia personas fallecidas; el relato de vida, personas vivas.</label></li>
+      </ul>
+      <div class="retroalimentacion" id="retro-q6" role="alert" aria-live="polite"></div>
+    </div>
+
+    <!-- P7 -->
+    <div class="pregunta" id="q7">
+      <span class="pregunta-num">Pregunta 7</span>
+      <span class="pregunta-tema">Entrevista en profundidad</span>
+      <p class="pregunta-texto">Una entrevistadora trabaja con una habitante de Facatativá sobre su experiencia de cuidado familiar. En la primera sesión la participante habla poco; en la segunda se abre mucho más. ¿Qué explica mejor ese cambio?</p>
+      <ul class="opciones" role="radiogroup" aria-labelledby="q7-label">
+        <li class="opcion"><label><input type="radio" name="q7" value="a">La entrevistadora cambió el cuestionario entre una sesión y otra.</label></li>
+        <li class="opcion"><label><input type="radio" name="q7" value="b">El rapport se construyó progresivamente: la confianza entre entrevistadora y participante creció con el tiempo y las sesiones.</label></li>
+        <li class="opcion"><label><input type="radio" name="q7" value="c">La participante no entendía el consentimiento informado en la primera sesión.</label></li>
+        <li class="opcion"><label><input type="radio" name="q7" value="d">Las preguntas de la segunda sesión eran más fáciles de responder.</label></li>
+      </ul>
+      <div class="retroalimentacion" id="retro-q7" role="alert" aria-live="polite"></div>
+    </div>
+
+    <!-- P8 -->
+    <div class="pregunta" id="q8">
+      <span class="pregunta-num">Pregunta 8</span>
+      <span class="pregunta-tema">IAP</span>
+      <p class="pregunta-texto">En una IAP sobre acceso a servicios de salud en Facatativá, el equipo entrega un informe final. La comunidad dice que los resultados "no nos representan". Según Fals Borda, ¿qué señala ese rechazo?</p>
+      <ul class="opciones" role="radiogroup" aria-labelledby="q8-label">
+        <li class="opcion"><label><input type="radio" name="q8" value="a">Que la comunidad no entiende el lenguaje académico y se necesita una traducción más sencilla.</label></li>
+        <li class="opcion"><label><input type="radio" name="q8" value="b">Que el informe falló en redacción y presentación, pero el análisis es válido.</label></li>
+        <li class="opcion"><label><input type="radio" name="q8" value="c">Que el conocimiento producido no pasó el criterio de validez más importante en IAP: el reconocimiento comunitario de los resultados como verdaderos y útiles.</label></li>
+        <li class="opcion"><label><input type="radio" name="q8" value="d">Que la comunidad tiene sesgos culturales que impiden valorar la investigación científica.</label></li>
+      </ul>
+      <div class="retroalimentacion" id="retro-q8" role="alert" aria-live="polite"></div>
+    </div>
+
+    <!-- P9 -->
+    <div class="pregunta" id="q9">
+      <span class="pregunta-num">Pregunta 9</span>
+      <span class="pregunta-tema">Grupo de discusión</span>
+      <p class="pregunta-texto">En un grupo de discusión, después de lanzar la consigna inicial, ¿cuál debe ser el rol del moderador?</p>
+      <ul class="opciones" role="radiogroup" aria-labelledby="q9-label">
+        <li class="opcion"><label><input type="radio" name="q9" value="a">Hacer preguntas directas a cada participante para que nadie se quede en silencio.</label></li>
+        <li class="opcion"><label><input type="radio" name="q9" value="b">Retirarse de la conversación al máximo para que el grupo interactúe entre sí y produzca su propio discurso.</label></li>
+        <li class="opcion"><label><input type="radio" name="q9" value="c">Ir completando un formulario con las respuestas de cada participante.</label></li>
+        <li class="opcion"><label><input type="radio" name="q9" value="d">Interrumpir cada vez que alguien se desvíe del tema central de la consigna.</label></li>
+      </ul>
+      <div class="retroalimentacion" id="retro-q9" role="alert" aria-live="polite"></div>
+    </div>
+
+    <!-- P10 -->
+    <div class="pregunta" id="q10">
+      <span class="pregunta-num">Pregunta 10</span>
+      <span class="pregunta-tema">Método biográfico</span>
+      <p class="pregunta-texto">¿Qué son los "turning points" o epifanías en el método biográfico?</p>
+      <ul class="opciones" role="radiogroup" aria-labelledby="q10-label">
+        <li class="opcion"><label><input type="radio" name="q10" value="a">Los momentos en que el investigador interrumpe el relato para pedir aclaraciones.</label></li>
+        <li class="opcion"><label><input type="radio" name="q10" value="b">Las contradicciones en el relato que el investigador debe corregir para dejar una historia coherente.</label></li>
+        <li class="opcion"><label><input type="radio" name="q10" value="c">Los momentos de quiebre o giro que el propio sujeto identifica como determinantes en su trayectoria de vida.</label></li>
+        <li class="opcion"><label><input type="radio" name="q10" value="d">Las fechas cronológicas más importantes según los documentos externos al relato.</label></li>
+      </ul>
+      <div class="retroalimentacion" id="retro-q10" role="alert" aria-live="polite"></div>
+    </div>
+
+    <div class="acciones">
+      <button type="button" id="btn-calificar" aria-label="Calificar mi quiz y ver nota">
+        Calificar
+      </button>
+    </div>
+
+  </form>
+
+  <!-- RESULTADO -->
+  <div id="resultado" role="region" aria-labelledby="resultado-titulo" aria-live="polite" tabindex="-1">
+    <h2 id="resultado-titulo">Tu resultado</h2>
+    <div id="nota-display" aria-live="polite"></div>
+    <p class="pts" id="pts-display"></p>
+    <div class="barra-wrap" role="progressbar" aria-valuemin="0" aria-valuemax="100" id="barra-progreso">
+      <div class="barra-fill" id="barra-relleno"></div>
+    </div>
+    <p id="mensaje-resultado"></p>
+    <span class="guardada-badge">📌 Nota guardada · no cambia al recargar</span>
+  </div>
+
+</main>
+
+<footer>
+  <p>Seminario de Investigación II · Pedro Luis Ravelo Rivera · UDEC Facatativá · 2026-1</p>
+</footer>
+
+</div><!-- /panel-quiz -->
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- PANEL POEMA                                                     -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div id="panel-poema" class="tab-panel" role="tabpanel" aria-labelledby="tab-poema">
+  <div class="poema-wrap">
+    <div class="poema-card">
+
+      <div class="poema-cabecera">
+        <p class="poema-autor">John Donne · <em>Devociones ante ocasiones urgentes</em> · Meditación XVII · 1624</p>
+        <h2 class="poema-titulo">Ningún hombre es una isla</h2>
+      </div>
+
+      <div class="poema-cuerpo">
+
+        <p class="poema-contexto">
+          Este fragmento en prosa poética fue escrito por John Donne mientras convalecía de una enfermedad grave. Es el origen de la frase que da título a la novela de Hemingway <em>¿Por quién doblan las campanas?</em> y expresa una idea central en investigación social: ninguna vida es completamente separable de las demás. De ahí su vínculo con el método biográfico y con la IAP.
+        </p>
+
+        <div class="poema-texto" aria-label="Texto del poema">Ningún hombre es una isla,
+entero en sí mismo;
+todo hombre es un fragmento del continente,
+una parte de la tierra firme.
+
+Si el mar arrastra un puñado de arena,
+Europa queda disminuida,
+lo mismo que si se llevara un cabo,
+o la hacienda de un amigo tuyo,
+o la tuya propia.
+
+La muerte de cualquier hombre me empequeñece,
+porque soy parte de la humanidad.<span class="verso-final">Y por eso nunca preguntes
+por quién doblan las campanas:
+doblan por ti.</span>
+        </div>
+
+        <div class="poema-nota">
+          <strong>Nota sobre la traducción.</strong> La versión original en inglés dice <em>"as well as if a promontory were"</em>. Muchas traducciones en español conservan "promontorio", un término geográfico correcto pero de peso técnico. Aquí preferí <strong>cabo</strong> —esa lengua de tierra que se adentra en el mar— porque mantiene la imagen visual sin interrumpir el ritmo de la prosa. Donne no buscaba precisión cartográfica sino la sensación de algo que sobresale, que parece independiente del continente y sin embargo le pertenece. Un cabo lo dice con más economía.
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <footer>
+    <p>Seminario de Investigación II · Pedro Luis Ravelo Rivera · UDEC Facatativá · 2026-1</p>
+  </footer>
+</div><!-- /panel-poema -->
+
+<script>
+  // ── PESTAÑAS ──────────────────────────────────────────────────────
+  const tabs = document.querySelectorAll('.tab-btn');
+  const panels = document.querySelectorAll('.tab-panel');
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => activarTab(tab));
+    tab.addEventListener('keydown', e => {
+      const idx = [...tabs].indexOf(tab);
+      if (e.key === 'ArrowRight') { activarTab(tabs[(idx + 1) % tabs.length]); tabs[(idx + 1) % tabs.length].focus(); }
+      if (e.key === 'ArrowLeft')  { activarTab(tabs[(idx - 1 + tabs.length) % tabs.length]); tabs[(idx - 1 + tabs.length) % tabs.length].focus(); }
+    });
+  });
+
+  function activarTab(tab) {
+    tabs.forEach(t => { t.setAttribute('aria-selected', 'false'); t.tabIndex = -1; });
+    panels.forEach(p => p.classList.remove('activo'));
+    tab.setAttribute('aria-selected', 'true');
+    tab.tabIndex = 0;
+    document.getElementById(tab.getAttribute('aria-controls')).classList.add('activo');
+  }
+
+  // ── CLAVE Y RETROALIMENTACIÓN ─────────────────────────────────────
+  const CLAVE = {
+    q1: 'b', q2: 'b', q3: 'b', q4: 'b', q5: 'b',
+    q6: 'b', q7: 'b', q8: 'c', q9: 'b', q10: 'c'
+  };
+
+  const RETROS = {
+    q1: {
+      ok: "Correcto. La entrevista en profundidad se define por su flexibilidad: no sigue un guión fijo sino que sigue el hilo del entrevistado, adaptando las preguntas a lo que emerge en la conversación (Robles, 2011).",
+      mal: "La característica central de la entrevista en profundidad no es su estructura sino su flexibilidad: el investigador adapta la conversación al entrevistado, no al revés."
+    },
+    q2: {
+      ok: "Correcto. El grupo de discusión captura el 'deber' (discurso social normativo) mientras que el grupo focal trabaja con el 'saber' (prácticas y experiencias). Esa es la distinción de Canales Cerón (2006).",
+      mal: "El grupo de discusión no captura prácticas ni experiencias individuales: eso es territorio del grupo focal. El GD busca el discurso social sobre lo que 'se debería' hacer o pensar."
+    },
+    q3: {
+      ok: "Correcto. Bourdieu advirtió que tendemos a narrar las vidas como si fueran trayectorias ordenadas y coherentes, cuando en realidad están llenas de rupturas, azar y contradicciones. Esa narrativización artificial es la 'ilusión biográfica'.",
+      mal: "La ilusión biográfica no es sobre engaño ni sobre el investigador: es sobre la tendencia a construir relatos de vida demasiado ordenados y coherentes, ignorando las rupturas y el azar."
+    },
+    q4: {
+      ok: "Correcto. La diferencia es epistémica, no de grado: en la IAP la comunidad tiene voz desde la definición del problema, no solo en la ejecución de acciones. Sin eso, aunque haya mucha participación, se trata de IA clásica.",
+      mal: "La diferencia entre IA e IAP no es de método (cuantitativo/cualitativo) ni de tiempo: es de quién define el problema. En IAP la comunidad tiene voz epistémica desde el inicio."
+    },
+    q5: {
+      ok: "Correcto. Canales Cerón recomienda entre 5 y 8 participantes que no se conozcan entre sí y que tengan una posición social semejante frente al objeto de discurso. Eso permite producir un discurso compartido sin que las relaciones previas lo organicen.",
+      mal: "El GD requiere que los participantes no se conozcan entre sí y que tengan posición semejante. Que se conozcan o que haya jerarquías entre ellos altera el discurso antes de que comience la sesión."
+    },
+    q6: {
+      ok: "Correcto. En el relato de vida la fuente es exclusivamente la narración del sujeto. En la historia de vida, esa voz se complementa con documentos, testimonios y otras fuentes para ampliar el contexto interpretativo.",
+      mal: "No son sinónimos: el relato de vida es la narración del propio sujeto; la historia de vida integra esa voz con fuentes documentales externas."
+    },
+    q7: {
+      ok: "Correcto. El rapport en la entrevista en profundidad se construye progresivamente a lo largo de las sesiones: la confianza no aparece de inmediato sino que se consolida con el tiempo y con la experiencia de ser escuchado sin juicios.",
+      mal: "El cambio no se debe al cuestionario ni al consentimiento: se debe al rapport, que es la confianza que se construye progresivamente entre entrevistadora y participante a lo largo de las sesiones."
+    },
+    q8: {
+      ok: "Correcto. Para Fals Borda, uno de los criterios de validez más importantes en IAP es el reconocimiento comunitario: que la comunidad identifique los resultados como verdaderos y útiles para su propia comprensión y acción.",
+      mal: "El rechazo comunitario no es un problema de lenguaje ni de presentación: es el criterio de validez más importante en IAP. Si la comunidad no se reconoce en los resultados, el análisis debe revisarse."
+    },
+    q9: {
+      ok: "Correcto. El moderador del GD lanza la consigna y luego se retira lo más posible de la conversación para que los participantes interactúen entre sí. Si el moderador hace preguntas directas, el GD se convierte en rondas de entrevistas simultáneas.",
+      mal: "En el GD el moderador debe retirarse después de la consigna. Hacer preguntas directas a cada participante destruye la dinámica: ya no hay conversación entre ellos sino respuestas al moderador."
+    },
+    q10: {
+      ok: "Correcto. Los turning points o epifanías son los momentos de quiebre que el propio sujeto identifica como bisagras de su trayectoria: no los define el investigador por cronología sino el sujeto por significado.",
+      mal: "Los turning points no los define el investigador: los define el sujeto. Son los momentos que la propia persona identifica como determinantes en su vida, independientemente de su orden cronológico."
+    },
+  };
+
+  const STORAGE_KEY = 'quiz_parcial3_seminario_inv2_nota';
+
+  // ── VERIFICAR NOTA GUARDADA AL CARGAR ─────────────────────────────
+  window.addEventListener('DOMContentLoaded', () => {
+    const guardada = localStorage.getItem(STORAGE_KEY);
+    if (guardada !== null) {
+      const data = JSON.parse(guardada);
+      document.getElementById('aviso-guardado').style.display = 'block';
+      mostrarResultado(data.correctas, data.total, false);
+      bloquearFormulario();
+    }
+  });
+
+  // ── CALIFICAR ─────────────────────────────────────────────────────
+  document.getElementById('btn-calificar').addEventListener('click', () => {
+    // Validar que todas estén respondidas
+    const preguntas = Object.keys(CLAVE);
+    const sinResponder = preguntas.filter(q => !document.querySelector(`input[name="${q}"]:checked`));
+
+    if (sinResponder.length > 0) {
+      const nums = sinResponder.map(q => q.replace('q', '')).join(', ');
+      alert(`Faltan por responder las preguntas: ${nums}. Respóndelas todas antes de calificar.`);
+      const primeraSin = document.getElementById(`q${sinResponder[0].replace('q','')}`);
+      if (primeraSin) primeraSin.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
+    let correctas = 0;
+    preguntas.forEach(q => {
+      const sel = document.querySelector(`input[name="${q}"]:checked`);
+      const val = sel ? sel.value : null;
+      const esCorrecta = val === CLAVE[q];
+      if (esCorrecta) correctas++;
+
+      // Colorear opciones
+      const labels = document.querySelectorAll(`#${q} .opcion label`);
+      labels.forEach(label => {
+        const radio = label.querySelector('input[type="radio"]');
+        if (radio.value === CLAVE[q]) {
+          label.classList.add('correcta');
+        } else if (radio.value === val && !esCorrecta) {
+          label.classList.add('incorrecta');
+        }
+      });
+
+      // Retroalimentación
+      const retro = document.getElementById(`retro-${q}`);
+      retro.textContent = esCorrecta ? RETROS[q].ok : RETROS[q].mal;
+      retro.classList.add('visible');
+    });
+
+    // Guardar solo si no hay nota previa
+    if (localStorage.getItem(STORAGE_KEY) === null) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ correctas, total: preguntas.length }));
+    }
+
+    mostrarResultado(correctas, preguntas.length, true);
+    bloquearFormulario();
+  });
+
+  function mostrarResultado(correctas, total, animar) {
+    const ptsPorPregunta = 10;
+    const puntaje = correctas * ptsPorPregunta;
+    const nota = (puntaje / 20).toFixed(1);
+    const pct = (correctas / total) * 100;
+
+    const notaNum = parseFloat(nota);
+    let clase = notaNum >= 3.5 ? 'aprobado' : notaNum >= 3.0 ? 'riesgo' : 'reprobado';
+    let mensaje = notaNum >= 4.5
+      ? 'Excelente dominio de los conceptos del corte. Vas muy bien para la defensa de tu monografía.'
+      : notaNum >= 3.5
+      ? 'Buen desempeño. Revisa las preguntas que fallaste: los argumentos están en la retroalimentación de abajo.'
+      : notaNum >= 3.0
+      ? 'Aprobado, pero hay conceptos que necesitan refuerzo. Vuelve a las lecturas indicadas y a la retroalimentación del parcial.'
+      : 'Por debajo de 3.0. Revisa cuidadosamente la retroalimentación de cada pregunta y agenda consulta si necesitas acompañamiento.';
+
+    const notaDisplay = document.getElementById('nota-display');
+    const ptsDisplay = document.getElementById('pts-display');
+    const barraRelleno = document.getElementById('barra-relleno');
+    const barraProgreso = document.getElementById('barra-progreso');
+
+    notaDisplay.textContent = nota;
+    notaDisplay.className = clase;
+    ptsDisplay.textContent = `${correctas} de ${total} correctas · ${puntaje} puntos de 100`;
+    document.getElementById('mensaje-resultado').textContent = mensaje;
+
+    barraProgreso.setAttribute('aria-valuenow', pct);
+    barraRelleno.className = `barra-fill ${clase}`;
+    barraRelleno.style.width = animar ? '0%' : `${pct}%`;
+
+    const res = document.getElementById('resultado');
+    res.style.display = 'block';
+    res.focus();
+    res.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+    if (animar) {
+      setTimeout(() => { barraRelleno.style.width = `${pct}%`; }, 100);
+    }
+  }
+
+  function bloquearFormulario() {
+    document.querySelectorAll('input[type="radio"]').forEach(r => { r.disabled = true; });
+    const btn = document.getElementById('btn-calificar');
+    btn.disabled = true;
+    btn.textContent = 'Ya calificado';
+  }
+</script>
+</body>
+</html>
