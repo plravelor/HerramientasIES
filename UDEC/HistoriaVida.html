@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Guía cronometrada - Rutas Profesionales en Psicología</title>
+  <style>
+    :root {
+      --bg: #f7f7f4;
+      --card: #ffffff;
+      --ink: #1f2933;
+      --muted: #5f6b7a;
+      --line: #d9ded6;
+      --accent: #264653;
+      --accent2: #2a9d8f;
+      --warning: #b45309;
+      --danger: #b91c1c;
+      --soft: #eef4f3;
+      --done: #f1f5f4;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.5;
+    }
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(247, 247, 244, 0.96);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(8px);
+      padding: 14px 18px;
+    }
+    .topbar {
+      max-width: 1120px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 14px;
+      align-items: center;
+    }
+    h1 {
+      margin: 0;
+      font-size: 21px;
+      letter-spacing: -0.02em;
+    }
+    .subtitle {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 2px;
+    }
+    .timerbox {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .timer-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 8px 12px;
+      min-width: 142px;
+      text-align: center;
+    }
+    .timer-label {
+      color: var(--muted);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      font-weight: 700;
+      margin-bottom: 1px;
+    }
+    .timer {
+      font-variant-numeric: tabular-nums;
+      font-size: 30px;
+      line-height: 1.1;
+      font-weight: 780;
+      color: var(--accent);
+    }
+    .timer.small-timer {
+      font-size: 22px;
+      color: #52606d;
+    }
+    button {
+      border: 0;
+      background: var(--accent);
+      color: white;
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    button.secondary { background: #52606d; }
+    button.light { background: #dbe4e2; color: var(--ink); }
+    button.success { background: var(--accent2); }
+    button:hover { filter: brightness(0.95); }
+    main {
+      max-width: 1120px;
+      margin: 22px auto;
+      padding: 0 18px 80px;
+      display: grid;
+      gap: 18px;
+    }
+    .meta {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 18px;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 16px;
+    }
+    .meta h2 { margin-top: 0; font-size: 18px; }
+    .pill {
+      display: inline-block;
+      background: var(--soft);
+      color: var(--accent);
+      border: 1px solid #cfe2df;
+      border-radius: 999px;
+      padding: 4px 9px;
+      margin: 3px 4px 3px 0;
+      font-size: 13px;
+    }
+    .progress-wrap {
+      background: #e5e7eb;
+      border-radius: 999px;
+      overflow: hidden;
+      height: 12px;
+      margin-top: 8px;
+    }
+    .progress {
+      width: 0%;
+      height: 100%;
+      background: var(--accent2);
+      transition: width .2s linear;
+    }
+    .section-progress {
+      background: #e5e7eb;
+      border-radius: 999px;
+      overflow: hidden;
+      height: 9px;
+      margin-top: 7px;
+    }
+    .section-progress div {
+      width: 0%;
+      height: 100%;
+      background: var(--accent);
+      transition: width .2s linear;
+    }
+    .section {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      overflow: hidden;
+    }
+    .section.active {
+      outline: 3px solid rgba(42, 157, 143, .28);
+      border-color: var(--accent2);
+    }
+    .section.done {
+      opacity: .72;
+      background: var(--done);
+    }
+    .section-head {
+      padding: 15px 18px;
+      background: #fbfbfa;
+      border-bottom: 1px solid var(--line);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+    }
+    .section h2 {
+      margin: 0;
+      font-size: 19px;
+      letter-spacing: -0.01em;
+    }
+    .section-timebox {
+      display: grid;
+      grid-template-columns: auto auto;
+      gap: 14px;
+      align-items: center;
+      justify-content: end;
+    }
+    .time {
+      color: var(--accent);
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+    .section-countdown {
+      min-width: 78px;
+      text-align: center;
+      font-weight: 850;
+      font-variant-numeric: tabular-nums;
+      color: white;
+      background: var(--accent);
+      border-radius: 12px;
+      padding: 7px 10px;
+      white-space: nowrap;
+      box-shadow: inset 0 -1px 0 rgba(0,0,0,.12);
+    }
+    .section-countdown.pending {
+      background: #cbd5d1;
+      color: #344054;
+    }
+    .section-countdown.warning {
+      background: var(--warning);
+      color: white;
+    }
+    .section-countdown.danger {
+      background: var(--danger);
+      color: white;
+    }
+    .section-body {
+      padding: 18px;
+      display: grid;
+      gap: 14px;
+    }
+    .grid2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .box {
+      border-left: 4px solid var(--accent2);
+      background: #fbfdfc;
+      padding: 12px 14px;
+      border-radius: 10px;
+    }
+    .box.warning { border-left-color: var(--warning); }
+    .box strong { display: block; margin-bottom: 4px; }
+    ul { margin: 8px 0 0; padding-left: 22px; }
+    li { margin: 5px 0; }
+    blockquote {
+      margin: 0;
+      padding: 12px 14px;
+      background: var(--soft);
+      border-left: 4px solid var(--accent);
+      border-radius: 10px;
+      font-size: 16px;
+    }
+    .small { color: var(--muted); font-size: 14px; }
+    .questions {
+      display: grid;
+      gap: 10px;
+    }
+    details {
+      background: #fbfbfa;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 10px 12px;
+    }
+    summary {
+      cursor: pointer;
+      font-weight: 650;
+    }
+    .footer-controls {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      display: flex;
+      gap: 8px;
+      background: rgba(255,255,255,.94);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 10px;
+      box-shadow: 0 8px 28px rgba(0,0,0,.10);
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .mode-row {
+      margin-top: 10px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    select {
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: white;
+      color: var(--ink);
+    }
+    @media print {
+      header, .footer-controls, button, .mode-row { display: none !important; }
+      body { background: white; }
+      main { margin: 0; max-width: none; padding: 0; }
+      .section, .meta { break-inside: avoid; border: 1px solid #bbb; }
+      .section { margin-bottom: 10px; opacity: 1 !important; }
+      .section-countdown { background: white !important; color: #111 !important; border: 1px solid #999; }
+    }
+    @media (max-width: 900px) {
+      .topbar, .meta, .grid2 { grid-template-columns: 1fr; }
+      .timerbox { justify-content: flex-start; }
+      .timer { font-size: 24px; }
+      .timer-card { min-width: 128px; }
+      .section-head { grid-template-columns: 1fr; }
+      .section-timebox { justify-content: start; }
+      .footer-controls { left: 10px; right: 10px; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="topbar">
+      <div>
+        <h1>Guía cronometrada · Rutas Profesionales en Psicología</h1>
+        <div class="subtitle">Puedes usar avance automático por secciones o avance manual cuando decidas pasar a la siguiente parte.</div>
+        <div class="mode-row">
+          <label for="durationMode"><strong>Duración:</strong></label>
+          <select id="durationMode" onchange="changeDurationMode()">
+            <option value="15" selected>15:00 total · 12:00 charla + 3:00 preguntas</option>
+            <option value="12">12:00 solo charla · sin preguntas</option>
+          </select>
+
+          <label for="advanceMode"><strong>Avance:</strong></label>
+          <select id="advanceMode" onchange="changeAdvanceMode()">
+            <option value="auto" selected>Automático · pasa solo a la siguiente sección</option>
+            <option value="manual">Manual · yo decido cuándo empieza la siguiente sección</option>
+          </select>
+        </div>
+      </div>
+      <div class="timerbox">
+        <div class="timer-card">
+          <div class="timer-label">Sección</div>
+          <div class="timer" id="sectionTimer">1:00</div>
+        </div>
+        <div class="timer-card">
+          <div class="timer-label">Total</div>
+          <div class="timer small-timer" id="totalTimer">15:00</div>
+        </div>
+        <button onclick="startTimer()">Iniciar</button>
+        <button class="secondary" onclick="pauseTimer()">Pausar</button>
+        <button class="light" onclick="resetTimer()">Reiniciar</button>
+      </div>
+    </div>
+    <div style="max-width:1120px;margin:10px auto 0;">
+      <div class="progress-wrap"><div class="progress" id="progress"></div></div>
+      <div class="section-progress"><div id="sectionProgress"></div></div>
+      <div class="small" id="status">Listo para empezar. Parte actual: Apertura.</div>
+    </div>
+  </header>
+
+  <main>
+    <section class="meta">
+      <div>
+        <h2>Idea central</h2>
+        <blockquote>La Psicología no me dio una sola ruta profesional. Me dio una forma de mirar el mundo y herramientas para transformar lo colectivo desde distintos lugares: la investigación, la acción social, las instituciones y la docencia.</blockquote>
+      </div>
+      <div>
+        <h2>Mapa de tiempo</h2>
+        <div id="timeMap"></div>
+      </div>
+    </section>
+
+    <section class="section active" data-name="Apertura" data-duration15="60" data-duration12="50">
+      <div class="section-head">
+        <h2>1. Apertura</h2>
+        <div class="section-timebox">
+          <div class="time" data-time-label></div>
+          <div class="section-countdown pending" data-countdown>--:--</div>
+        </div>
+      </div>
+      <div class="section-body">
+        <div class="box">
+          <strong>Objetivo</strong>
+          Ubicar el tono: personal, cercano y con una tesis clara.
+        </div>
+        <ul>
+          <li>Agradecer a Germán y al Departamento.</li>
+          <li>Decir que mi ruta no fue completamente lineal, pero sí tiene un hilo.</li>
+          <li>Ese hilo: investigar y transformar la sociedad.</li>
+          <li>La Psicología en la UN me permitió unir esas dos cosas.</li>
+        </ul>
+        <blockquote>“Cuando me invitaron a hablar de rutas profesionales en Psicología, pensé que mi ruta no era tan fácil de contar. No fue una ruta perfectamente lineal. Pero mirando hacia atrás, sí tiene un hilo: siempre quise investigar y siempre quise transformar algo del mundo en el que vivía.”</blockquote>
+        <div class="box warning">
+          <strong>Transición</strong>
+          “Para explicar esa ruta, tengo que empezar por la Nacional, por esta universidad, porque mi historia profesional no se entiende sin mi alma mater.”
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-name="Diapositiva 1" data-duration15="170" data-duration12="160">
+      <div class="section-head">
+        <h2>2. Diapositiva 1 · Psicología en la UN me dio varias formas de ver el mundo</h2>
+        <div class="section-timebox">
+          <div class="time" data-time-label></div>
+          <div class="section-countdown pending" data-countdown>--:--</div>
+        </div>
+      </div>
+      <div class="section-body">
+        <div class="grid2">
+          <div class="box">
+            <strong>Objetivo</strong>
+            Explicar por qué la Universidad Nacional fue el ecosistema que me formó.
+          </div>
+          <div class="box warning">
+            <strong>No debo hacer</strong>
+            No debo leer la línea de tiempo. La línea de tiempo es solo apoyo visual.
+          </div>
+        </div>
+        <strong>Lo que debo decir</strong>
+        <ul>
+          <li>La Nacional no fue solo el lugar donde estudié: fue donde aprendí a mirar el país.</li>
+          <li>Entré a Psicología porque quería investigar y porque tenía un interés fuerte por lo social y lo político.</li>
+          <li>En Psicología encontré un puente entre ciencia, pensamiento crítico y transformación social.</li>
+          <li>Trabajé durante todo el pregrado; eso marcó mi experiencia universitaria.</li>
+          <li>Mi formación no ocurrió solo en clases: también ocurrió en trabajos, laboratorios, grupos y proyectos colectivos.</li>
+          <li>Germán Gutiérrez y Carlos Parales marcaron profundamente mi forma de pensar.</li>
+          <li>Esta universidad me dio pensamiento crítico, sentido de país y responsabilidad con lo público.</li>
+        </ul>
+        <blockquote>“Si uno mira esta línea de tiempo, puede parecer una ruta organizada. Pero viviéndola no fue así. Lo que sí hubo fue una constante: estudiar, trabajar, investigar y buscar espacios para transformar algo.”</blockquote>
+        <div class="box warning">
+          <strong>Transición</strong>
+          “Con el tiempo entendí que mi formación en la Nacional no ocurrió en un solo lugar. Ocurrió en varios laboratorios, algunos formales y otros no.”
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-name="Diapositiva 2" data-duration15="300" data-duration12="290">
+      <div class="section-head">
+        <h2>3. Diapositiva 2 · Tres laboratorios para una misma pregunta</h2>
+        <div class="section-timebox">
+          <div class="time" data-time-label></div>
+          <div class="section-countdown pending" data-countdown>--:--</div>
+        </div>
+      </div>
+      <div class="section-body">
+        <div class="grid2">
+          <div class="box">
+            <strong>Objetivo</strong>
+            Mostrar que mi trayectoria tiene coherencia, aunque no haya sido lineal.
+          </div>
+          <div class="box">
+            <strong>Idea central</strong>
+            Estos tres laboratorios parecen distintos, pero tienen una misma pregunta: ¿cómo entender el comportamiento y cómo transformar condiciones colectivas?
+          </div>
+        </div>
+
+        <h3>1. Laboratorio de comportamiento</h3>
+        <ul>
+          <li>Hablar del LACA.</li>
+          <li>Llegué por amigos y por las clases de Germán.</li>
+          <li>Las abejas fueron una forma de estudiar aprendizaje, cooperación y evolución.</li>
+          <li>La línea de abejas fue un trabajo colectivo e interdisciplinar.</li>
+          <li>Trabajamos con Psicología, mecatrónica, biología y zootecnia.</li>
+          <li>Ahí aprendí que las grandes preguntas no caben en una sola disciplina.</li>
+        </ul>
+        <blockquote>“En el LACA aprendí que investigar no es encerrarse en una disciplina, sino aprender a conversar con otras para responder preguntas difíciles.”</blockquote>
+
+        <h3>2. Laboratorio social</h3>
+        <ul>
+          <li>Nachoteca: nació de una necesidad concreta.</li>
+          <li>Un estudiante me regaló sus fotocopias cuando yo no podía comprarlas.</li>
+          <li>Con amigos pensamos que esa ayuda podía multiplicarse.</li>
+          <li>Ahí aprendí que una necesidad puede convertirse en una solución colectiva.</li>
+          <li>Paziempre fue el punto de inflexión más fuerte.</li>
+          <li>Después del triunfo del No en 2016, entendí que un problema inédito requería soluciones inéditas.</li>
+          <li>Mi papel fue estratégico.</li>
+          <li>Lo más importante fue no subestimar al votante del No.</li>
+          <li>Había que entender motivaciones, miedos, identidades y emociones colectivas.</li>
+        </ul>
+        <blockquote>“Paziempre me enseñó que la Psicología sirve para actuar en el mundo, no solo para explicar después lo que pasó.”</blockquote>
+
+        <h3>3. Laboratorio institucional</h3>
+        <ul>
+          <li>Fundación Jaime Benítez, Bienestar UN, ESAP y docencia.</li>
+          <li>Ahí entendí que la Psicología también sirve para diseñar programas, estrategias y políticas.</li>
+          <li>En permanencia estudiantil no hay solo indicadores: hay trayectorias de vida.</li>
+          <li>Detrás de la deserción hay condiciones económicas, vínculos, expectativas, barreras y decisiones.</li>
+          <li>La Psicología puede aportar una mirada humana a la política pública.</li>
+          <li>La docencia universitaria conecta mi interés por investigación, educación pública y transformación social.</li>
+        </ul>
+        <blockquote>“Detrás de cada indicador hay personas. Y la Psicología ayuda a que las instituciones no olviden eso.”</blockquote>
+
+        <div class="box warning">
+          <strong>Transición</strong>
+          “De esos tres laboratorios salieron las herramientas que más he usado profesionalmente.”
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-name="Diapositiva 3" data-duration15="150" data-duration12="150">
+      <div class="section-head">
+        <h2>4. Diapositiva 3 · Lo que la Psicología me dio para transformar lo colectivo</h2>
+        <div class="section-timebox">
+          <div class="time" data-time-label></div>
+          <div class="section-countdown pending" data-countdown>--:--</div>
+        </div>
+      </div>
+      <div class="section-body">
+        <div class="grid2">
+          <div class="box">
+            <strong>Objetivo</strong>
+            Convertir mi historia en herramientas útiles para los estudiantes.
+          </div>
+          <div class="box warning">
+            <strong>No debo hacer</strong>
+            No debo explicar todos los puntos con el mismo peso.
+          </div>
+        </div>
+
+        <strong>Debo destacar sobre todo tres</strong>
+
+        <h3>1. Entender comportamiento</h3>
+        <ul>
+          <li>Leer motivaciones, miedos, identidades y decisiones.</li>
+          <li>Esto me sirvió en Paziempre.</li>
+          <li>También me ha servido en instituciones, alianzas y docencia.</li>
+        </ul>
+
+        <h3>2. Diseñar con evidencia</h3>
+        <ul>
+          <li>No asumir que algo funciona solo porque suena bien.</li>
+          <li>Formular preguntas.</li>
+          <li>Mirar datos.</li>
+          <li>Diseñar intervenciones.</li>
+          <li>Evaluar y ajustar.</li>
+        </ul>
+
+        <h3>3. Incidir en política pública</h3>
+        <ul>
+          <li>La Psicología puede aportar lo humano donde muchas veces solo se ven indicadores económicos o administrativos.</li>
+          <li>Puede ayudar a diseñar instituciones más sensibles a la vida real de las personas.</li>
+        </ul>
+
+        <blockquote>“La Psicología sirve en muchos más lugares de los que uno imagina cuando está en pregrado.”</blockquote>
+
+        <div class="box warning">
+          <strong>Transición</strong>
+          “Termino con lo que me habría gustado escuchar cuando estaba sentado donde ustedes están hoy.”
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-name="Consejos y cierre" data-duration15="40" data-duration12="70">
+      <div class="section-head">
+        <h2>5. Consejos y cierre</h2>
+        <div class="section-timebox">
+          <div class="time" data-time-label></div>
+          <div class="section-countdown pending" data-countdown>--:--</div>
+        </div>
+      </div>
+      <div class="section-body">
+        <strong>Consejos para cerrar</strong>
+        <ul>
+          <li>Aprendan a investigar, aunque no quieran ser investigadores.</li>
+          <li>Aprendan idiomas, estadística, programación y escritura.</li>
+          <li>Métanse en grupos, monitorías, proyectos y redes.</li>
+          <li>Sus compañeros de pupitre serán colegas, aliados y puertas futuras.</li>
+          <li>No esperen tener toda la ruta clara: exploren, descarten, conecten y construyan.</li>
+        </ul>
+        <blockquote>“No tuve una ruta perfectamente diseñada. Tuve preguntas, personas y la terquedad de no dejar nada como lo encontré.”</blockquote>
+        <blockquote>“La Nacional me transformó y me dio la posibilidad de transformar. Esa es, para mí, la potencia de estudiar Psicología en esta universidad pública.”</blockquote>
+      </div>
+    </section>
+
+    <section class="section" data-name="Preguntas" data-duration15="180" data-duration12="0">
+      <div class="section-head">
+        <h2>6. Preguntas probables</h2>
+        <div class="section-timebox">
+          <div class="time" data-time-label></div>
+          <div class="section-countdown pending" data-countdown>--:--</div>
+        </div>
+      </div>
+      <div class="section-body">
+        <div class="questions">
+          <details>
+            <summary>¿Cómo entrar a investigación?</summary>
+            <p>Buscando profesores, laboratorios y grupos. No hay que esperar a sentirse listo. Uno aprende investigando, leyendo, ayudando, equivocándose y sosteniendo procesos.</p>
+          </details>
+          <details>
+            <summary>¿Cómo combinar investigación y trabajo institucional?</summary>
+            <p>Pensando los problemas institucionales como problemas de investigación aplicada: hacer preguntas, mirar datos, entender actores, diseñar intervenciones y evaluar resultados.</p>
+          </details>
+          <details>
+            <summary>¿Qué fue lo más difícil?</summary>
+            <p>Trabajar durante todo el pregrado. Eso limitó algunas cosas, pero también me dio experiencia, criterio institucional y una relación concreta con los problemas de permanencia estudiantil.</p>
+          </details>
+          <details>
+            <summary>¿Qué habilidad recomendaría aprender ya?</summary>
+            <p>Investigar bien y escribir bien. Luego idiomas, estadística y programación. Pero investigar y escribir son la base para casi cualquier ruta profesional sólida.</p>
+          </details>
+          <details>
+            <summary>¿Cómo saber qué ruta escoger?</summary>
+            <p>Probando. Metiéndose en proyectos, grupos, monitorías, prácticas y conversaciones. Uno no descubre sus intereses solo pensando; también los descubre haciendo.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="footer-controls">
+    <button class="light" onclick="prevPart()">Anterior</button>
+    <button class="success" onclick="nextPart()">Iniciar siguiente sección</button>
+    <button class="secondary" onclick="window.print()">Imprimir / PDF</button>
+  </div>
+
+  <script>
+    let durationMode = "15";
+    let advanceMode = "auto";
+    let plan = [];
+    let totalDuration = 0;
+    let currentPart = 0;
+    let elapsedTotal = 0;
+    let elapsedInPart = 0;
+    let running = false;
+    let interval = null;
+    let manualWaiting = false;
+
+    const sections = [...document.querySelectorAll('.section')];
+    const sectionTimerEl = document.getElementById('sectionTimer');
+    const totalTimerEl = document.getElementById('totalTimer');
+    const progressEl = document.getElementById('progress');
+    const sectionProgressEl = document.getElementById('sectionProgress');
+    const statusEl = document.getElementById('status');
+    const timeMapEl = document.getElementById('timeMap');
+
+    function fmt(s) {
+      s = Math.max(0, Math.round(Number(s)));
+      const m = Math.floor(s / 60);
+      const sec = s % 60;
+      return `${m}:${String(sec).padStart(2, '0')}`;
+    }
+
+    function buildPlan() {
+      plan = [];
+      let start = 0;
+      sections.forEach((section) => {
+        const duration = Number(section.dataset[`duration${durationMode}`] || 0);
+        const end = start + duration;
+        section.dataset.start = start;
+        section.dataset.duration = duration;
+        section.dataset.end = end;
+
+        const label = section.querySelector('[data-time-label]');
+        const countdown = section.querySelector('[data-countdown]');
+        if (duration > 0) {
+          label.textContent = `${fmt(start)} – ${fmt(end)}`;
+          countdown.textContent = fmt(duration);
+          section.style.display = "";
+          plan.push({ section, start, end, duration, name: section.dataset.name, countdown });
+        } else {
+          label.textContent = "No incluido";
+          countdown.textContent = "--:--";
+          section.style.display = durationMode === "12" ? "none" : "";
+        }
+        start = end;
+      });
+      totalDuration = start;
+      renderTimeMap();
+    }
+
+    function renderTimeMap() {
+      timeMapEl.innerHTML = "";
+      plan.forEach(item => {
+        const span = document.createElement("span");
+        span.className = "pill";
+        span.textContent = `${item.name} · ${fmt(item.duration)}`;
+        timeMapEl.appendChild(span);
+      });
+      const total = document.createElement("div");
+      total.className = "small";
+      total.style.marginTop = "8px";
+      total.innerHTML = `<strong>Total:</strong> ${fmt(totalDuration)}`;
+      timeMapEl.appendChild(total);
+    }
+
+    function updateSectionCountdowns() {
+      plan.forEach((p, i) => {
+        const el = p.countdown;
+        el.className = "section-countdown";
+        if (i < currentPart) {
+          el.textContent = "0:00";
+          el.classList.add("pending");
+          return;
+        }
+        if (i > currentPart) {
+          el.textContent = fmt(p.duration);
+          el.classList.add("pending");
+          return;
+        }
+
+        const remaining = Math.max(0, p.duration - elapsedInPart);
+        el.textContent = fmt(remaining);
+        if (remaining <= 10) el.classList.add("danger");
+        else if (remaining <= 25) el.classList.add("warning");
+      });
+    }
+
+    function updateDisplay() {
+      const part = plan[currentPart];
+      const remainingPart = Math.max(0, part.duration - elapsedInPart);
+      const remainingTotal = Math.max(0, totalDuration - elapsedTotal);
+
+      sectionTimerEl.textContent = fmt(remainingPart);
+      totalTimerEl.textContent = fmt(remainingTotal);
+
+      progressEl.style.width = `${Math.min(100, (elapsedTotal / totalDuration) * 100)}%`;
+      sectionProgressEl.style.width = `${Math.min(100, (elapsedInPart / part.duration) * 100)}%`;
+
+      sectionTimerEl.style.color = remainingPart <= 10 ? 'var(--danger)' : remainingPart <= 25 ? 'var(--warning)' : 'var(--accent)';
+      totalTimerEl.style.color = remainingTotal <= 30 ? 'var(--danger)' : remainingTotal <= 120 ? 'var(--warning)' : '#52606d';
+
+      const modeText = advanceMode === "auto" ? "avance automático" : "avance manual";
+      if (manualWaiting) {
+        statusEl.textContent = `Terminó ${part.name}. Pulsa “Iniciar siguiente sección” cuando quieras empezar la siguiente.`;
+      } else {
+        statusEl.textContent = `Parte actual: ${part.name}. Quedan ${fmt(remainingPart)} de esta sección y ${fmt(remainingTotal)} en total. Modo: ${modeText}.`;
+      }
+
+      sections.forEach(s => s.classList.remove('active', 'done'));
+      plan.forEach((p, i) => {
+        if (i < currentPart) p.section.classList.add('done');
+        if (i === currentPart) p.section.classList.add('active');
+      });
+
+      updateSectionCountdowns();
+    }
+
+    function startTimer() {
+      if (running) return;
+      if (manualWaiting) return;
+      running = true;
+
+      interval = setInterval(() => {
+        elapsedTotal += 1;
+        elapsedInPart += 1;
+
+        const part = plan[currentPart];
+        if (elapsedInPart >= part.duration) {
+          if (currentPart < plan.length - 1) {
+            if (advanceMode === "auto") {
+              currentPart += 1;
+              elapsedInPart = 0;
+              elapsedTotal = plan[currentPart].start;
+              plan[currentPart].section.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            } else {
+              elapsedInPart = part.duration;
+              elapsedTotal = part.end;
+              manualWaiting = true;
+              pauseTimer(false);
+            }
+          } else {
+            elapsedInPart = part.duration;
+            elapsedTotal = totalDuration;
+            pauseTimer(false);
+            statusEl.textContent = "Tiempo cumplido.";
+          }
+        }
+
+        updateDisplay();
+      }, 1000);
+
+      updateDisplay();
+    }
+
+    function pauseTimer(update = true) {
+      running = false;
+      clearInterval(interval);
+      if (update) updateDisplay();
+    }
+
+    function resetTimer() {
+      pauseTimer(false);
+      currentPart = 0;
+      elapsedTotal = 0;
+      elapsedInPart = 0;
+      manualWaiting = false;
+      updateDisplay();
+      plan[0].section.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function nextPart() {
+      pauseTimer(false);
+      if (currentPart < plan.length - 1) {
+        currentPart += 1;
+        elapsedTotal = plan[currentPart].start;
+        elapsedInPart = 0;
+        manualWaiting = false;
+        updateDisplay();
+        plan[currentPart].section.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        startTimer();
+      } else {
+        elapsedInPart = plan[currentPart].duration;
+        elapsedTotal = totalDuration;
+        manualWaiting = false;
+        updateDisplay();
+      }
+    }
+
+    function prevPart() {
+      pauseTimer(false);
+      currentPart = Math.max(0, currentPart - 1);
+      elapsedTotal = plan[currentPart].start;
+      elapsedInPart = 0;
+      manualWaiting = false;
+      updateDisplay();
+      plan[currentPart].section.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function changeDurationMode() {
+      pauseTimer(false);
+      durationMode = document.getElementById('durationMode').value;
+      buildPlan();
+      currentPart = 0;
+      elapsedTotal = 0;
+      elapsedInPart = 0;
+      manualWaiting = false;
+      updateDisplay();
+    }
+
+    function changeAdvanceMode() {
+      advanceMode = document.getElementById('advanceMode').value;
+      manualWaiting = false;
+      updateDisplay();
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.code === 'Space') {
+        e.preventDefault();
+        running ? pauseTimer() : startTimer();
+      }
+      if (e.key === 'ArrowRight') nextPart();
+      if (e.key === 'ArrowLeft') prevPart();
+    });
+
+    buildPlan();
+    updateDisplay();
+  </script>
+</body>
+</html>
