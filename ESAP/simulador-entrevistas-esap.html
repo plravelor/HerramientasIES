@@ -1169,6 +1169,13 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
   let audioFrame = null;
   let audioSamples = [];
   let recognitionTarget = null;
+  let spokenAudio = null;
+  let spokenAudioUrl = '';
+  let mediaRecorder = null;
+  let recordedChunks = [];
+  let recordedAudioBlob = null;
+  let recordingStopped = null;
+  let resolveRecordingStopped = null;
 
   function freshState() {
     return {
@@ -1593,7 +1600,7 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
         <div class="summary-item"><b>Audio</b><span>Preguntas y respuestas por voz</span></div>
       </div>
       <div id="connection-box" class="notice info"><i data-lucide="loader-circle"></i><span>Comprobando el servicio de entrevista…</span></div>
-      <div class="notice safe"><i data-lucide="mic-2"></i><span>El micrófono es opcional. Siempre podrás escribir. El audio no se guarda ni se envía; solo se usa la transcripción que ves y puedes corregir antes de responder.</span></div>
+      <div class="notice safe"><i data-lucide="mic-2"></i><span>El micrófono es opcional. Si lo usas, la grabación se envía temporalmente al servicio seguro de Cloudflare para mejorar la transcripción y analizar ritmo, pausas y variación de volumen. No se almacena. Siempre puedes escribir y corregir el texto antes de responder.</span></div>
       <label style="display:flex;gap:8px;align-items:center;font-size:11.5px;font-weight:650;margin-top:9px"><input id="auto-speak" type="checkbox"${state.autoSpeak ? ' checked' : ''}> Leer automáticamente cada pregunta en voz alta</label>
       <div class="form-actions">
         <button class="secondary-btn" id="edit-config" type="button"><i data-lucide="pencil"></i> Editar</button>
@@ -1645,6 +1652,11 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
   }
 
   async function startInterview() {
+    if (!state.aiAvailable) {
+      showToast('La IA no está disponible. La entrevista no comenzará hasta recuperar la conexión.');
+      await checkApiStatus();
+      return;
+    }
     const button = document.getElementById('start-interview');
     if (button) {
       button.disabled = true;
@@ -1665,10 +1677,14 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
         const result = await callInterviewApi('start');
         question = normalizeQuestion(result.question, 0);
       } catch (error) {
-        switchToLocal(error);
+        showAiInterruption(error, 'No fue posible generar la primera pregunta.');
+        return;
       }
     }
-    if (!question) question = state.localQuestions[0];
+    if (!question) {
+      showAiInterruption(new Error('La IA no entregó una pregunta válida.'), 'No fue posible generar la primera pregunta.');
+      return;
+    }
     await sleep(350);
     presentQuestion(question);
   }
@@ -1769,7 +1785,8 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
     send.disabled = true;
     stopQuestionTimer();
     const delivery = finishVoiceCapture(answer);
-    stopListening(false);
+    await stopListening(false);
+    const audio = await encodeRecordedAudio();
     window.speechSynthesis?.cancel();
     addMsg('usr', textToHtml(answer));
     els.opts.innerHTML = '';
@@ -1779,7 +1796,8 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
       question: state.currentQuestion.text,
       competency: state.currentQuestion.competency || '',
       answer,
-      delivery
+      delivery,
+      audio
     };
 
     let result = null;
@@ -1787,10 +1805,18 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
       try {
         result = await callInterviewApi('answer', record);
       } catch (error) {
-        switchToLocal(error);
+        hideTyping();
+        showAiInterruption(error, 'La respuesta no fue enviada a la IA y no será evaluada.');
+        presentQuestion(state.currentQuestion);
+        return;
       }
     }
     hideTyping();
+
+    if (result?.transcript && typeof result.transcript === 'string') {
+      record.answer = result.transcript.trim().slice(0, 5000) || record.answer;
+      record.delivery.transcriptionSource = 'Whisper de Cloudflare';
+    }
 
     if (result && result.accepted === false) {
       addMsg('bot', textToHtml(result.message || 'Volvamos a la entrevista. Responde la pregunta con una experiencia, una decisión o un ejemplo relacionado.'));
@@ -1806,14 +1832,21 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
     }
 
     if (result?.done || state.answers.length >= state.totalQuestions) {
-      state.feedback = result?.feedback || buildLocalFeedback();
+      if (!result?.feedback) {
+        showAiInterruption(new Error('La IA no entregó retroalimentación.'), 'La sesión terminó, pero no se generará un informe automático incompleto.');
+        return;
+      }
+      state.feedback = result.feedback;
       await renderFeedback();
       return;
     }
 
     state.questionIndex = state.answers.length;
-    let nextQuestion = result?.question ? normalizeQuestion(result.question, state.questionIndex) : null;
-    if (!nextQuestion) nextQuestion = state.localQuestions[state.questionIndex] || buildLocalQuestions()[state.questionIndex];
+    const nextQuestion = result?.question ? normalizeQuestion(result.question, state.questionIndex) : null;
+    if (!nextQuestion) {
+      showAiInterruption(new Error('La IA no entregó la siguiente pregunta.'), 'La entrevista se detuvo antes de continuar.');
+      return;
+    }
     presentQuestion(nextQuestion);
   }
 
@@ -1987,6 +2020,35 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
     state.aiFailure = error?.message || 'Servicio no disponible';
     state.localQuestions = buildLocalQuestions();
     addMsg('bot', '<div class="notice warn"><i data-lucide="wifi-off"></i><span>La conexión con la IA se interrumpió. Continuaré la sesión con el banco local para no perder tu práctica.</span></div>');
+  }
+
+  function showAiInterruption(error, message) {
+    state.aiAvailable = false;
+    state.aiFailure = error?.message || 'Error desconocido';
+    addMsg('bot', `<div class="notice warn"><i data-lucide="triangle-alert"></i><span><b>La entrevista con IA se detuvo.</b> ${escapeHtml(message)}<br><small>Detalle técnico: ${escapeHtml(state.aiFailure)}</small></span></div>`);
+    els.opts.innerHTML = `<div class="form-actions"><button class="secondary-btn" id="retry-ai" type="button"><i data-lucide="refresh-cw"></i> Comprobar y reintentar</button><button class="primary-btn" id="restart-ai" type="button"><i data-lucide="rotate-ccw"></i> Reiniciar práctica</button></div>`;
+    document.getElementById('retry-ai')?.addEventListener('click', async () => {
+      state.aiAvailable = await probeApi();
+      if (state.aiAvailable) startInterview();
+      else showToast('La IA todavía no responde. Revisa el Worker antes de intentarlo nuevamente.');
+    });
+    document.getElementById('restart-ai')?.addEventListener('click', resetApp);
+    renderIcons();
+  }
+
+  async function probeApi() {
+    try {
+      const response = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ action: 'health' }),
+        cache: 'no-store'
+      });
+      const data = await response.json();
+      return response.ok && data?.ok === true;
+    } catch (_) {
+      return false;
+    }
   }
 
   function countWords(text) {
@@ -2291,7 +2353,7 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
     }
   }
 
-  function stopListening(silent) {
+  async function stopListening(silent) {
     const activeRecognition = recognition;
     listening = false;
     recognition = null;
@@ -2302,7 +2364,7 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
       try { activeRecognition.stop(); } catch (_) {}
     }
     updateMicUi(false);
-    finishAudioAnalysis();
+    await finishAudioAnalysis();
     if (!silent && voiceUsedThisAnswer) showToast('Transcripción detenida. Puedes corregirla antes de enviar.');
   }
 
@@ -2329,6 +2391,11 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
     voiceStartedAt = 0;
     voiceUsedThisAnswer = false;
     audioSamples = [];
+    recordedChunks = [];
+    recordedAudioBlob = null;
+    mediaRecorder = null;
+    recordingStopped = null;
+    resolveRecordingStopped = null;
   }
 
   function finishVoiceCapture(answer) {
@@ -2356,6 +2423,22 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
     audioSamples = [];
     try {
       audioStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+      recordedChunks = [];
+      recordedAudioBlob = null;
+      const preferredTypes = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4'];
+      const mimeType = preferredTypes.find(type => window.MediaRecorder?.isTypeSupported?.(type)) || '';
+      if (window.MediaRecorder) {
+        mediaRecorder = mimeType ? new MediaRecorder(audioStream, { mimeType }) : new MediaRecorder(audioStream);
+        recordingStopped = new Promise(resolve => { resolveRecordingStopped = resolve; });
+        mediaRecorder.ondataavailable = event => {
+          if (event.data?.size) recordedChunks.push(event.data);
+        };
+        mediaRecorder.onstop = () => {
+          recordedAudioBlob = recordedChunks.length ? new Blob(recordedChunks, { type: mediaRecorder?.mimeType || mimeType || 'audio/webm' }) : null;
+          resolveRecordingStopped?.(recordedAudioBlob);
+        };
+        mediaRecorder.start(250);
+      }
       audioContext = new (window.AudioContext || window.webkitAudioContext)();
       const source = audioContext.createMediaStreamSource(audioStream);
       audioAnalyser = audioContext.createAnalyser();
@@ -2379,9 +2462,15 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
     }
   }
 
-  function finishAudioAnalysis() {
+  async function finishAudioAnalysis() {
     if (audioFrame) cancelAnimationFrame(audioFrame);
     audioFrame = null;
+    if (mediaRecorder?.state === 'recording') {
+      try { mediaRecorder.stop(); } catch (_) {}
+      if (recordingStopped) {
+        await Promise.race([recordingStopped, new Promise(resolve => setTimeout(resolve, 1500))]);
+      }
+    }
     audioStream?.getTracks().forEach(track => track.stop());
     audioStream = null;
     if (audioContext && audioContext.state !== 'closed') audioContext.close().catch(() => {});
@@ -2389,11 +2478,70 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
     audioAnalyser = null;
   }
 
-  function speakText(text, button) {
+  async function encodeRecordedAudio() {
+    if (!recordedAudioBlob || recordedAudioBlob.size < 1000) return null;
+    const maxBytes = 4 * 1024 * 1024;
+    if (recordedAudioBlob.size > maxBytes) {
+      showToast('El audio fue demasiado largo para enviarlo; se usará la transcripción visible.');
+      return null;
+    }
+    const buffer = await recordedAudioBlob.arrayBuffer();
+    const bytes = new Uint8Array(buffer);
+    let binary = '';
+    const chunkSize = 0x8000;
+    for (let index = 0; index < bytes.length; index += chunkSize) {
+      binary += String.fromCharCode(...bytes.subarray(index, index + chunkSize));
+    }
+    return { base64: btoa(binary), mimeType: recordedAudioBlob.type || 'audio/webm' };
+  }
+
+  async function speakText(text, button) {
     if (!('speechSynthesis' in window) || !text.trim()) {
       showToast('La lectura en voz alta no está disponible en este navegador.');
       return;
     }
+    if (spokenAudio) {
+      stopSpokenAudio();
+      return;
+    }
+    window.speechSynthesis.cancel();
+    document.querySelectorAll('.bub-speak').forEach(item => item.classList.remove('speaking'));
+    button?.classList.add('speaking');
+    try {
+      const response = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ action: 'speak', text: String(text).slice(0, 1200) })
+      });
+      if (!response.ok || !String(response.headers.get('content-type') || '').includes('audio')) throw new Error('Voz neuronal no disponible');
+      const blob = await response.blob();
+      spokenAudioUrl = URL.createObjectURL(blob);
+      spokenAudio = new Audio(spokenAudioUrl);
+      spokenAudio.onended = spokenAudio.onerror = () => {
+        button?.classList.remove('speaking');
+        stopSpokenAudio();
+      };
+      await spokenAudio.play();
+      return;
+    } catch (_) {
+      button?.classList.remove('speaking');
+      stopSpokenAudio();
+    }
+    speakWithBrowser(text, button);
+  }
+
+  function stopSpokenAudio() {
+    if (spokenAudio) {
+      spokenAudio.pause();
+      spokenAudio.src = '';
+    }
+    spokenAudio = null;
+    if (spokenAudioUrl) URL.revokeObjectURL(spokenAudioUrl);
+    spokenAudioUrl = '';
+    document.querySelectorAll('.bub-speak').forEach(item => item.classList.remove('speaking'));
+  }
+
+  function speakWithBrowser(text, button) {
     const synth = window.speechSynthesis;
     if (synth.speaking) {
       synth.cancel();
