@@ -1168,6 +1168,7 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
   let audioAnalyser = null;
   let audioFrame = null;
   let audioSamples = [];
+  let recognitionTarget = null;
 
   function freshState() {
     return {
@@ -1618,11 +1619,15 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
       return;
     }
     try {
-      const healthUrl = new URL(API_URL);
-      healthUrl.pathname = healthUrl.pathname.replace(/\/api\/interview\/?$/, '/health');
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), 6000);
-      const response = await fetch(healthUrl, { signal: controller.signal, cache: 'no-store' });
+      const response = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ action: 'health' }),
+        signal: controller.signal,
+        cache: 'no-store'
+      });
       clearTimeout(timeout);
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const data = await response.json();
@@ -1746,6 +1751,21 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
     const send = document.getElementById('send-btn');
     if (!input || !input.value.trim() || send.disabled) return;
     const answer = input.value.trim();
+    const previousAnswers = state.answers.map(item => item.answer.trim().toLowerCase());
+    const normalizedAnswer = answer.toLowerCase().replace(/[^a-záéíóúüñ0-9\s]/g, ' ').replace(/\s+/g, ' ').trim();
+    const testAnswer = /(solo |solamente )?(estoy |era |es )?(probando|testeando)( la)? (aplicaci[oó]n|app|p[aá]gina|micr[oó]fono|sistema)/i.test(normalizedAnswer);
+    const insufficient = countWords(answer) < 4 || testAnswer || previousAnswers.includes(answer.toLowerCase());
+    if (insufficient) {
+      stopQuestionTimer();
+      stopListening(true);
+      addMsg('usr', textToHtml(answer));
+      els.opts.innerHTML = '';
+      addMsg('bot', textToHtml(testAnswer
+        ? 'Entiendo que estás comprobando la herramienta. Esta respuesta no se contará ni se calificará. Cuando quieras continuar, responde la pregunta con una experiencia, decisión o ejemplo relacionado.'
+        : 'Esta respuesta todavía no aporta evidencia suficiente para evaluarla. Amplíala con una experiencia, una decisión o un ejemplo relacionado; no se contará como una pregunta nueva.'));
+      presentQuestion(state.currentQuestion);
+      return;
+    }
     send.disabled = true;
     stopQuestionTimer();
     const delivery = finishVoiceCapture(answer);
@@ -2219,8 +2239,8 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
         if (event.results[i].isFinal) voiceFinalText += `${part.trim()} `;
         else interim += part;
       }
-      const input = document.getElementById('answer-box');
-      if (input) {
+      const input = recognitionTarget;
+      if (input && input.isConnected && input === document.getElementById('answer-box')) {
         input.value = [voiceBaseText, voiceFinalText.trim(), interim.trim()].filter(Boolean).join(' ').replace(/\s+/g, ' ');
         input.dispatchEvent(new Event('input'));
       }
@@ -2234,6 +2254,8 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
         updateMicUi(false);
         finishAudioAnalysis();
       }
+      recognition = null;
+      recognitionTarget = null;
     };
     return instance;
   }
@@ -2244,13 +2266,15 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
   }
 
   async function startListening() {
-    recognition = recognition || initRecognition();
+    if (recognition) stopListening(true);
+    recognition = initRecognition();
     if (!recognition) {
       showToast('Este navegador no ofrece reconocimiento de voz. Usa Chrome o Edge actualizado, o escribe la respuesta.');
       return;
     }
     window.speechSynthesis?.cancel();
     const input = document.getElementById('answer-box');
+    recognitionTarget = input;
     voiceBaseText = input?.value.trim() || '';
     voiceFinalText = '';
     voiceStartedAt = Date.now();
@@ -2268,9 +2292,14 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
   }
 
   function stopListening(silent) {
-    if (recognition && listening) {
-      listening = false;
-      try { recognition.stop(); } catch (_) {}
+    const activeRecognition = recognition;
+    listening = false;
+    recognition = null;
+    recognitionTarget = null;
+    if (activeRecognition) {
+      activeRecognition.onresult = null;
+      activeRecognition.onend = null;
+      try { activeRecognition.stop(); } catch (_) {}
     }
     updateMicUi(false);
     finishAudioAnalysis();
@@ -2373,9 +2402,11 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
     }
     const utterance = new SpeechSynthesisUtterance(text.replace(/\s+/g, ' ').trim());
     utterance.lang = 'es-CO';
-    utterance.rate = 1;
+    utterance.rate = 0.96;
+    utterance.pitch = 1;
     const voices = synth.getVoices();
-    utterance.voice = voices.find(voice => /es-CO/i.test(voice.lang)) || voices.find(voice => /^es/i.test(voice.lang)) || null;
+    const naturalVoice = voices.find(voice => /m[oó]nica|paulina|helena|soledad|sabina|google.*espa[nñ]ol/i.test(`${voice.name} ${voice.lang}`));
+    utterance.voice = naturalVoice || voices.find(voice => /es-CO/i.test(voice.lang)) || voices.find(voice => /^es/i.test(voice.lang)) || null;
     utterance.onstart = () => button?.classList.add('speaking');
     utterance.onend = utterance.onerror = () => button?.classList.remove('speaking');
     synth.speak(utterance);
