@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Administración · Simulador ESAP</title>
+<style>
+:root{--b:#003da5;--bd:#002a75;--bg:#f3f6fa;--card:#fff;--txt:#17202a;--mut:#66717d;--line:#dce3ea;--ok:#0d7a4a;--warn:#9a6700}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--txt)}
+header{background:linear-gradient(135deg,var(--bd),var(--b));color:#fff;padding:22px clamp(18px,4vw,46px)}header h1{margin:0;font-size:clamp(22px,3vw,34px)}header p{margin:6px 0 0;opacity:.88}
+main{max-width:1180px;margin:0 auto;padding:24px clamp(14px,3vw,30px) 46px}.toolbar,.card{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 8px 28px rgba(18,38,63,.06)}
+.toolbar{padding:16px;display:flex;gap:12px;align-items:end;flex-wrap:wrap}.field{display:grid;gap:5px;min-width:180px;flex:1}.field label{font-size:12px;font-weight:750}.field input,.field select{border:1px solid var(--line);border-radius:9px;padding:10px 11px;font:inherit;background:#fff}.btn{border:0;border-radius:9px;padding:11px 14px;font-weight:750;cursor:pointer}.btn.primary{background:var(--b);color:#fff}.btn.secondary{background:#eaf0fb;color:var(--bd)}.btn:disabled{opacity:.55;cursor:not-allowed}
+.note{font-size:12px;color:var(--mut);margin:10px 2px 0}.status{margin:14px 0;padding:11px 13px;border-radius:10px;background:#eef4ff;color:var(--bd);font-size:13px}.status.err{background:#fff0f0;color:#9a1c1c}.status.ok{background:#ecf8f1;color:var(--ok)}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:18px 0}.metric{padding:16px}.metric b{display:block;font-size:28px;color:var(--bd);margin-top:5px}.metric span{font-size:12px;color:var(--mut);font-weight:700}.section-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.card h2{font-size:16px;margin:0;padding:16px;border-bottom:1px solid var(--line)}.list{padding:8px 16px 16px}.row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;padding:9px 0;border-bottom:1px solid #edf1f5}.row:last-child{border-bottom:0}.row span:first-child{overflow-wrap:anywhere}.row b{color:var(--bd)}
+.pilot{margin-top:18px;padding:18px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}.pilot h2{padding:0;border:0;margin:0 0 5px}.pilot p{margin:0;color:var(--mut);font-size:13px;max-width:720px}.hidden{display:none!important}
+@media(max-width:850px){.grid{grid-template-columns:repeat(2,1fr)}.section-grid{grid-template-columns:1fr}}@media(max-width:480px){.grid{grid-template-columns:1fr}.toolbar{align-items:stretch}.btn{width:100%}}
+</style>
+</head>
+<body>
+<header><h1>Panel de administración</h1><p>Simulador de Entrevistas Laborales ESAP · métricas anónimas y modo de pilotaje</p></header>
+<main>
+  <section class="toolbar" aria-label="Acceso a métricas">
+    <div class="field"><label for="admin-key">Clave de administrador</label><input id="admin-key" type="password" autocomplete="current-password" placeholder="ADMIN_KEY del Worker"></div>
+    <div class="field" style="max-width:220px"><label for="days">Periodo</label><select id="days"><option value="7">Últimos 7 días</option><option value="30" selected>Últimos 30 días</option><option value="90">Últimos 90 días</option><option value="365">Último año</option></select></div>
+    <button class="btn primary" id="load">Cargar métricas</button>
+    <button class="btn secondary" id="forget">Olvidar clave</button>
+  </section>
+  <p class="note">La clave se guarda solo en esta pestaña mediante sessionStorage. El archivo de GitHub Pages no contiene la clave.</p>
+  <div id="status" class="status">Ingresa la clave configurada como secreto <b>ADMIN_KEY</b> en Cloudflare y carga las métricas.</div>
+
+  <section id="dashboard" class="hidden">
+    <div class="grid">
+      <article class="card metric"><span>Usuarios anónimos aprox.</span><b id="m-visitors">0</b></article>
+      <article class="card metric"><span>Sesiones</span><b id="m-sessions">0</b></article>
+      <article class="card metric"><span>Entrevistas iniciadas</span><b id="m-started">0</b></article>
+      <article class="card metric"><span>Entrevistas completadas</span><b id="m-completed">0</b></article>
+      <article class="card metric"><span>Tasa de finalización</span><b id="m-rate">0%</b></article>
+      <article class="card metric"><span>CV cargados</span><b id="m-uploaded">0</b></article>
+      <article class="card metric"><span>CV generados</span><b id="m-generated">0</b></article>
+      <article class="card metric"><span>Sesiones con voz</span><b id="m-voice">0</b></article>
+    </div>
+    <div class="section-grid">
+      <article class="card"><h2>Uso por territorial / sede</h2><div class="list" id="territorial"></div></article>
+      <article class="card"><h2>Uso por programa académico</h2><div class="list" id="programs"></div></article>
+      <article class="card"><h2>Eventos registrados</h2><div class="list" id="events"></div></article>
+      <article class="card"><h2>Qué se registra</h2><div class="list"><div class="row"><span>Identificador</span><b>Aleatorio</b></div><div class="row"><span>Programa y territorial</span><b>Opcionales</b></div><div class="row"><span>Respuestas / audios / CV</span><b>No</b></div><div class="row"><span>Número de documento</span><b>No</b></div></div></article>
+    </div>
+  </section>
+
+  <section class="card pilot">
+    <div><h2>Pilotaje del bot</h2><p>Abre el simulador en modo administrativo. Podrás omitir cualquier pregunta. Si respondes al menos una, el bot generará retroalimentación únicamente sobre las respuestas contestadas.</p></div>
+    <button class="btn primary" id="pilot">Abrir modo de prueba</button>
+  </section>
+</main>
+<script>
+(() => {
+  const DEFAULT_API_URL = 'https://entrevista-esap-worker.esap-entrevistas-pedro.workers.dev';
+  const API_URL = String(window.SIMULADOR_API_URL || DEFAULT_API_URL).trim();
+  const $ = id => document.getElementById(id);
+  const keyInput = $('admin-key');
+  keyInput.value = sessionStorage.getItem('esap-admin-key') || '';
+
+  $('forget').addEventListener('click', () => { sessionStorage.removeItem('esap-admin-key'); keyInput.value=''; setStatus('Clave eliminada de esta pestaña.'); });
+  $('pilot').addEventListener('click', () => { window.location.href = 'simulador-entrevistas-esap.html?modo=prueba'; });
+  $('load').addEventListener('click', loadStats);
+  $('days').addEventListener('change', () => { if (keyInput.value) loadStats(); });
+
+  async function loadStats(){
+    const key = keyInput.value.trim();
+    if(!key){ setStatus('Ingresa la clave ADMIN_KEY.', true); return; }
+    sessionStorage.setItem('esap-admin-key', key);
+    const button=$('load'); button.disabled=true; button.textContent='Cargando…'; setStatus('Consultando métricas…');
+    try{
+      const response=await fetch(API_URL,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({action:'admin-stats',adminKey:key,days:Number($('days').value)})});
+      let data={}; try{data=await response.json()}catch(_){ }
+      if(!response.ok || data.ok===false) throw new Error(data.error || `Error ${response.status}`);
+      render(data); setStatus(`Métricas cargadas para los últimos ${data.days} días.`, false, true);
+    }catch(error){ $('dashboard').classList.add('hidden'); setStatus(error.message || 'No fue posible cargar las métricas.', true); }
+    finally{button.disabled=false;button.textContent='Cargar métricas'}
+  }
+
+  function n(value){ return Number(value)||0 }
+  function render(data){
+    const s=data.summary||{}, started=n(s.interviews_started), completed=n(s.interviews_completed);
+    $('m-visitors').textContent=n(s.visitors).toLocaleString('es-CO'); $('m-sessions').textContent=n(s.sessions).toLocaleString('es-CO');
+    $('m-started').textContent=started.toLocaleString('es-CO'); $('m-completed').textContent=completed.toLocaleString('es-CO');
+    $('m-rate').textContent=started ? `${Math.round(completed/started*100)}%` : '0%';
+    $('m-uploaded').textContent=n(s.resumes_uploaded).toLocaleString('es-CO'); $('m-generated').textContent=n(s.resumes_generated).toLocaleString('es-CO'); $('m-voice').textContent=n(s.voice_sessions).toLocaleString('es-CO');
+    renderList('territorial',data.territorial); renderList('programs',data.programs); renderList('events',data.events,true); $('dashboard').classList.remove('hidden');
+  }
+  function renderList(id,items,eventNames=false){
+    const labels={context_completed:'Formulario completado',interview_started:'Entrevista iniciada',interview_completed:'Entrevista completada',resume_uploaded:'CV cargado',resume_requested:'CV solicitado',resume_generated:'CV generado',resume_blocked:'CV bloqueado por trazabilidad'};
+    const list=Array.isArray(items)?items:[]; $(id).innerHTML=list.length?list.map(x=>`<div class="row"><span>${escapeHtml(eventNames?(labels[x.label]||x.label):x.label)}</span><b>${n(x.value).toLocaleString('es-CO')}</b></div>`).join(''):'<p class="note">Sin datos en este periodo.</p>';
+  }
+  function escapeHtml(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
+  function setStatus(text,error=false,ok=false){const el=$('status');el.className=`status${error?' err':ok?' ok':''}`;el.innerHTML=escapeHtml(text)}
+})();
+</script>
+</body>
+</html>
