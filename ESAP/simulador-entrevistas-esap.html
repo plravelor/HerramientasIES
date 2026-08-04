@@ -1018,6 +1018,7 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
 .answer-review{border-top:1px solid var(--border);padding:9px 0}
 .answer-review:first-of-type{border-top:none}
 .answer-review .q{font-size:11.5px;font-weight:750;line-height:1.45;margin-bottom:4px}
+.answer-review .a{font-size:11px;line-height:1.5;margin:6px 0;padding:8px 9px;border-left:3px solid var(--g);background:var(--gll);border-radius:0 7px 7px 0;white-space:pre-wrap;overflow-wrap:anywhere}
 .answer-review .r{font-size:11px;color:var(--muted);line-height:1.5}
 .metric-row{display:grid;grid-template-columns:105px 1fr auto;gap:8px;align-items:center;margin:8px 0;font-size:10.5px}
 .metric-track{height:6px;border-radius:99px;background:var(--border);overflow:hidden}
@@ -1116,6 +1117,7 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
 <script src="https://unpkg.com/lucide@0.454.0/dist/umd/lucide.min.js"></script>
 <script src="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
 <script src="https://unpkg.com/mammoth@1.10.0/mammoth.browser.min.js"></script>
+<script src="https://unpkg.com/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
 <script>
 /*
  * Simulador de Entrevistas Laborales ESAP
@@ -1129,7 +1131,7 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
   const DEFAULT_API_URL = 'https://entrevista-esap-worker.esap-entrevistas-pedro.workers.dev';
   const API_URL = String(window.SIMULADOR_API_URL || DEFAULT_API_URL).trim();
   const API_CONFIGURED = /^https:\/\//i.test(API_URL) && !/REEMPLAZAR-POR-SU-WORKER/i.test(API_URL);
-  const REQUIRED_WORKER_VERSION = '2026-08-04.2';
+  const REQUIRED_WORKER_VERSION = '2026-08-03.3';
   const MAX_VACANCY = 7000;
   const MAX_PROFILE = 5000;
   const MAX_RESUME_BYTES = 8 * 1024 * 1024;
@@ -1191,6 +1193,8 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
   let toastTimer = null;
   let questionTimer = null;
   let recognition = null;
+  let recognitionRestartTimer = null;
+  let recognitionInterimAvailable = false;
   let listening = false;
   let voiceBaseText = '';
   let voiceFinalText = '';
@@ -1236,6 +1240,7 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
       questionIndex: 0,
       currentQuestion: null,
       answers: [],
+      attempts: [],
       localQuestions: [],
       feedback: null,
       adminTest: ADMIN_TEST_MODE
@@ -1783,7 +1788,7 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
       </div>
       ${state.adminTest ? '<div class="admin-test-note"><i data-lucide="flask-conical"></i><span><b>Modo de prueba administrativa.</b> Podrás omitir respuestas y recorrer todas las preguntas. En este modo no se generará una evaluación del desempeño.</span></div>' : ''}
       <div id="connection-box" class="notice info"><i data-lucide="loader-circle"></i><span>Comprobando el servicio de entrevista…</span></div>
-      <div class="notice safe"><i data-lucide="mic-2"></i><span>El micrófono es opcional. Si lo usas, la grabación se envía temporalmente al servicio seguro de Cloudflare para mejorar la transcripción y analizar ritmo, pausas y variación de volumen. No se almacena. Siempre puedes escribir y corregir el texto antes de responder.</span></div>
+      <div class="notice safe"><i data-lucide="mic-2"></i><span>El micrófono es opcional. En navegadores compatibles verás una transcripción provisional mientras hablas; al detener, Cloudflare genera una transcripción final más precisa. La grabación se usa temporalmente para transcribir y calcular métricas aproximadas de ritmo, pausas y volumen; no se almacena. Siempre puedes corregir el texto antes de responder.</span></div>
       <label style="display:flex;gap:8px;align-items:center;font-size:11.5px;font-weight:650;margin-top:9px"><input id="auto-speak" type="checkbox"${state.autoSpeak ? ' checked' : ''}> Leer automáticamente cada pregunta en voz alta</label>
       <div class="form-actions">
         <button class="secondary-btn" id="edit-config" type="button"><i data-lucide="pencil"></i> Editar</button>
@@ -1849,6 +1854,7 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
     }
     state.questionIndex = 0;
     state.answers = [];
+    state.attempts = [];
     state.feedback = null;
     state.localQuestions = buildLocalQuestions();
     clearConversation();
@@ -1898,14 +1904,20 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
   function presentQuestion(question) {
     state.currentQuestion = question;
     setStep('interview', 62 + (state.questionIndex / Math.max(1, state.totalQuestions)) * 32);
+    const speaker = question.interviewer || interviewerLabel(state.questionIndex);
+    const speakerIcon = state.format === 'panel' ? 'users-round' : state.channel === 'async' ? 'video' : 'user-round';
+    if (question.transition) {
+      addMsg('bot', textToHtml(question.transition), { speaker, speakerIcon });
+    }
     const message = addMsg('bot', textToHtml(question.text), {
-      speaker: question.interviewer || interviewerLabel(state.questionIndex),
-      speakerIcon: state.format === 'panel' ? 'users-round' : state.channel === 'async' ? 'video' : 'user-round',
+      speaker,
+      speakerIcon,
       meta: [question.competency || LABELS.focus[state.focus], `Pregunta ${state.questionIndex + 1} de ${state.totalQuestions}`]
     });
     renderComposer();
     if (state.autoSpeak) {
-      setTimeout(() => speakText(question.text, message.querySelector('.bub-speak')), 300);
+      const spokenQuestion = [question.transition, question.text].filter(Boolean).join(' ');
+      setTimeout(() => speakText(spokenQuestion, message.querySelector('.bub-speak')), 300);
     }
   }
 
@@ -1962,6 +1974,7 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
     const send = document.getElementById('send-btn');
     const adminSkip = Boolean(state.adminTest && options.adminSkip);
     if (!input || (!adminSkip && (!input.value.trim() || send.disabled))) return;
+    if (listening) await stopListening(false);
     const answer = adminSkip ? '[Pregunta omitida durante la prueba administrativa]' : input.value.trim();
     const previousAnswers = state.answers.map(item => item.answer.trim().toLowerCase());
     const normalizedAnswer = answer.toLowerCase().replace(/[^a-záéíóúüñ0-9\s]/g, ' ').replace(/\s+/g, ' ').trim();
@@ -1970,6 +1983,14 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
     if (insufficient && !state.adminTest) {
       stopQuestionTimer();
       stopListening(true);
+      state.attempts.push({
+        question: state.currentQuestion.text,
+        competency: state.currentQuestion.competency || '',
+        answer,
+        delivery: finishVoiceCapture(answer),
+        accepted: false,
+        status: 'Se solicitó reformular la respuesta'
+      });
       addMsg('usr', textToHtml(answer));
       els.opts.innerHTML = '';
       addMsg('bot', textToHtml(testAnswer
@@ -1981,7 +2002,6 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
     send.disabled = true;
     stopQuestionTimer();
     const delivery = finishVoiceCapture(answer);
-    await stopListening(false);
     const audio = serverTranscript ? null : await encodeRecordedAudio();
     if (serverTranscript) delivery.transcriptionSource = 'Whisper de Cloudflare';
     window.speechSynthesis?.cancel();
@@ -2003,6 +2023,7 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
       try {
         result = await callInterviewApi('answer', record);
       } catch (error) {
+        state.attempts.push({ ...record, accepted: null, status: 'No evaluada por interrupción de la conexión' });
         hideTyping();
         showAiInterruption(error, 'La respuesta no fue enviada a la IA y no será evaluada.');
         presentQuestion(state.currentQuestion);
@@ -2017,12 +2038,14 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
     }
 
     if (result && result.accepted === false) {
+      state.attempts.push({ ...record, accepted: false, status: 'Se solicitó reformular la respuesta' });
       addMsg('bot', textToHtml(result.message || 'Volvamos a la entrevista. Responde la pregunta con una experiencia, una decisión o un ejemplo relacionado.'));
       if (result.question) state.currentQuestion = normalizeQuestion(result.question, state.questionIndex);
       presentQuestion(state.currentQuestion);
       return;
     }
 
+    state.attempts.push({ ...record, accepted: true, status: 'Respuesta aceptada' });
     state.answers.push(record);
     if (state.mode === 'coach') {
       const coaching = result?.coaching || localCoaching(record);
@@ -2077,9 +2100,16 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
     return {
       id: String(question.id || `q-${index + 1}`),
       text: guardQuestionText(question.text, index),
+      transition: guardTransitionText(question.transition),
       competency: String(question.competency || LABELS.focus[state.focus]).slice(0, 80),
       interviewer: String(question.interviewer || interviewerLabel(index)).slice(0, 80)
     };
+  }
+
+  function guardTransitionText(value) {
+    const transition = String(value || '').replace(/\s+/g, ' ').trim().slice(0, 260);
+    if (!transition || /excelente|muy bien|gran (?:experiencia|respuesta|liderazgo)|demuestras?|el estudiante|la estudiante|el candidato|la candidata|\bESAP\b/i.test(transition)) return '';
+    return transition;
   }
 
   function guardQuestionText(value, index) {
@@ -2432,20 +2462,54 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
         })
       : fallback;
     const indicators = raw.indicators || {};
+    const scoreValues = [indicators.content ?? raw.content_score, indicators.structure ?? raw.structure_score, indicators.specificity ?? raw.specificity_score].map(Number);
+    const finiteScores = scoreValues.filter(Number.isFinite);
+    const scoreFactor = finiteScores.length && Math.max(...finiteScores) <= 5 ? 20 : finiteScores.length && Math.max(...finiteScores) <= 10 ? 10 : 1;
+    const priorities = normalizeItems(raw.priorities, [], ['title', 'why', 'action']).slice(0, 3);
+    for (const item of local.priorities) {
+      if (priorities.length >= 3) break;
+      if (!priorities.some(existing => existing.title.toLowerCase() === item.title.toLowerCase())) priorities.push(item);
+    }
+    const generatedReviews = normalizeItems(raw.answerReviews || raw.answer_reviews, [], ['question', 'observation', 'suggestion']);
+    const reviews = state.answers.map((answer, index) => {
+      const generated = generatedReviews[index] || local.answerReviews[index] || {};
+      return {
+        question: `Pregunta ${index + 1}: ${answer.question}`,
+        observation: String(generated.observation || 'No hay evidencia suficiente para una observación específica.').slice(0, 1000),
+        suggestion: String(generated.suggestion || 'Reformula la respuesta indicando el contexto, tu acción y el resultado.').slice(0, 1000)
+      };
+    });
     return {
       summary: String(raw.summary || local.summary).slice(0, 1600),
       strengths: normalizeItems(raw.strengths, local.strengths, ['title', 'evidence']),
-      priorities: normalizeItems(raw.priorities, local.priorities, ['title', 'why', 'action']),
-      answerReviews: normalizeItems(raw.answerReviews || raw.answer_reviews, local.answerReviews, ['question', 'observation', 'suggestion']),
+      priorities,
+      answerReviews: reviews,
       indicators: {
-        content: clamp(Number(indicators.content ?? raw.content_score ?? local.indicators.content)),
-        structure: clamp(Number(indicators.structure ?? raw.structure_score ?? local.indicators.structure)),
-        specificity: clamp(Number(indicators.specificity ?? raw.specificity_score ?? local.indicators.specificity))
+        content: Number.isFinite(scoreValues[0]) ? clamp(Math.round(scoreValues[0] * scoreFactor)) : local.indicators.content,
+        structure: Number.isFinite(scoreValues[1]) ? clamp(Math.round(scoreValues[1] * scoreFactor)) : local.indicators.structure,
+        specificity: Number.isFinite(scoreValues[2]) ? clamp(Math.round(scoreValues[2] * scoreFactor)) : local.indicators.specificity
       },
       deliveryNote: String(raw.deliveryNote || raw.delivery_note || local.deliveryNote).slice(0, 1400),
       nextSteps: Array.isArray(raw.nextSteps || raw.next_steps) ? (raw.nextSteps || raw.next_steps).slice(0, 5).map(item => String(item).slice(0, 500)) : local.nextSteps,
       source: raw.source === 'local' ? 'local' : 'ai'
     };
+  }
+
+  function completeSessionRecords() {
+    if (Array.isArray(state.attempts) && state.attempts.length) return state.attempts;
+    return state.answers.map(item => ({ ...item, accepted: true, status: 'Respuesta aceptada' }));
+  }
+
+  function buildSessionReviewHtml(feedback) {
+    let acceptedIndex = 0;
+    return completeSessionRecords().map((attempt, index) => {
+      const review = attempt.accepted === true ? (feedback.answerReviews[acceptedIndex++] || {}) : {};
+      const status = attempt.status || (attempt.accepted === true ? 'Respuesta aceptada' : attempt.accepted === false ? 'Se solicitó reformular la respuesta' : 'No evaluada');
+      const reviewText = attempt.accepted === true
+        ? `<div class="r"><b>Observación:</b> ${escapeHtml(review.observation || 'Sin observación específica.')}<br><b>Cómo mejorarla:</b> ${escapeHtml(review.suggestion || 'Sin recomendación específica.')}</div>`
+        : `<div class="r"><b>Estado:</b> ${escapeHtml(status)}. Esta respuesta no se incorporó a los indicadores ni a la retroalimentación final.</div>`;
+      return `<div class="answer-review"><div class="q">Interacción ${index + 1}: ${escapeHtml(attempt.question)}</div><div class="a"><b>Tu respuesta:</b><br>${escapeHtml(attempt.answer)}</div>${reviewText}</div>`;
+    }).join('');
   }
 
   async function renderFeedback() {
@@ -2465,7 +2529,7 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
     </div>
     <div class="report-section">
       <h3><i data-lucide="sparkles"></i> Fortalezas observadas</h3>
-      ${feedback.strengths.map(item => `<div class="priority"><span class="priority-num"><i data-lucide="check"></i></span><div><b>${escapeHtml(item.title)}</b><p>${escapeHtml(item.evidence)}</p></div></div>`).join('')}
+      ${feedback.strengths.length ? feedback.strengths.map(item => `<div class="priority"><span class="priority-num"><i data-lucide="check"></i></span><div><b>${escapeHtml(item.title)}</b><p>${escapeHtml(item.evidence)}</p></div></div>`).join('') : '<p class="privacy-note">Las respuestas no aportaron evidencia suficiente para afirmar una fortaleza concreta sin hacer suposiciones.</p>'}
     </div>
     <div class="report-section">
       <h3><i data-lucide="list-checks"></i> Tres mejoras prioritarias</h3>
@@ -2483,8 +2547,8 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
       <p style="font-size:11.5px;line-height:1.55">${escapeHtml(feedback.deliveryNote)}</p>
     </div>
     <div class="report-section">
-      <h3><i data-lucide="messages-square"></i> Revisión de respuestas</h3>
-      ${feedback.answerReviews.map(item => `<div class="answer-review"><div class="q">${escapeHtml(item.question)}</div><div class="r"><b>Observación:</b> ${escapeHtml(item.observation)}<br><b>Cómo mejorarla:</b> ${escapeHtml(item.suggestion)}</div></div>`).join('')}
+      <h3><i data-lucide="messages-square"></i> Registro completo: preguntas, respuestas y revisión</h3>
+      ${buildSessionReviewHtml(feedback)}
     </div>
     <div class="report-section">
       <h3><i data-lucide="footprints"></i> Próximos pasos</h3>
@@ -2492,11 +2556,13 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
     </div>
     <div class="form-actions report-actions">
       <button class="secondary-btn" id="copy-report" type="button"><i data-lucide="copy"></i> Copiar</button>
-      <button class="secondary-btn" id="print-report" type="button"><i data-lucide="printer"></i> Imprimir / PDF</button>
+      <button class="secondary-btn" id="download-pdf" type="button"><i data-lucide="file-down"></i> Descargar PDF completo</button>
+      <button class="secondary-btn" id="print-report" type="button"><i data-lucide="printer"></i> Imprimir</button>
       <button class="primary-btn" id="new-practice" type="button"><i data-lucide="rotate-ccw"></i> Nueva práctica</button>
     </div>`;
     els.msgs.insertBefore(report, els.typing);
     document.getElementById('copy-report').addEventListener('click', copyReport);
+    document.getElementById('download-pdf').addEventListener('click', downloadSessionPdf);
     document.getElementById('print-report').addEventListener('click', () => window.print());
     document.getElementById('new-practice').addEventListener('click', () => restart(true));
     renderIcons();
@@ -2517,6 +2583,122 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
       showToast('Retroalimentación copiada.');
     } catch (_) {
       showToast('No fue posible copiar automáticamente. Puedes seleccionar el texto del informe.');
+    }
+  }
+
+  async function downloadSessionPdf() {
+    if (!window.jspdf?.jsPDF) {
+      showToast('No se pudo cargar el generador de PDF. Revisa la conexión e inténtalo nuevamente.');
+      return;
+    }
+    const button = document.getElementById('download-pdf');
+    if (button) button.disabled = true;
+    try {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({ unit: 'mm', format: 'a4', compress: true });
+      const margin = 16;
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const pageHeight = doc.internal.pageSize.getHeight();
+      const contentWidth = pageWidth - margin * 2;
+      let y = 18;
+      const safeText = value => String(value ?? '').replace(/[“”]/g, '"').replace(/[‘’]/g, "'").replace(/[–—]/g, '-').replace(/•/g, '-').replace(/\u00a0/g, ' ').trim();
+      const ensureSpace = needed => {
+        if (y + needed > pageHeight - 16) {
+          doc.addPage();
+          y = 18;
+        }
+      };
+      const writeText = (text, options = {}) => {
+        const size = options.size || 10;
+        const lineHeight = options.lineHeight || size * 0.42;
+        doc.setFont('helvetica', options.bold ? 'bold' : 'normal');
+        doc.setFontSize(size);
+        doc.setTextColor(...(options.color || [28, 32, 39]));
+        const lines = doc.splitTextToSize(safeText(text) || '—', options.width || contentWidth);
+        ensureSpace(lines.length * lineHeight + (options.after ?? 2));
+        doc.text(lines, options.x || margin, y);
+        y += lines.length * lineHeight + (options.after ?? 2);
+      };
+      const section = title => {
+        ensureSpace(14);
+        y += 3;
+        doc.setDrawColor(0, 61, 165);
+        doc.setLineWidth(0.6);
+        doc.line(margin, y, margin + contentWidth, y);
+        y += 6;
+        writeText(title, { size: 14, bold: true, color: [0, 61, 165], after: 3 });
+      };
+
+      doc.setFillColor(0, 61, 165);
+      doc.rect(0, 0, pageWidth, 37, 'F');
+      doc.setTextColor(255, 255, 255);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(16);
+      doc.text('ESAP - Simulador de Entrevistas Laborales', margin, 16);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(10);
+      doc.text('Registro completo y retroalimentación formativa', margin, 24);
+      doc.text(`Generado: ${new Date().toLocaleString('es-CO')}`, margin, 31);
+      y = 46;
+
+      writeText(`Cargo o área: ${state.role || LABELS.area[state.area] || 'No especificado'}`, { bold: true });
+      writeText(`Organización: ${state.organization || 'No especificada'}`);
+      writeText(`Tipo: ${LABELS.format[state.format]} · ${LABELS.channel[state.channel]} · ${LABELS.focus[state.focus]} · ${LABELS.level[state.level] || state.level}`);
+
+      section('Preguntas y respuestas de la sesión');
+      completeSessionRecords().forEach((answer, index) => {
+        ensureSpace(25);
+        writeText(`Interacción ${index + 1}`, { size: 11, bold: true, color: [0, 61, 165], after: 1 });
+        writeText(answer.question, { bold: true, after: 2 });
+        writeText('Respuesta registrada', { size: 9, bold: true, color: [95, 106, 125], after: 1 });
+        writeText(answer.answer, { after: 4 });
+        writeText(`Estado: ${answer.status || (answer.accepted === true ? 'Respuesta aceptada' : answer.accepted === false ? 'Se solicitó reformular la respuesta' : 'No evaluada')}`, { size: 8, color: [95, 106, 125], after: 3 });
+      });
+
+      const feedback = state.feedback || normalizeFeedback(null);
+      section('Retroalimentación');
+      writeText(feedback.summary);
+      section('Fortalezas observadas');
+      if (!feedback.strengths.length) writeText('No hubo evidencia suficiente para afirmar fortalezas específicas sin hacer suposiciones.');
+      feedback.strengths.forEach((item, index) => {
+        writeText(`${index + 1}. ${item.title}`, { bold: true, after: 1 });
+        writeText(item.evidence, { after: 3 });
+      });
+      section('Tres mejoras prioritarias');
+      feedback.priorities.slice(0, 3).forEach((item, index) => {
+        writeText(`${index + 1}. ${item.title}`, { bold: true, after: 1 });
+        writeText(`Por qué: ${item.why}`, { after: 1 });
+        writeText(`Próxima acción: ${item.action}`, { after: 4 });
+      });
+      section('Indicadores formativos');
+      writeText(`Contenido pertinente: ${Math.round(feedback.indicators.content)}%`);
+      writeText(`Estructura: ${Math.round(feedback.indicators.structure)}%`);
+      writeText(`Ejemplos específicos: ${Math.round(feedback.indicators.specificity)}%`);
+      writeText('Estos indicadores describen esta práctica; no predicen contratación ni califican la empleabilidad.', { size: 9, color: [95, 106, 125] });
+      section('Forma de respuesta');
+      writeText(feedback.deliveryNote);
+      section('Revisión de cada respuesta');
+      state.answers.forEach((answer, index) => {
+        const review = feedback.answerReviews[index] || {};
+        ensureSpace(28);
+        writeText(`Pregunta ${index + 1}: ${answer.question}`, { bold: true, after: 1 });
+        writeText(`Respuesta: ${answer.answer}`, { after: 1 });
+        writeText(`Observación: ${review.observation || 'Sin observación específica.'}`, { after: 1 });
+        writeText(`Cómo mejorarla: ${review.suggestion || 'Sin recomendación específica.'}`, { after: 4 });
+      });
+      section('Próximos pasos');
+      feedback.nextSteps.forEach((item, index) => writeText(`${index + 1}. ${item}`));
+      y += 3;
+      writeText('Herramienta formativa de la Dirección de Bienestar Universitario. No decide procesos de selección.', { size: 8, color: [95, 106, 125] });
+
+      const roleSlug = safeText(state.role || 'entrevista').toLowerCase().replace(/[^a-z0-9áéíóúüñ]+/gi, '-').replace(/^-|-$/g, '').slice(0, 45) || 'entrevista';
+      const date = new Date().toISOString().slice(0, 10);
+      doc.save(`informe-entrevista-esap-${roleSlug}-${date}.pdf`);
+      showToast('PDF completo generado. Revisa la carpeta de descargas.');
+    } catch (error) {
+      showToast(`No fue posible generar el PDF: ${error.message || 'error desconocido'}.`);
+    } finally {
+      if (button) button.disabled = false;
     }
   }
 
@@ -2549,7 +2731,12 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
     instance.continuous = true;
     instance.interimResults = true;
     instance.maxAlternatives = 1;
+    instance.onstart = () => {
+      recognitionInterimAvailable = true;
+      updateMicUi(true);
+    };
     instance.onresult = event => {
+      recognitionInterimAvailable = true;
       let interim = '';
       for (let i = event.resultIndex; i < event.results.length; i += 1) {
         const part = event.results[i][0]?.transcript || '';
@@ -2563,18 +2750,40 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
       }
     };
     instance.onerror = event => {
-      if (event.error !== 'aborted' && event.error !== 'no-speech') showToast('El micrófono no pudo transcribir. Puedes continuar escribiendo.');
+      if (!['aborted', 'no-speech'].includes(event.error)) showToast('La transcripción en vivo se interrumpió; la grabación final seguirá disponible.');
     };
     instance.onend = () => {
+      if (recognition === instance) recognition = null;
+      const keepRecording = listening && mediaRecorder?.state === 'recording' && recognitionTarget?.isConnected;
+      if (keepRecording) {
+        clearTimeout(recognitionRestartTimer);
+        recognitionRestartTimer = setTimeout(() => {
+          if (listening && mediaRecorder?.state === 'recording') startRecognitionStream();
+        }, 280);
+        return;
+      }
       if (listening) {
         listening = false;
         updateMicUi(false);
         finishAudioAnalysis();
       }
-      recognition = null;
       recognitionTarget = null;
     };
     return instance;
+  }
+
+  function startRecognitionStream() {
+    if (!recognitionTarget?.isConnected) return false;
+    const instance = initRecognition();
+    if (!instance) return false;
+    recognition = instance;
+    try {
+      instance.start();
+      return true;
+    } catch (_) {
+      if (recognition === instance) recognition = null;
+      return false;
+    }
   }
 
   async function toggleListening() {
@@ -2598,31 +2807,29 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
     voiceBaseText = input?.value.trim() || '';
     voiceFinalText = '';
     serverTranscript = '';
+    recognitionInterimAvailable = false;
     voiceStartedAt = Date.now();
     voiceUsedThisAnswer = true;
     listening = true;
     updateMicUi(true);
     const recordingStarted = await startAudioAnalysis();
-    if (recordingStarted) return;
+    if (recordingStarted) {
+      startRecognitionStream();
+      updateMicUi(true);
+      return;
+    }
 
-    recognition = initRecognition();
-    if (!recognition) {
+    if (!startRecognitionStream()) {
       listening = false;
       updateMicUi(false);
       showToast('No fue posible abrir el micrófono. Revisa el permiso del navegador o escribe tu respuesta.');
       return;
     }
-    try {
-      recognition.start();
-    } catch (error) {
-      listening = false;
-      recognition = null;
-      updateMicUi(false);
-      showToast('No fue posible iniciar el micrófono. Revisa el permiso del navegador.');
-    }
   }
 
   async function stopListening(silent) {
+    clearTimeout(recognitionRestartTimer);
+    recognitionRestartTimer = null;
     const activeRecognition = recognition;
     listening = false;
     recognition = null;
@@ -2652,13 +2859,16 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
     if (status) {
       status.classList.toggle('active', active);
       status.innerHTML = active
-        ? '<i data-lucide="audio-waveform"></i><span>Escuchando… toca el botón rojo para detener</span>'
+        ? `<i data-lucide="audio-waveform"></i><span>${recognitionInterimAvailable ? 'Transcribiendo mientras hablas…' : 'Grabando… la transcripción final aparecerá al detener'} Toca el botón rojo para detener</span>`
         : '<i data-lucide="keyboard"></i><span>Revisa la respuesta antes de enviarla</span>';
     }
     renderIcons();
   }
 
   function resetVoiceCapture() {
+    clearTimeout(recognitionRestartTimer);
+    recognitionRestartTimer = null;
+    recognitionInterimAvailable = false;
     voiceBaseText = '';
     voiceFinalText = '';
     voiceStartedAt = 0;
@@ -2821,15 +3031,12 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
   }
 
   async function speakText(text, button) {
-    if (!('speechSynthesis' in window) || !text.trim()) {
-      showToast('La lectura en voz alta no está disponible en este navegador.');
-      return;
-    }
+    if (!text.trim()) return;
     if (spokenAudio) {
       stopSpokenAudio();
       return;
     }
-    window.speechSynthesis.cancel();
+    window.speechSynthesis?.cancel();
     document.querySelectorAll('.bub-speak').forEach(item => item.classList.remove('speaking'));
     button?.classList.add('speaking');
     try {
@@ -2852,6 +3059,11 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
       button?.classList.remove('speaking');
       stopSpokenAudio();
     }
+    if (!('speechSynthesis' in window)) {
+      showToast('La voz natural no respondió y este navegador no ofrece una voz de respaldo.');
+      return;
+    }
+    showToast('La voz natural no respondió; se usará temporalmente la voz del dispositivo.');
     speakWithBrowser(text, button);
   }
 
