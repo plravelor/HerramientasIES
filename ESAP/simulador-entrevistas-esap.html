@@ -54,6 +54,9 @@
   --scroll-th:#2f3b42;
 }
 html,body{height:100%;width:100%;max-width:100%;overflow-x:hidden;font-family:var(--f);background:var(--bg);color:var(--txt);transition:background .35s ease,color .35s ease}
+*,*::before,*::after{box-sizing:border-box;min-width:0}
+input,textarea,select,button{max-width:100%}
+.bubble,.bub-content,.setup-card,.field,.answer-review,.report-section,.notice{overflow-wrap:anywhere;word-break:normal}
 button{-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none}
 input,textarea,select,button{max-width:100%}
 .ms-item:focus,.ch:focus{outline:none}
@@ -965,6 +968,15 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
 .resume-status.loading{color:var(--bluec);font-weight:650}
 .resume-status.success{color:var(--sosc);font-weight:650}
 .resume-status.error{color:var(--redc);font-weight:650}
+.voice-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:9px 0 2px}
+.voice-option{display:flex;align-items:center;gap:8px;min-width:0;padding:9px 10px;border:1.5px solid var(--border);border-radius:10px;background:var(--card);cursor:pointer;font-size:11px;font-weight:700}
+.voice-option:has(input:checked){border-color:var(--g);background:var(--gll);color:var(--gd)}
+.voice-option input{flex:0 0 auto}
+.coach-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:8px}
+.coach-card{border:1px solid var(--border);border-radius:10px;padding:10px;background:var(--gll);min-width:0}
+.coach-card b{display:block;margin-bottom:4px;color:var(--gd)}
+.coach-card p{margin:3px 0;font-size:10.5px;line-height:1.45;overflow-wrap:anywhere}
+.rating-pill{display:inline-flex;border-radius:99px;padding:3px 7px;background:var(--gll);color:var(--gd);font-size:9px;font-weight:800;text-transform:uppercase}
 .file-privacy{width:100%;font-size:9.8px;line-height:1.45;color:var(--muted)}
 .notice{display:flex;gap:9px;align-items:flex-start;border-radius:10px;padding:10px 11px;font-size:11.5px;line-height:1.5;margin:9px 0}
 .notice svg{width:16px;height:16px;flex-shrink:0;margin-top:1px}
@@ -1028,7 +1040,7 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
 .toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,20px);z-index:50;background:#17212b;color:#fff;border-radius:10px;padding:10px 14px;font-size:11.5px;box-shadow:0 6px 24px rgba(0,0,0,.28);opacity:0;pointer-events:none;transition:.22s;max-width:min(90vw,430px);text-align:center}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-@media(max-width:560px){.form-grid.two,.choice-grid.two,.summary-list{grid-template-columns:1fr}.setup-card{padding:13px}.report-hero h2{font-size:21px}}
+@media(max-width:560px){.form-grid.two,.choice-grid.two,.summary-list,.voice-options,.coach-grid{grid-template-columns:1fr}.setup-card{padding:13px}.report-hero h2{font-size:21px}}
 @media print{.composer,.form-actions,.report-actions{display:none!important}.report-section{break-inside:avoid}}
 </style>
 </head>
@@ -1131,7 +1143,7 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
   const DEFAULT_API_URL = 'https://entrevista-esap-worker.esap-entrevistas-pedro.workers.dev';
   const API_URL = String(window.SIMULADOR_API_URL || DEFAULT_API_URL).trim();
   const API_CONFIGURED = /^https:\/\//i.test(API_URL) && !/REEMPLAZAR-POR-SU-WORKER/i.test(API_URL);
-  const REQUIRED_WORKER_VERSION = '2026-08-03.3';
+  const REQUIRED_WORKER_VERSION = '2026-08-04.4';
   const MAX_VACANCY = 7000;
   const MAX_PROFILE = 5000;
   const MAX_RESUME_BYTES = 8 * 1024 * 1024;
@@ -1215,6 +1227,8 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
   let resolveRecordingStopped = null;
   let serverTranscript = '';
   let microphoneBusy = false;
+  let previousSessionSnapshot = null;
+  const preparedSpeech = new Map();
 
   function freshState() {
     return {
@@ -1225,6 +1239,8 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
       vacancy: '',
       profile: '',
       resumeFileName: '',
+      resumeFileType: '',
+      resumeText: '',
       area: '',
       level: '',
       format: 'individual',
@@ -1232,7 +1248,8 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
       focus: 'mixed',
       mode: 'realistic',
       totalQuestions: 8,
-      autoSpeak: true,
+      autoSpeak: false,
+      voiceGender: 'female',
       sessionId: makeId(),
       aiAvailable: false,
       aiChecked: false,
@@ -1243,6 +1260,7 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
       attempts: [],
       localQuestions: [],
       feedback: null,
+      contextWarnings: [],
       adminTest: ADMIN_TEST_MODE
     };
   }
@@ -1609,6 +1627,8 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
       profile.value = summary.slice(0, MAX_PROFILE);
       profile.dispatchEvent(new Event('input'));
       state.resumeFileName = file.name;
+      state.resumeFileType = /\.pdf$/i.test(file.name) ? 'PDF' : 'DOCX';
+      state.resumeText = extracted.slice(0, MAX_RESUME_TEXT);
       setStatus(`Resumen generado desde ${file.name}. Revísalo y edítalo antes de continuar.`, 'success');
       showToast('Tu hoja de vida fue resumida. Puedes corregir o complementar el texto.');
     } catch (error) {
@@ -1787,16 +1807,28 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
         <div class="summary-item"><b>Audio</b><span>Preguntas y respuestas por voz</span></div>
       </div>
       ${state.adminTest ? '<div class="admin-test-note"><i data-lucide="flask-conical"></i><span><b>Modo de prueba administrativa.</b> Podrás omitir respuestas y recorrer todas las preguntas. En este modo no se generará una evaluación del desempeño.</span></div>' : ''}
+      ${state.scenario === 'vacancy' && countWords(state.vacancy) < 35 ? '<div class="notice warn"><i data-lucide="file-warning"></i><span><b>Convocatoria poco detallada.</b> Con el cargo y tu trayectoria se puede hacer una práctica general, pero no una entrevista técnica específica sin inventar requisitos. Si tienes funciones, estudios requeridos, experiencia exigida o competencias, vuelve y pégalos.</span></div>' : ''}
       <div id="connection-box" class="notice info"><i data-lucide="loader-circle"></i><span>Comprobando el servicio de entrevista…</span></div>
       <div class="notice safe"><i data-lucide="mic-2"></i><span>El micrófono es opcional. En navegadores compatibles verás una transcripción provisional mientras hablas; al detener, Cloudflare genera una transcripción final más precisa. La grabación se usa temporalmente para transcribir y calcular métricas aproximadas de ritmo, pausas y volumen; no se almacena. Siempre puedes corregir el texto antes de responder.</span></div>
       <label style="display:flex;gap:8px;align-items:center;font-size:11.5px;font-weight:650;margin-top:9px"><input id="auto-speak" type="checkbox"${state.autoSpeak ? ' checked' : ''}> Leer automáticamente cada pregunta en voz alta</label>
+      <div id="voice-options" class="voice-options"${state.autoSpeak ? '' : ' hidden'} aria-label="Tipo de voz">
+        <label class="voice-option"><input type="radio" name="voice-gender" value="female"${state.voiceGender === 'female' ? ' checked' : ''}> Voz femenina · Diana</label>
+        <label class="voice-option"><input type="radio" name="voice-gender" value="male"${state.voiceGender === 'male' ? ' checked' : ''}> Voz masculina · Álvaro</label>
+      </div>
       <div class="form-actions">
         <button class="secondary-btn" id="edit-config" type="button"><i data-lucide="pencil"></i> Editar</button>
         <button class="primary-btn" id="start-interview" type="button">Comenzar entrevista <i data-lucide="play"></i></button>
       </div>
     </div>`;
     document.getElementById('edit-config').addEventListener('click', renderConfiguration);
-    document.getElementById('auto-speak').addEventListener('change', event => { state.autoSpeak = event.target.checked; });
+    document.getElementById('auto-speak').addEventListener('change', event => {
+      state.autoSpeak = event.target.checked;
+      document.getElementById('voice-options').hidden = !state.autoSpeak;
+    });
+    document.querySelectorAll('input[name="voice-gender"]').forEach(input => input.addEventListener('change', event => {
+      state.voiceGender = event.target.value === 'male' ? 'male' : 'female';
+      clearPreparedSpeech();
+    }));
     document.getElementById('start-interview').addEventListener('click', startInterview);
     renderIcons();
     await checkApiStatus();
@@ -1874,6 +1906,7 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
           renderIcons();
           return;
         }
+        state.contextWarnings = Array.isArray(result.contextWarnings) ? result.contextWarnings.slice(0, 5) : [];
         question = normalizeQuestion(result.question, 0);
       } catch (error) {
         showAiInterruption(error, 'No fue posible generar la primera pregunta.');
@@ -1884,8 +1917,12 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
       showAiInterruption(new Error('La IA no entregó una pregunta válida.'), 'No fue posible generar la primera pregunta.');
       return;
     }
+    if (state.contextWarnings.length) {
+      addMsg('bot', `<div class="notice warn"><i data-lucide="file-warning"></i><span><b>Límite de personalización:</b><ul>${state.contextWarnings.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul></span></div>`);
+    }
     await sleep(350);
-    presentQuestion(question);
+    showTyping();
+    await presentQuestion(question);
   }
 
   function interviewIntro() {
@@ -1901,11 +1938,16 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
     return 'Gracias por participar. Empezaremos con algunas preguntas para conocer tu perfil y tu manera de abordar situaciones relacionadas con el cargo. Responde con ejemplos concretos cuando sea posible.';
   }
 
-  function presentQuestion(question) {
+  async function presentQuestion(question, options = {}) {
     state.currentQuestion = question;
     setStep('interview', 62 + (state.questionIndex / Math.max(1, state.totalQuestions)) * 32);
     const speaker = question.interviewer || interviewerLabel(state.questionIndex);
     const speakerIcon = state.format === 'panel' ? 'users-round' : state.channel === 'async' ? 'video' : 'user-round';
+    const spokenQuestion = [question.transition, question.text].filter(Boolean).join(' ');
+    let preparedUrl = '';
+    if (state.autoSpeak) preparedUrl = await prepareSpeech(spokenQuestion);
+    hideTyping();
+    if (options.before) addMsg('bot', textToHtml(options.before), { speaker, speakerIcon });
     if (question.transition) {
       addMsg('bot', textToHtml(question.transition), { speaker, speakerIcon });
     }
@@ -1916,8 +1958,8 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
     });
     renderComposer();
     if (state.autoSpeak) {
-      const spokenQuestion = [question.transition, question.text].filter(Boolean).join(' ');
-      setTimeout(() => speakText(spokenQuestion, message.querySelector('.bub-speak')), 300);
+      if (preparedUrl) playPreparedSpeech(preparedUrl, message.querySelector('.bub-speak'));
+      else showToast('La voz natural no estuvo disponible. Puedes continuar leyendo la pregunta.');
     }
   }
 
@@ -1986,6 +2028,9 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
       state.attempts.push({
         question: state.currentQuestion.text,
         competency: state.currentQuestion.competency || '',
+        questionType: state.currentQuestion.questionType || '',
+        purpose: state.currentQuestion.purpose || '',
+        expectedEvidence: state.currentQuestion.expectedEvidence || [],
         answer,
         delivery: finishVoiceCapture(answer),
         accepted: false,
@@ -1996,7 +2041,7 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
       addMsg('bot', textToHtml(testAnswer
         ? 'Entiendo que estás comprobando la herramienta. Esta respuesta no se contará ni se calificará. Cuando quieras continuar, responde la pregunta con una experiencia, decisión o ejemplo relacionado.'
         : 'Esta respuesta todavía no aporta evidencia suficiente para evaluarla. Amplíala con una experiencia, una decisión o un ejemplo relacionado; no se contará como una pregunta nueva.'));
-      presentQuestion(state.currentQuestion);
+      await presentQuestion(state.currentQuestion);
       return;
     }
     send.disabled = true;
@@ -2012,6 +2057,9 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
     const record = {
       question: state.currentQuestion.text,
       competency: state.currentQuestion.competency || '',
+      questionType: state.currentQuestion.questionType || '',
+      purpose: state.currentQuestion.purpose || '',
+      expectedEvidence: state.currentQuestion.expectedEvidence || [],
       answer,
       delivery,
       audio,
@@ -2026,7 +2074,7 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
         state.attempts.push({ ...record, accepted: null, status: 'No evaluada por interrupción de la conexión' });
         hideTyping();
         showAiInterruption(error, 'La respuesta no fue enviada a la IA y no será evaluada.');
-        presentQuestion(state.currentQuestion);
+        await presentQuestion(state.currentQuestion);
         return;
       }
     }
@@ -2039,9 +2087,9 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
 
     if (result && result.accepted === false) {
       state.attempts.push({ ...record, accepted: false, status: 'Se solicitó reformular la respuesta' });
-      addMsg('bot', textToHtml(result.message || 'Volvamos a la entrevista. Responde la pregunta con una experiencia, una decisión o un ejemplo relacionado.'));
       if (result.question) state.currentQuestion = normalizeQuestion(result.question, state.questionIndex);
-      presentQuestion(state.currentQuestion);
+      showTyping();
+      await presentQuestion(state.currentQuestion, { before: result.message || 'Volvamos a la entrevista. Responde la pregunta con una experiencia, una decisión o un ejemplo relacionado.' });
       return;
     }
 
@@ -2063,7 +2111,7 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
         return;
       }
       state.feedback = result.feedback;
-      await renderFeedback();
+      await renderFeedbackV4();
       return;
     }
 
@@ -2073,7 +2121,8 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
       showAiInterruption(new Error('La IA no entregó la siguiente pregunta.'), 'La entrevista se detuvo antes de continuar.');
       return;
     }
-    presentQuestion(nextQuestion);
+    showTyping();
+    await presentQuestion(nextQuestion);
   }
 
   function renderAdminTestComplete() {
@@ -2102,13 +2151,16 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
       text: guardQuestionText(question.text, index),
       transition: guardTransitionText(question.transition),
       competency: String(question.competency || LABELS.focus[state.focus]).slice(0, 80),
+      questionType: String(question.questionType || 'behavioral').slice(0, 40),
+      purpose: String(question.purpose || '').slice(0, 500),
+      expectedEvidence: Array.isArray(question.expectedEvidence) ? question.expectedEvidence.slice(0, 6).map(item => String(item).slice(0, 220)) : [],
       interviewer: String(question.interviewer || interviewerLabel(index)).slice(0, 80)
     };
   }
 
   function guardTransitionText(value) {
     const transition = String(value || '').replace(/\s+/g, ' ').trim().slice(0, 260);
-    if (!transition || /excelente|muy bien|gran (?:experiencia|respuesta|liderazgo)|demuestras?|el estudiante|la estudiante|el candidato|la candidata|\bESAP\b/i.test(transition)) return '';
+    if (!transition || /excelente|muy bien|gran (?:experiencia|respuesta|liderazgo)|demuestras?|el estudiante|la estudiante|el candidato|la candidata|\bESAP\b|gracias[,.;:]?\s*profundicemos/i.test(transition)) return '';
     return transition;
   }
 
@@ -2250,6 +2302,7 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
   async function callInterviewApi(action, latest = null) {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 28000);
+    const willFinish = action === 'answer' && state.answers.length + 1 >= state.totalQuestions;
     const payload = {
       action,
       session: {
@@ -2264,6 +2317,9 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
         organization: state.organization,
         vacancy: state.vacancy,
         profile: state.profile,
+        resumeText: willFinish ? state.resumeText : '',
+        resumeUploaded: state.resumeFileName ? 'sí' : '',
+        resumeFileType: state.resumeFileType,
         area: LABELS.area[state.area] || state.area,
         level: LABELS.level[state.level] || state.level,
         format: LABELS.format[state.format],
@@ -2275,10 +2331,14 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
       history: state.answers.slice(-12).map(item => ({
         question: item.question,
         competency: item.competency,
+        questionType: item.questionType,
+        purpose: item.purpose,
+        expectedEvidence: item.expectedEvidence,
         answer: item.answer,
         delivery: item.delivery
       })),
-      latest
+      latest,
+      previousSession: previousSessionSnapshot
     };
     try {
       const response = await fetch(API_URL, {
@@ -2569,6 +2629,174 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
     scrollBottom();
   }
 
+  function normalizeFeedbackV4(raw) {
+    if (!raw || typeof raw !== 'object') return normalizeFeedback(raw);
+    const text = (value, fallback = '', limit = 1200) => String(value ?? fallback).trim().slice(0, limit);
+    const list = (value, limit = 6) => Array.isArray(value) ? value.slice(0, limit) : [];
+    const itemList = (value, fields, limit = 6) => list(value, limit).map(item => {
+      const output = {};
+      fields.forEach(field => { output[field] = text(item?.[field], '', 1400); });
+      return output;
+    });
+    const rawReviews = list(raw.answerReviews || raw.answer_reviews, state.answers.length);
+    const reviewMap = new Map(rawReviews.map((item, index) => [Number(item?.questionNumber || index + 1), item]));
+    const answerReviews = state.answers.map((answer, index) => {
+      const number = index + 1;
+      const item = reviewMap.get(number) || {};
+      return {
+        questionNumber: number,
+        question: answer.question,
+        answer: answer.answer,
+        verdict: text(item.verdict, 'parcial', 30),
+        score: Math.max(1, Math.min(4, Math.round(Number(item.score) || 2))),
+        observation: text(item.observation, 'No hay evidencia suficiente para una observación específica.'),
+        whatWorked: text(item.whatWorked, 'No hubo evidencia suficiente para identificar un acierto concreto.'),
+        missing: text(item.missing, 'Faltó delimitar la acción personal y el resultado.'),
+        suggestion: text(item.suggestion, 'Distingue el contexto, tu responsabilidad, tu acción y el resultado.'),
+        betterStructure: text(item.betterStructure, 'Contexto breve → responsabilidad → acción personal → resultado o aprendizaje.'),
+        exampleStart: text(item.exampleStart, 'En [situación], mi responsabilidad fue [tarea]. Yo decidí [acción] y el resultado fue [resultado verificable].')
+      };
+    });
+    const indicators = raw.indicators || {};
+    const delivery = raw.deliveryAssessment && typeof raw.deliveryAssessment === 'object' ? raw.deliveryAssessment : {};
+    const comparison = raw.comparison && typeof raw.comparison === 'object' ? raw.comparison : {};
+    const resume = raw.resumeReview && typeof raw.resumeReview === 'object' ? raw.resumeReview : null;
+    return {
+      summary: text(raw.summary, 'La sesión terminó, pero no hubo un resumen utilizable.', 1800),
+      overallAssessment: {
+        level: text(raw.overallAssessment?.level, 'evidencia parcial', 80),
+        evidence: text(raw.overallAssessment?.evidence, 'Se observó evidencia parcial en las respuestas.'),
+        limitation: text(raw.overallAssessment?.limitation, 'Esta práctica no permite concluir idoneidad ni probabilidad de contratación.')
+      },
+      strengths: itemList(raw.strengths, ['title', 'evidence', 'whyItMatters'], 3),
+      priorities: list(raw.priorities, 3).map((item, index) => ({
+        title: text(item?.title, `Mejora ${index + 1}`),
+        questionNumber: Math.max(1, Math.min(state.answers.length || 1, Math.round(Number(item?.questionNumber) || index + 1))),
+        why: text(item?.why), action: text(item?.action), practicePrompt: text(item?.practicePrompt)
+      })),
+      competencyReviews: list(raw.competencyReviews, 6).map(item => ({
+        competency: text(item?.competency, 'Competencia'), rating: Math.max(1, Math.min(4, Math.round(Number(item?.rating) || 2))),
+        evidence: text(item?.evidence), gap: text(item?.gap), nextAction: text(item?.nextAction)
+      })),
+      answerReviews,
+      indicators: {
+        content: clamp(Math.round(Number(indicators.content) || 0)),
+        structure: clamp(Math.round(Number(indicators.structure) || 0)),
+        specificity: clamp(Math.round(Number(indicators.specificity) || 0))
+      },
+      deliveryAssessment: {
+        summary: text(delivery.summary, 'No hay observaciones de audio para esta sesión.'),
+        observations: list(delivery.observations, 6).map(item => ({ label: text(item?.label, 'Señal'), finding: text(item?.finding), coaching: text(item?.coaching), confidence: text(item?.confidence) })),
+        technicalDetails: text(delivery.technicalDetails, 'Sin datos técnicos.', 1000)
+      },
+      comparison: {
+        available: comparison.available === true,
+        summary: text(comparison.summary, 'Completa otra práctica sin recargar la página para comparar avances.'),
+        improved: list(comparison.improved, 6).map(item => text(item)),
+        persisted: list(comparison.persisted, 6).map(item => text(item)),
+        changes: list(comparison.changes, 6).map(item => ({ area: text(item?.area), before: clamp(Number(item?.before) || 0), now: clamp(Number(item?.now) || 0), delta: Math.round(Number(item?.delta) || 0) }))
+      },
+      resumeReview: resume ? {
+        contextLimit: text(resume.contextLimit), fitSummary: text(resume.fitSummary, '', 1800),
+        alignments: itemList(resume.alignments, ['requirement', 'evidence', 'assessment'], 6),
+        gaps: itemList(resume.gaps, ['gap', 'why', 'howToAddress'], 6),
+        contentRecommendations: itemList(resume.contentRecommendations, ['section', 'issue', 'recommendation', 'exampleRewrite'], 6),
+        formatChecklist: list(resume.formatChecklist, 10).map(item => text(item)),
+        tailoredProfile: text(resume.tailoredProfile, '', 1800),
+        keywordsFromVacancy: list(resume.keywordsFromVacancy, 18).map(item => text(item, '', 120)),
+        nextEdits: list(resume.nextEdits, 8).map(item => text(item))
+      } : null,
+      nextSteps: list(raw.nextSteps || raw.next_steps, 7).map(item => text(item)),
+      source: 'ai'
+    };
+  }
+
+  function buildSessionReviewHtmlV4(feedback) {
+    let acceptedIndex = 0;
+    return completeSessionRecords().map((attempt, index) => {
+      const review = attempt.accepted === true ? (feedback.answerReviews[acceptedIndex++] || {}) : {};
+      const status = attempt.status || (attempt.accepted === true ? 'Respuesta aceptada' : attempt.accepted === false ? 'Se solicitó reformular la respuesta' : 'No evaluada');
+      const details = attempt.accepted === true ? `<div class="r">
+        <span class="rating-pill">${escapeHtml(review.verdict || 'parcial')} · ${Number(review.score || 2)}/4</span>
+        <p><b>Qué respondió realmente:</b> ${escapeHtml(review.observation || 'Sin observación específica.')}</p>
+        <p><b>Qué funcionó:</b> ${escapeHtml(review.whatWorked || 'No hubo evidencia suficiente.')}</p>
+        <p><b>Qué faltó:</b> ${escapeHtml(review.missing || 'Sin dato.')}</p>
+        <p><b>Cómo reconstruirla:</b> ${escapeHtml(review.suggestion || 'Sin recomendación específica.')}</p>
+        <p><b>Estructura sugerida:</b> ${escapeHtml(review.betterStructure || '')}</p>
+        <p><b>Inicio para practicar:</b> ${escapeHtml(review.exampleStart || '')}</p>
+      </div>` : `<div class="r"><b>Estado:</b> ${escapeHtml(status)}. Esta respuesta no se incorporó a los indicadores ni a la evaluación final.</div>`;
+      return `<div class="answer-review"><div class="q">Interacción ${index + 1}: ${escapeHtml(attempt.question)}</div><div class="a"><b>Tu respuesta:</b><br>${escapeHtml(attempt.answer)}</div>${details}</div>`;
+    }).join('');
+  }
+
+  function resumeReviewHtml(review) {
+    if (!review) return '';
+    return `<div class="report-section">
+      <h3><i data-lucide="file-user"></i> Hoja de vida frente a esta oportunidad</h3>
+      <div class="notice warn"><i data-lucide="info"></i><span>${escapeHtml(review.contextLimit)}</span></div>
+      <p>${escapeHtml(review.fitSummary)}</p>
+      ${review.alignments.length ? `<h4>Alineaciones verificables</h4><div class="coach-grid">${review.alignments.map(item => `<div class="coach-card"><b>${escapeHtml(item.requirement)}</b><p>${escapeHtml(item.evidence)}</p><span class="rating-pill">${escapeHtml(item.assessment)}</span></div>`).join('')}</div>` : ''}
+      ${review.gaps.length ? `<h4>Brechas o evidencia faltante</h4>${review.gaps.map(item => `<div class="priority"><span class="priority-num">!</span><div><b>${escapeHtml(item.gap)}</b><p>${escapeHtml(item.why)}</p><p><b>Cómo abordarla:</b> ${escapeHtml(item.howToAddress)}</p></div></div>`).join('')}` : ''}
+      ${review.contentRecommendations.length ? `<h4>Contenido y redacción</h4>${review.contentRecommendations.map(item => `<div class="answer-review"><div class="q">${escapeHtml(item.section)}</div><p><b>Problema:</b> ${escapeHtml(item.issue)}</p><p><b>Cambio:</b> ${escapeHtml(item.recommendation)}</p><p><b>Ejemplo fiel:</b> ${escapeHtml(item.exampleRewrite)}</p></div>`).join('')}` : ''}
+      ${review.tailoredProfile ? `<h4>Perfil sugerido para editar</h4><div class="answer-review"><p>${escapeHtml(review.tailoredProfile)}</p></div>` : ''}
+      ${review.formatChecklist.length ? `<h4>Lista de verificación de formato</h4><ul>${review.formatChecklist.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>` : ''}
+      ${review.keywordsFromVacancy.length ? `<p><b>Términos comprobados en el cargo o la convocatoria:</b> ${escapeHtml(review.keywordsFromVacancy.join(' · '))}</p>` : ''}
+      ${review.nextEdits.length ? `<h4>Ediciones prioritarias</h4><ol>${review.nextEdits.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ol>` : ''}
+      <p class="privacy-note">La plataforma revisa el texto extraído. No puede confirmar columnas, márgenes, tipografías o jerarquía visual del archivo original; por eso el formato se presenta como lista de verificación.</p>
+    </div>`;
+  }
+
+  async function renderFeedbackV4() {
+    clearConversation();
+    setStep('feedback', 100);
+    const feedback = normalizeFeedbackV4(state.feedback);
+    state.feedback = feedback;
+    previousSessionSnapshot = { indicators: { ...feedback.indicators }, priorities: feedback.priorities.map(item => ({ title: item.title })) };
+    addMsg('bot', '<b>Terminaste la entrevista.</b> El informe separa lo que dijiste, la evidencia que mostró cada respuesta y la forma concreta de mejorarla.');
+    const report = document.createElement('section');
+    report.className = 'report';
+    report.setAttribute('aria-label', 'Informe de retroalimentación');
+    const assessment = feedback.overallAssessment;
+    report.innerHTML = `<div class="report-hero">
+      <h2>Tu retroalimentación</h2><p>${escapeHtml(feedback.summary)}</p>
+      <div style="margin-top:9px"><span class="status-pill">Retroalimentación personalizada con IA</span></div>
+    </div>
+    <div class="report-section">
+      <h3><i data-lucide="scan-search"></i> Diagnóstico de la evidencia</h3>
+      <span class="rating-pill">${escapeHtml(assessment.level)}</span>
+      <p><b>Patrón observado:</b> ${escapeHtml(assessment.evidence)}</p>
+      <p class="privacy-note"><b>Límite:</b> ${escapeHtml(assessment.limitation)}</p>
+    </div>
+    <div class="report-section">
+      <h3><i data-lucide="sparkles"></i> Fortalezas demostradas</h3>
+      ${feedback.strengths.length ? feedback.strengths.map(item => `<div class="priority"><span class="priority-num"><i data-lucide="check"></i></span><div><b>${escapeHtml(item.title)}</b><p><b>Evidencia:</b> ${escapeHtml(item.evidence)}</p><p><b>Por qué importa:</b> ${escapeHtml(item.whyItMatters)}</p></div></div>`).join('') : '<p class="privacy-note">No hubo evidencia suficiente para afirmar una fortaleza concreta sin hacer suposiciones.</p>'}
+    </div>
+    <div class="report-section">
+      <h3><i data-lucide="list-checks"></i> Tres mejoras prioritarias</h3>
+      ${feedback.priorities.map((item, index) => `<div class="priority"><span class="priority-num">${index + 1}</span><div><b>${escapeHtml(item.title)}</b><p><b>Se observó en la pregunta ${item.questionNumber}:</b> ${escapeHtml(item.why)}</p><p><b>Próxima acción:</b> ${escapeHtml(item.action)}</p><p><b>Ejercicio:</b> ${escapeHtml(item.practicePrompt)}</p></div></div>`).join('')}
+    </div>
+    ${feedback.competencyReviews.length ? `<div class="report-section"><h3><i data-lucide="blocks"></i> Evidencia por competencia</h3><div class="coach-grid">${feedback.competencyReviews.map(item => `<div class="coach-card"><b>${escapeHtml(item.competency)} · ${item.rating}/4</b><p><b>Evidencia:</b> ${escapeHtml(item.evidence)}</p><p><b>Brecha:</b> ${escapeHtml(item.gap)}</p><p><b>Entrenamiento:</b> ${escapeHtml(item.nextAction)}</p></div>`).join('')}</div></div>` : ''}
+    <div class="report-section"><h3><i data-lucide="gauge"></i> Indicadores de esta práctica</h3>
+      ${metricRow('Contenido pertinente', feedback.indicators.content)}${metricRow('Estructura', feedback.indicators.structure)}${metricRow('Evidencia específica', feedback.indicators.specificity)}
+      <p class="privacy-note">Describen las respuestas de esta sesión; no califican tu empleabilidad ni predicen contratación.</p>
+    </div>
+    ${feedback.comparison.available ? `<div class="report-section"><h3><i data-lucide="chart-no-axes-combined"></i> Comparación con la práctica anterior</h3><p>${escapeHtml(feedback.comparison.summary)}</p>${feedback.comparison.changes.map(item => metricRow(`${item.area}: ${item.before}% → ${item.now}%`, item.now)).join('')}${feedback.comparison.improved.length ? `<h4>Avances</h4><ul>${feedback.comparison.improved.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>` : ''}${feedback.comparison.persisted.length ? `<h4>Aspectos persistentes</h4><ul>${feedback.comparison.persisted.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>` : ''}</div>` : ''}
+    <div class="report-section"><h3><i data-lucide="audio-lines"></i> Cómo sonó la entrega</h3><p>${escapeHtml(feedback.deliveryAssessment.summary)}</p>
+      <div class="coach-grid">${feedback.deliveryAssessment.observations.map(item => `<div class="coach-card"><b>${escapeHtml(item.label)}</b><p>${escapeHtml(item.finding)}</p><p><b>Práctica:</b> ${escapeHtml(item.coaching)}</p><p class="privacy-note">Confianza: ${escapeHtml(item.confidence)}</p></div>`).join('')}</div>
+      <details><summary>Ver mediciones técnicas</summary><p class="privacy-note">${escapeHtml(feedback.deliveryAssessment.technicalDetails)}</p></details>
+    </div>
+    <div class="report-section"><h3><i data-lucide="messages-square"></i> Auditoría de cada pregunta y respuesta</h3>${buildSessionReviewHtmlV4(feedback)}</div>
+    ${resumeReviewHtml(feedback.resumeReview)}
+    <div class="report-section"><h3><i data-lucide="footprints"></i> Plan de práctica</h3><ol>${feedback.nextSteps.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ol></div>
+    <div class="form-actions report-actions"><button class="secondary-btn" id="copy-report" type="button"><i data-lucide="copy"></i> Copiar</button><button class="secondary-btn" id="download-pdf" type="button"><i data-lucide="file-down"></i> Descargar PDF completo</button><button class="secondary-btn" id="print-report" type="button"><i data-lucide="printer"></i> Imprimir</button><button class="primary-btn" id="new-practice" type="button"><i data-lucide="rotate-ccw"></i> Nueva práctica</button></div>`;
+    els.msgs.insertBefore(report, els.typing);
+    document.getElementById('copy-report').addEventListener('click', copyReport);
+    document.getElementById('download-pdf').addEventListener('click', downloadSessionPdf);
+    document.getElementById('print-report').addEventListener('click', () => window.print());
+    document.getElementById('new-practice').addEventListener('click', () => restart(true));
+    renderIcons(); scrollBottom();
+  }
+
   function metricRow(label, value) {
     const safe = clamp(Math.round(Number(value) || 0));
     return `<div class="metric-row"><span>${escapeHtml(label)}</span><span class="metric-track"><span class="metric-fill" style="display:block;width:${safe}%"></span></span><span class="metric-val">${safe}%</span></div>`;
@@ -2614,10 +2842,17 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
         doc.setFont('helvetica', options.bold ? 'bold' : 'normal');
         doc.setFontSize(size);
         doc.setTextColor(...(options.color || [28, 32, 39]));
-        const lines = doc.splitTextToSize(safeText(text) || '—', options.width || contentWidth);
-        ensureSpace(lines.length * lineHeight + (options.after ?? 2));
-        doc.text(lines, options.x || margin, y);
-        y += lines.length * lineHeight + (options.after ?? 2);
+        let lines = doc.splitTextToSize(safeText(text) || '—', options.width || contentWidth);
+        while (lines.length) {
+          let capacity = Math.floor((pageHeight - 16 - y) / lineHeight);
+          if (capacity < 1) { doc.addPage(); y = 18; capacity = Math.floor((pageHeight - 34) / lineHeight); }
+          const chunk = lines.slice(0, capacity);
+          doc.text(chunk, options.x || margin, y);
+          y += chunk.length * lineHeight;
+          lines = lines.slice(capacity);
+          if (lines.length) { doc.addPage(); y = 18; }
+        }
+        y += (options.after ?? 2);
       };
       const section = title => {
         ensureSpace(14);
@@ -2662,30 +2897,73 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
       if (!feedback.strengths.length) writeText('No hubo evidencia suficiente para afirmar fortalezas específicas sin hacer suposiciones.');
       feedback.strengths.forEach((item, index) => {
         writeText(`${index + 1}. ${item.title}`, { bold: true, after: 1 });
-        writeText(item.evidence, { after: 3 });
+        writeText(`Evidencia: ${item.evidence}`, { after: 1 });
+        if (item.whyItMatters) writeText(`Por qué importa: ${item.whyItMatters}`, { after: 3 });
       });
       section('Tres mejoras prioritarias');
       feedback.priorities.slice(0, 3).forEach((item, index) => {
         writeText(`${index + 1}. ${item.title}`, { bold: true, after: 1 });
+        writeText(`Pregunta relacionada: ${item.questionNumber || '—'}`, { after: 1 });
         writeText(`Por qué: ${item.why}`, { after: 1 });
-        writeText(`Próxima acción: ${item.action}`, { after: 4 });
+        writeText(`Próxima acción: ${item.action}`, { after: 1 });
+        if (item.practicePrompt) writeText(`Ejercicio: ${item.practicePrompt}`, { after: 4 });
       });
+      if (feedback.competencyReviews?.length) {
+        section('Evidencia por competencia');
+        feedback.competencyReviews.forEach(item => {
+          writeText(`${item.competency}: ${item.rating}/4`, { bold: true, after: 1 });
+          writeText(`Evidencia: ${item.evidence}`, { after: 1 });
+          writeText(`Brecha: ${item.gap}`, { after: 1 });
+          writeText(`Entrenamiento: ${item.nextAction}`, { after: 4 });
+        });
+      }
       section('Indicadores formativos');
       writeText(`Contenido pertinente: ${Math.round(feedback.indicators.content)}%`);
       writeText(`Estructura: ${Math.round(feedback.indicators.structure)}%`);
       writeText(`Ejemplos específicos: ${Math.round(feedback.indicators.specificity)}%`);
       writeText('Estos indicadores describen esta práctica; no predicen contratación ni califican la empleabilidad.', { size: 9, color: [95, 106, 125] });
+      if (feedback.comparison?.available) {
+        section('Comparación con la práctica anterior');
+        writeText(feedback.comparison.summary);
+        feedback.comparison.changes.forEach(item => writeText(`${item.area}: ${item.before}% -> ${item.now}% (${item.delta >= 0 ? '+' : ''}${item.delta})`));
+        feedback.comparison.improved.forEach(item => writeText(`Avance: ${item}`));
+        feedback.comparison.persisted.forEach(item => writeText(`Persiste: ${item}`));
+      }
       section('Forma de respuesta');
-      writeText(feedback.deliveryNote);
+      writeText(feedback.deliveryAssessment?.summary || feedback.deliveryNote || 'Sin observaciones de audio.');
+      (feedback.deliveryAssessment?.observations || []).forEach(item => {
+        writeText(item.label, { bold: true, after: 1 });
+        writeText(item.finding, { after: 1 });
+        writeText(`Práctica: ${item.coaching}`, { after: 1 });
+        writeText(`Confianza de la medición: ${item.confidence}`, { size: 8, color: [95, 106, 125], after: 3 });
+      });
+      if (feedback.deliveryAssessment?.technicalDetails) writeText(`Detalle técnico: ${feedback.deliveryAssessment.technicalDetails}`, { size: 8, color: [95, 106, 125] });
       section('Revisión de cada respuesta');
       state.answers.forEach((answer, index) => {
         const review = feedback.answerReviews[index] || {};
         ensureSpace(28);
         writeText(`Pregunta ${index + 1}: ${answer.question}`, { bold: true, after: 1 });
         writeText(`Respuesta: ${answer.answer}`, { after: 1 });
-        writeText(`Observación: ${review.observation || 'Sin observación específica.'}`, { after: 1 });
-        writeText(`Cómo mejorarla: ${review.suggestion || 'Sin recomendación específica.'}`, { after: 4 });
+        writeText(`Valoración formativa: ${review.verdict || 'parcial'} (${review.score || 2}/4)`, { after: 1 });
+        writeText(`Qué respondió realmente: ${review.observation || 'Sin observación específica.'}`, { after: 1 });
+        writeText(`Qué funcionó: ${review.whatWorked || 'No hubo evidencia suficiente.'}`, { after: 1 });
+        writeText(`Qué faltó: ${review.missing || 'Sin dato.'}`, { after: 1 });
+        writeText(`Cómo reconstruirla: ${review.suggestion || 'Sin recomendación específica.'}`, { after: 1 });
+        writeText(`Estructura: ${review.betterStructure || 'Sin estructura sugerida.'}`, { after: 1 });
+        writeText(`Inicio para practicar: ${review.exampleStart || 'Sin ejemplo.'}`, { after: 4 });
       });
+      if (feedback.resumeReview) {
+        const resume = feedback.resumeReview;
+        section('Hoja de vida frente a esta oportunidad');
+        writeText(`Límite: ${resume.contextLimit}`);
+        writeText(resume.fitSummary);
+        resume.alignments.forEach(item => { writeText(item.requirement, { bold: true, after: 1 }); writeText(`Evidencia: ${item.evidence}`); writeText(`Valoración: ${item.assessment}`, { after: 3 }); });
+        resume.gaps.forEach(item => { writeText(`Brecha: ${item.gap}`, { bold: true, after: 1 }); writeText(item.why); writeText(`Cómo abordarla: ${item.howToAddress}`, { after: 3 }); });
+        resume.contentRecommendations.forEach(item => { writeText(`Sección: ${item.section}`, { bold: true, after: 1 }); writeText(`Problema: ${item.issue}`); writeText(`Cambio: ${item.recommendation}`); writeText(`Ejemplo fiel: ${item.exampleRewrite}`, { after: 3 }); });
+        if (resume.tailoredProfile) writeText(`Perfil sugerido para editar: ${resume.tailoredProfile}`, { after: 4 });
+        resume.formatChecklist.forEach((item, index) => writeText(`Formato ${index + 1}: ${item}`));
+        resume.nextEdits.forEach((item, index) => writeText(`Edición prioritaria ${index + 1}: ${item}`));
+      }
       section('Próximos pasos');
       feedback.nextSteps.forEach((item, index) => writeText(`${index + 1}. ${item}`));
       y += 3;
@@ -3030,41 +3308,67 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
     }
   }
 
+  async function prepareSpeech(text) {
+    const clean = String(text || '').replace(/\s+/g, ' ').trim().slice(0, 1400);
+    if (!clean) return '';
+    const key = `${state.voiceGender}|${clean}`;
+    if (!preparedSpeech.has(key)) {
+      preparedSpeech.set(key, fetch(API_URL, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ action: 'speak', text: clean, voice: state.voiceGender })
+      }).then(async response => {
+        if (!response.ok || !String(response.headers.get('content-type') || '').includes('audio')) throw new Error('Voz natural no disponible');
+        return response.blob();
+      }).catch(error => {
+        preparedSpeech.delete(key);
+        throw error;
+      }));
+    }
+    try {
+      const blob = await preparedSpeech.get(key);
+      return URL.createObjectURL(blob);
+    } catch (_) {
+      return '';
+    }
+  }
+
+  function clearPreparedSpeech() {
+    preparedSpeech.clear();
+    stopSpokenAudio();
+  }
+
+  async function playPreparedSpeech(url, button) {
+    if (!url) return;
+    stopSpokenAudio();
+    document.querySelectorAll('.bub-speak').forEach(item => item.classList.remove('speaking'));
+    button?.classList.add('speaking');
+    spokenAudioUrl = url;
+    spokenAudio = new Audio(spokenAudioUrl);
+    spokenAudio.onended = spokenAudio.onerror = () => {
+      button?.classList.remove('speaking');
+      stopSpokenAudio();
+    };
+    try {
+      await spokenAudio.play();
+    } catch (_) {
+      button?.classList.remove('speaking');
+      stopSpokenAudio();
+      showToast('El navegador bloqueó la reproducción automática. Toca el ícono de sonido de la pregunta.');
+    }
+  }
+
   async function speakText(text, button) {
     if (!text.trim()) return;
     if (spokenAudio) {
       stopSpokenAudio();
       return;
     }
-    window.speechSynthesis?.cancel();
-    document.querySelectorAll('.bub-speak').forEach(item => item.classList.remove('speaking'));
     button?.classList.add('speaking');
-    try {
-      const response = await fetch(API_URL, {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ action: 'speak', text: String(text).slice(0, 1200) })
-      });
-      if (!response.ok || !String(response.headers.get('content-type') || '').includes('audio')) throw new Error('Voz neuronal no disponible');
-      const blob = await response.blob();
-      spokenAudioUrl = URL.createObjectURL(blob);
-      spokenAudio = new Audio(spokenAudioUrl);
-      spokenAudio.onended = spokenAudio.onerror = () => {
-        button?.classList.remove('speaking');
-        stopSpokenAudio();
-      };
-      await spokenAudio.play();
-      return;
-    } catch (_) {
-      button?.classList.remove('speaking');
-      stopSpokenAudio();
-    }
-    if (!('speechSynthesis' in window)) {
-      showToast('La voz natural no respondió y este navegador no ofrece una voz de respaldo.');
-      return;
-    }
-    showToast('La voz natural no respondió; se usará temporalmente la voz del dispositivo.');
-    speakWithBrowser(text, button);
+    const url = await prepareSpeech(text);
+    if (url) return playPreparedSpeech(url, button);
+    button?.classList.remove('speaking');
+    showToast('La voz natural no respondió. No se usará una voz robótica de respaldo; puedes continuar leyendo la pregunta.');
   }
 
   function stopSpokenAudio() {
