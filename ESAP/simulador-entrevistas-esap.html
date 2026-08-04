@@ -215,9 +215,11 @@ input,textarea,select,button{max-width:100%}
 #opts-wrap.has-cont{border-top:1px solid var(--border)}
 #opts-wrap.has-cont #btn-cont{border-top:1px solid var(--border);position:relative}
 #opts-wrap.has-cont{max-height:56vh}
-#chat-panel.form-mode #msgs{flex:0 0 min(31vh,290px);min-height:150px;max-height:31vh}
-#chat-panel.form-mode #opts-wrap{flex:1 1 auto;max-height:none;min-height:0}
-#chat-panel.form-mode #opts-inner{overscroll-behavior:contain}
+#chat-panel.form-mode{overflow-y:auto}
+#chat-panel.form-mode #msgs{flex:0 0 auto;min-height:0;max-height:24vh}
+#chat-panel.form-mode #opts-wrap{flex:0 1 auto;max-height:none;min-height:0}
+#chat-panel.form-mode #opts-inner{overflow:visible;overscroll-behavior:contain}
+#chat-panel.form-mode #footer{flex-shrink:0}
 
 /* ── CHIPS ── */
 .chips{display:flex;flex-wrap:wrap;gap:6px}
@@ -872,7 +874,7 @@ input,textarea,select,button{max-width:100%}
   .resume-upload{align-items:stretch}
   .resume-upload .secondary-btn{width:100%}
   .resume-status{min-width:0;width:100%}
-  #chat-panel.form-mode #msgs{flex-basis:min(29vh,230px);min-height:125px;max-height:29vh}
+  #chat-panel.form-mode #msgs{flex-basis:auto;min-height:0;max-height:24vh}
 }
 @media (max-width:380px){
   #hdr-logo{width:48px;height:22px}
@@ -1163,7 +1165,7 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
   const DEFAULT_API_URL = 'https://entrevista-esap-worker.esap-entrevistas-pedro.workers.dev';
   const API_URL = String(window.SIMULADOR_API_URL || DEFAULT_API_URL).trim();
   const API_CONFIGURED = /^https:\/\//i.test(API_URL) && !/REEMPLAZAR-POR-SU-WORKER/i.test(API_URL);
-  const REQUIRED_WORKER_VERSION = '2026-08-04.6';
+  const REQUIRED_WORKER_VERSION = '2026-08-04.7';
   const MAX_VACANCY = 7000;
   const MAX_PROFILE = 5000;
   const MAX_RESUME_BYTES = 8 * 1024 * 1024;
@@ -1311,6 +1313,7 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
       aiChecked: false,
       aiFailure: '',
       metricsConfigured: false,
+      visitorId: getAnonymousVisitorId(),
       questionIndex: 0,
       currentQuestion: null,
       answers: [],
@@ -1326,6 +1329,20 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
   function makeId() {
     if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
     return `esap-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+  }
+
+  function getAnonymousVisitorId() {
+    const key = 'esap-simulador-anon-id';
+    try {
+      let value = localStorage.getItem(key);
+      if (!value) {
+        value = `anon-${makeId()}`;
+        localStorage.setItem(key, value);
+      }
+      return value;
+    } catch (_) {
+      return `anon-${makeId()}`;
+    }
   }
 
   function escapeHtml(value) {
@@ -1569,7 +1586,7 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
           </div>`}
         <div class="field full metrics-card">
           <div class="metrics-title">Datos opcionales para estadísticas de uso</div>
-          <span class="file-privacy">Puedes continuar sin responder. No solicitamos ni almacenamos tu número de documento. Si se activa la base de métricas, solo se registrarán estos datos generales y eventos de uso; nunca tus respuestas, audios ni hoja de vida.</span>
+          <span class="file-privacy">Puedes continuar sin responder. Para contar usos y usuarios aproximados se utiliza un identificador aleatorio de este navegador; no se solicita número de documento. Si se activa la base de métricas, solo se registran estos datos generales y eventos de uso, nunca tus respuestas, audios ni hoja de vida.</span>
           <div class="form-grid two">
             <div class="field">
               <label for="program">Programa académico <span class="hint">(opcional)</span></label>
@@ -1981,14 +1998,14 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
         <div class="summary-item"><b>Modo</b><span>${escapeHtml(LABELS.mode[state.mode])}</span></div>
         <div class="summary-item"><b>Audio</b><span>Preguntas y respuestas por voz</span></div>
       </div>
-      ${state.adminTest ? '<div class="admin-test-note"><i data-lucide="flask-conical"></i><span><b>Modo de prueba administrativa.</b> Podrás omitir respuestas y recorrer todas las preguntas. En este modo no se generará una evaluación del desempeño.</span></div>' : ''}
-      ${state.scenario === 'vacancy' && countWords(state.vacancy) < 35 ? '<div class="notice warn"><i data-lucide="file-warning"></i><span><b>Convocatoria poco detallada.</b> Con el cargo y tu trayectoria se puede hacer una práctica general, pero no una entrevista técnica específica ni una hoja de vida adaptada sin inventar requisitos. Para mayor precisión, pega funciones, formación, experiencia y conocimientos exigidos.</span></div>' : ''}
+      ${state.adminTest ? '<div class="admin-test-note"><i data-lucide="flask-conical"></i><span><b>Modo de prueba administrativa.</b> Puedes omitir cualquier pregunta. Si respondes al menos una, al final recibirás retroalimentación únicamente sobre las respuestas que sí hayas contestado.</span></div>' : ''}
+      ${state.scenario === 'vacancy' && countWords(state.vacancy) < 35 ? '<div class="notice warn"><i data-lucide="file-warning"></i><span><b>Convocatoria con pocos detalles.</b> La práctica se adaptará al cargo y a tu trayectoria, pero evitará inventar requisitos técnicos. Si puedes, agrega funciones y requisitos para mayor precisión.</span></div>' : ''}
       <div id="connection-box" class="notice info"><i data-lucide="loader-circle"></i><span>Comprobando el servicio de entrevista…</span></div>
       <div class="notice safe"><i data-lucide="mic-2"></i><span>El micrófono es opcional. En navegadores compatibles verás una transcripción provisional mientras hablas; al detener, Cloudflare genera una transcripción final más precisa. La grabación se usa temporalmente para transcribir y calcular métricas aproximadas de ritmo, pausas y volumen; no se almacena. Siempre puedes corregir el texto antes de responder.</span></div>
       <label style="display:flex;gap:8px;align-items:center;font-size:11.5px;font-weight:650;margin-top:9px"><input id="auto-speak" type="checkbox"${state.autoSpeak ? ' checked' : ''}> Leer automáticamente cada pregunta en voz alta</label>
       <div id="voice-options" class="voice-options"${state.autoSpeak ? '' : ' hidden'} aria-label="Tipo de voz">
-        <label class="voice-option"><input type="radio" name="voice-gender" value="female"${state.voiceGender === 'female' ? ' checked' : ''}> Voz femenina natural en español · Diana</label>
-        <label class="voice-option"><input type="radio" name="voice-gender" value="male"${state.voiceGender === 'male' ? ' checked' : ''}> Voz masculina natural en español · Álvaro</label>
+        <label class="voice-option"><input type="radio" name="voice-gender" value="female"${state.voiceGender === 'female' ? ' checked' : ''}> Voz femenina natural · Celeste (Colombia)</label>
+        <label class="voice-option"><input type="radio" name="voice-gender" value="male"${state.voiceGender === 'male' ? ' checked' : ''}> Voz masculina natural · Aquila (Latinoamérica)</label>
       </div>
       <div class="form-actions">
         <button class="secondary-btn" id="edit-config" type="button"><i data-lucide="pencil"></i> Editar</button>
@@ -2034,11 +2051,15 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const data = await response.json();
       if (!data.ok) throw new Error('Servicio no disponible');
-      if (data.version !== REQUIRED_WORKER_VERSION) throw new Error('El Worker está desactualizado. Publica el index.js incluido en este paquete.');
       state.aiAvailable = true;
       state.metricsConfigured = data.metricsConfigured === true;
-      box.className = 'notice safe';
-      box.innerHTML = '<i data-lucide="sparkles"></i><span><b>IA segura disponible.</b> Las preguntas y la retroalimentación se adaptarán a la información que proporcionaste.</span>';
+      if (data.version !== REQUIRED_WORKER_VERSION) {
+        box.className = 'notice warn';
+        box.innerHTML = `<i data-lucide="triangle-alert"></i><span><b>IA disponible.</b> El Worker responde, pero es la versión ${escapeHtml(data.version || 'desconocida')}. La entrevista puede continuar; para las funciones nuevas de hoja de vida y administración publica también el index.js de V7.</span>`;
+      } else {
+        box.className = 'notice safe';
+        box.innerHTML = '<i data-lucide="sparkles"></i><span><b>IA disponible.</b> Las preguntas y la retroalimentación se adaptarán a la información que proporcionaste.</span>';
+      }
     } catch (error) {
       state.aiAvailable = false;
       state.aiFailure = error.message;
@@ -2129,13 +2150,13 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
     renderComposer();
     if (state.autoSpeak) {
       const speakButton = message.querySelector('.bub-speak');
+      const pieces = options.speakPrefix
+        ? [options.speakPrefix, [question.transition, question.text].filter(Boolean).join(' ')]
+        : [[question.transition, question.text].filter(Boolean).join(' ')];
       speakButton?.classList.add('speaking');
-      prepareSpeech(spokenQuestion).then(preparedUrl => {
-        if (preparedUrl) playPreparedSpeech(preparedUrl, speakButton);
-        else {
-          speakButton?.classList.remove('speaking');
-          showToast('La voz natural no estuvo disponible. Puedes continuar leyendo la pregunta.');
-        }
+      playSpeechSequence(pieces, speakButton).catch(() => {
+        speakButton?.classList.remove('speaking');
+        showToast('La voz natural no estuvo disponible. Puedes continuar leyendo la pregunta.');
       });
     }
   }
@@ -2283,7 +2304,8 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
     }
 
     if (result?.testComplete) {
-      renderAdminTestComplete();
+      if (result.feedback && Number(result.evaluatedAnswers || 0) > 0) state.feedback = result.feedback;
+      renderAdminTestComplete(result);
       return;
     }
 
@@ -2308,16 +2330,22 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
     await presentQuestion(nextQuestion);
   }
 
-  function renderAdminTestComplete() {
+  function renderAdminTestComplete(result = {}) {
     stopQuestionTimer();
     stopListening(true);
     clearConversation();
     setStep('feedback', 100);
     els.optsWrap.classList.remove('interview-mode');
-    addMsg('bot', '<b>Recorrido administrativo completado.</b> Estas preguntas se mostraron sin evaluar las respuestas. Puedes iniciar otra sesión para comprobar una combinación diferente de cargo, nivel o tipo de entrevista.');
+    const answered = state.answers.filter(item => !item.testSkipped);
+    addMsg('bot', answered.length
+      ? `<b>Recorrido administrativo completado.</b> Omitiste las preguntas que quisiste y respondiste ${answered.length}. La retroalimentación siguiente se basa únicamente en esas respuestas.`
+      : '<b>Recorrido administrativo completado.</b> Recorriste las preguntas sin responderlas. No se genera evaluación porque no hay respuestas para analizar.');
+    const feedback = answered.length && state.feedback ? normalizeFeedback(state.feedback) : null;
+    const feedbackHtml = feedback ? `<div class="report-section" style="margin-top:12px"><h3><i data-lucide="sparkles"></i> Retroalimentación de las respuestas contestadas</h3><p>${escapeHtml(feedback.summary)}</p>${feedback.strengths.slice(0,3).map(item => `<div class="priority"><span class="priority-num"><i data-lucide="check"></i></span><div><b>${escapeHtml(item.title)}</b><p>${escapeHtml(item.evidence)}</p></div></div>`).join('')}${feedback.priorities.slice(0,3).map((item,index) => `<div class="priority"><span class="priority-num">${index+1}</span><div><b>${escapeHtml(item.title)}</b><p>${escapeHtml(item.why)}</p><p><b>Acción:</b> ${escapeHtml(item.action)}</p></div></div>`).join('')}</div>` : '';
     els.opts.innerHTML = `<div class="setup-card">
       <div class="setup-title">Preguntas recorridas</div>
-      <div class="admin-summary-list">${state.answers.map(item => `<div class="admin-summary-item">${escapeHtml(item.question)}</div>`).join('')}</div>
+      <div class="admin-summary-list">${state.answers.map(item => `<div class="admin-summary-item">${escapeHtml(item.question)}${item.testSkipped ? ' <span class="hint">· omitida</span>' : ' <span class="hint">· respondida</span>'}</div>`).join('')}</div>
+      ${feedbackHtml}
       <div class="form-actions">
         <button id="admin-new-test" class="primary-btn" type="button"><i data-lucide="rotate-ccw"></i> Nueva prueba</button>
       </div>
@@ -2502,7 +2530,8 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
         purpose: item.purpose,
         expectedEvidence: item.expectedEvidence,
         answer: item.answer,
-        delivery: item.delivery
+        delivery: item.delivery,
+        testSkipped: item.testSkipped === true
       })),
       latest,
       previousSession: previousSessionSnapshot
@@ -2558,6 +2587,7 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
       level: LABELS.level[state.level] || state.level,
       territorial: state.territorial,
       program: state.program,
+      visitorId: state.visitorId,
       channel: LABELS.channel[state.channel] || state.channel,
       usedVoice: state.answers.some(item => item?.delivery?.usedVoice === true),
       resumeUploaded: Boolean(state.resumeFileName),
@@ -3815,6 +3845,28 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
   function clearPreparedSpeech() {
     preparedSpeech.clear();
     stopSpokenAudio();
+  }
+
+  async function playSpeechSequence(parts, button) {
+    stopSpokenAudio();
+    for (const part of parts.map(item => String(item || '').trim()).filter(Boolean)) {
+      const url = await prepareSpeech(part);
+      if (!url) throw new Error('Voz natural no disponible');
+      await new Promise((resolve, reject) => {
+        document.querySelectorAll('.bub-speak').forEach(item => item.classList.remove('speaking'));
+        button?.classList.add('speaking');
+        spokenAudioUrl = url;
+        spokenAudio = new Audio(spokenAudioUrl);
+        spokenAudio.onended = () => {
+          if (spokenAudioUrl) URL.revokeObjectURL(spokenAudioUrl);
+          spokenAudio = null; spokenAudioUrl = ''; resolve();
+        };
+        spokenAudio.onerror = () => { stopSpokenAudio(); reject(new Error('Error de audio')); };
+        spokenAudio.play().catch(error => { stopSpokenAudio(); reject(error); });
+      });
+      await sleep(120);
+    }
+    button?.classList.remove('speaking');
   }
 
   async function playPreparedSpeech(url, button) {
