@@ -53,8 +53,9 @@
   --usr-bub-txt:#e9edef;
   --scroll-th:#2f3b42;
 }
-html,body{height:100%;font-family:var(--f);background:var(--bg);color:var(--txt);transition:background .35s ease,color .35s ease}
+html,body{height:100%;width:100%;max-width:100%;overflow-x:hidden;font-family:var(--f);background:var(--bg);color:var(--txt);transition:background .35s ease,color .35s ease}
 button{-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none}
+input,textarea,select,button{max-width:100%}
 .ms-item:focus,.ch:focus{outline:none}
 .ms-item:focus-visible,.ch:focus-visible{outline:2px solid var(--g);outline-offset:2px}
 
@@ -154,7 +155,7 @@ button{-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none}
 .bub{
   padding:10px 14px;border-radius:9px;font-size:15px;line-height:1.55;
   box-shadow:0 1px 1px rgba(0,0,0,.08),0 0 0 .5px rgba(0,0,0,.04);
-  position:relative;
+  position:relative;max-width:100%;overflow-wrap:anywhere;word-break:normal;
 }
 .bot .bub{background:var(--bot-bub);border-top-left-radius:3px;color:var(--txt)}
 .usr .bub{background:var(--usr-bub);color:var(--usr-bub-txt);border-top-right-radius:3px}
@@ -834,6 +835,7 @@ button{-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none}
 }
 
 @media (max-width:767px){
+  #shell,#chat-panel,#msgs,#opts-wrap,#opts-inner,.msg,.bub,.setup-card,.form-grid,.field,.choice-card,.choice-copy,.composer,.composer-row{min-width:0;max-width:100%}
   #btn-theme-mobile{display:inline-flex}
   #hdr{gap:8px;padding:10px 12px;flex-wrap:nowrap}
   #hdr-logo{width:58px;height:26px;flex-shrink:0}
@@ -849,9 +851,20 @@ button{-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none}
   /* Tighter mobile opts panel & prevent continuar button overlap */
   #opts-wrap{max-height:45vh}
   #opts-wrap.has-cont{max-height:52vh}
-  #opts-inner{padding:4px 12px 10px}
+  #opts-inner{padding:4px 12px 10px;overflow-x:hidden}
   #btn-cont{margin:6px 12px 10px;padding:11px;font-size:14px}
   #footer{padding:3px 12px 4px;font-size:9px;line-height:1.4}
+  .text-in,.text-area,.select-in,.answer-box,.opt-search-inp{font-size:16px;line-height:1.45}
+  .form-actions{display:grid;grid-template-columns:1fr;width:100%}
+  .form-actions .primary-btn,.form-actions .secondary-btn{width:100%;white-space:normal}
+  .composer-row{display:grid;grid-template-columns:minmax(0,1fr) 43px 43px;align-items:end;width:100%}
+  .answer-box{width:100%;min-width:0}
+  .composer-tools{align-items:flex-start;flex-wrap:wrap}
+  .audio-state{min-width:0;overflow-wrap:anywhere}
+  .notice,.setup-help,.choice-name,.choice-desc,.summary-item span,.privacy-note{overflow-wrap:anywhere}
+  .resume-upload{align-items:stretch}
+  .resume-upload .secondary-btn{width:100%}
+  .resume-status{min-width:0;width:100%}
 }
 @media (max-width:380px){
   #hdr-logo{width:48px;height:22px}
@@ -939,6 +952,20 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
 .primary-btn:disabled{opacity:.52;cursor:not-allowed;transform:none}
 .secondary-btn{background:var(--card);color:var(--g);border:1.5px solid var(--g)}
 .form-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:13px}
+.admin-test-note{display:flex;align-items:flex-start;gap:8px;background:var(--blue);color:var(--bluec);border:1px dashed currentColor;border-radius:10px;padding:9px 10px;margin:9px 0;font-size:11px;line-height:1.45}
+.admin-test-note svg{width:16px;height:16px;flex:0 0 auto}
+.admin-skip-btn{align-self:flex-start;border:1px dashed var(--g);border-radius:8px;background:var(--gll);color:var(--g);padding:7px 10px;font:700 10.5px var(--f);cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.admin-skip-btn svg{width:14px;height:14px}
+.admin-summary-list{display:grid;gap:7px;margin-top:10px;counter-reset:admin-question}
+.admin-summary-item{counter-increment:admin-question;background:var(--gll);border:1px solid var(--gl);border-radius:9px;padding:9px 10px;font-size:11.5px;line-height:1.45;overflow-wrap:anywhere}
+.admin-summary-item::before{content:counter(admin-question) ". ";font-weight:800;color:var(--g)}
+.resume-upload{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-top:3px;padding:10px;border:1px dashed var(--border);border-radius:10px;background:var(--gll)}
+.resume-upload .secondary-btn{padding:8px 10px;font-size:11.5px}
+.resume-status{flex:1;min-width:150px;font-size:10.5px;line-height:1.4;color:var(--muted);overflow-wrap:anywhere}
+.resume-status.loading{color:var(--bluec);font-weight:650}
+.resume-status.success{color:var(--sosc);font-weight:650}
+.resume-status.error{color:var(--redc);font-weight:650}
+.file-privacy{width:100%;font-size:9.8px;line-height:1.45;color:var(--muted)}
 .notice{display:flex;gap:9px;align-items:flex-start;border-radius:10px;padding:10px 11px;font-size:11.5px;line-height:1.5;margin:9px 0}
 .notice svg{width:16px;height:16px;flex-shrink:0;margin-top:1px}
 .notice.info{background:var(--blue);color:var(--bluec)}
@@ -1087,6 +1114,8 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
 </div>
 
 <script src="https://unpkg.com/lucide@0.454.0/dist/umd/lucide.min.js"></script>
+<script src="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+<script src="https://unpkg.com/mammoth@1.10.0/mammoth.browser.min.js"></script>
 <script>
 /*
  * Simulador de Entrevistas Laborales ESAP
@@ -1100,8 +1129,12 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
   const DEFAULT_API_URL = 'https://entrevista-esap-worker.esap-entrevistas-pedro.workers.dev';
   const API_URL = String(window.SIMULADOR_API_URL || DEFAULT_API_URL).trim();
   const API_CONFIGURED = /^https:\/\//i.test(API_URL) && !/REEMPLAZAR-POR-SU-WORKER/i.test(API_URL);
+  const REQUIRED_WORKER_VERSION = '2026-08-04.2';
   const MAX_VACANCY = 7000;
   const MAX_PROFILE = 5000;
+  const MAX_RESUME_BYTES = 8 * 1024 * 1024;
+  const MAX_RESUME_TEXT = 18000;
+  const ADMIN_TEST_MODE = new URLSearchParams(window.location.search).get('modo') === 'prueba';
 
   const LABELS = {
     scenario: {
@@ -1176,6 +1209,8 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
   let recordedAudioBlob = null;
   let recordingStopped = null;
   let resolveRecordingStopped = null;
+  let serverTranscript = '';
+  let microphoneBusy = false;
 
   function freshState() {
     return {
@@ -1185,6 +1220,7 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
       organization: '',
       vacancy: '',
       profile: '',
+      resumeFileName: '',
       area: '',
       level: '',
       format: 'individual',
@@ -1201,7 +1237,8 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
       currentQuestion: null,
       answers: [],
       localQuestions: [],
-      feedback: null
+      feedback: null,
+      adminTest: ADMIN_TEST_MODE
     };
   }
 
@@ -1377,7 +1414,7 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
       '<b>Hola. Soy el Simulador de Entrevistas Laborales de la ESAP.</b> Te ayudaré a practicar una entrevista con preguntas abiertas y, al terminar, recibirás retroalimentación concreta sobre tus respuestas.',
       'Puedes prepararte para una convocatoria específica o hacer una práctica general. Podrás responder escribiendo o usando el micrófono.'
     ]).then(() => {
-      addMsg('bot', '<div class="notice safe"><i data-lucide="shield-check"></i><span><b>Privacidad:</b> no grabamos audio ni guardamos tus respuestas. Si utilizas el micrófono, el navegador produce una transcripción y solo esa transcripción se analiza.</span></div>¿Qué quieres hacer?');
+      addMsg('bot', '<div class="notice safe"><i data-lucide="shield-check"></i><span><b>Privacidad:</b> no guardamos tus respuestas. Si utilizas el micrófono, la grabación se envía temporalmente al servicio seguro para transcribirla y calcular indicadores de ritmo, pausas y volumen; después se descarta.</span></div>¿Qué quieres hacer?');
       renderWelcomeOptions();
     });
   }
@@ -1414,14 +1451,16 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
             <input class="text-in" id="role" maxlength="120" autocomplete="organization-title" value="${escapeHtml(state.role)}" placeholder="Ej.: profesional de planeación">
             <span class="field-error">Escribe el cargo al que aplicas.</span>
           </div>
-          <div class="field">
+          <div class="field" id="organization-field">
             <label for="organization">Organización</label>
             <input class="text-in" id="organization" maxlength="120" autocomplete="organization" value="${escapeHtml(state.organization)}" placeholder="Ej.: alcaldía, empresa o entidad">
+            <span class="field-error">Escribe una organización reconocible o deja este campo vacío.</span>
           </div>
-          <div class="field full">
+          <div class="field full" id="vacancy-field">
             <label for="vacancy">Texto de la convocatoria <span class="hint">(opcional)</span></label>
             <textarea class="text-area tall" id="vacancy" maxlength="${MAX_VACANCY}" placeholder="Pega funciones, requisitos y competencias. Las instrucciones que aparezcan dentro del texto se tratarán únicamente como contenido de la convocatoria.">${escapeHtml(state.vacancy)}</textarea>
             <span class="char-count" data-count-for="vacancy"></span>
+            <span class="field-error">El texto no parece contener información comprensible de una convocatoria.</span>
           </div>` : `
           <div class="field" id="area-field">
             <label for="area">Área de interés <span class="required">*</span></label>
@@ -1439,14 +1478,22 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
             </select>
             <span class="field-error">Selecciona el nivel que deseas practicar.</span>
           </div>
-          <div class="field full">
+          <div class="field full" id="role-field">
             <label for="role">Cargo de referencia <span class="hint">(opcional)</span></label>
             <input class="text-in" id="role" maxlength="120" value="${escapeHtml(state.role)}" placeholder="Ej.: auxiliar administrativo, coordinador de proyectos">
+            <span class="field-error">Escribe un cargo reconocible o deja este campo vacío.</span>
           </div>`}
-        <div class="field full">
-          <label for="profile">Resumen de estudios y experiencia <span class="hint">(opcional, pero recomendado)</span></label>
-          <textarea class="text-area" id="profile" maxlength="${MAX_PROFILE}" placeholder="Resume tu formación, experiencias, proyectos, prácticas, voluntariados y habilidades relacionadas. No necesitas experiencia laboral formal.">${escapeHtml(state.profile)}</textarea>
+        <div class="field full" id="profile-field">
+          <label for="profile">Experiencia o perfil <span class="hint">(opcional, pero recomendado)</span></label>
+          <textarea class="text-area" id="profile" maxlength="${MAX_PROFILE}" placeholder="Escribe libremente tu formación, experiencias, proyectos, prácticas, voluntariados y habilidades. También puedes cargar tu hoja de vida para generar un resumen editable.">${escapeHtml(state.profile)}</textarea>
           <span class="char-count" data-count-for="profile"></span>
+          <span class="field-error">El texto no parece describir estudios, experiencia o habilidades comprensibles.</span>
+          <div class="resume-upload">
+            <input class="sr-only" id="resume-file" type="file" accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+            <label class="secondary-btn" for="resume-file"><i data-lucide="file-up"></i> Cargar hoja de vida</label>
+            <span id="resume-status" class="resume-status">${state.resumeFileName ? `Resumen generado desde ${escapeHtml(state.resumeFileName)}. Puedes editarlo.` : 'Formatos admitidos: PDF con texto o Word DOCX, máximo 8 MB.'}</span>
+            <span class="file-privacy">El archivo se lee en este dispositivo y no se guarda. Para generar el resumen, se envía temporalmente solo el texto extraído al servicio de IA.</span>
+          </div>
         </div>
       </div>
       <div class="form-actions"><button class="primary-btn" type="submit">Continuar <i data-lucide="arrow-right"></i></button></div>
@@ -1459,13 +1506,15 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
       area.addEventListener('input', update);
       update();
     });
+    document.getElementById('resume-file')?.addEventListener('change', event => processResumeFile(event, form));
     form.addEventListener('submit', event => {
       event.preventDefault();
       let valid = true;
       if (isVacancy) {
         const role = form.elements.role.value.trim();
-        form.querySelector('#role-field').classList.toggle('invalid', !role);
-        valid = Boolean(role);
+        const roleValid = isMeaningfulInput(role);
+        form.querySelector('#role-field').classList.toggle('invalid', !roleValid);
+        valid = roleValid;
       } else {
         const area = form.elements.area.value;
         const level = form.elements.level.value;
@@ -1473,8 +1522,23 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
         form.querySelector('#level-field').classList.toggle('invalid', !level);
         valid = Boolean(area && level);
       }
+      const optionalChecks = [
+        ['organization', '#organization-field'],
+        ['vacancy', '#vacancy-field'],
+        ['profile', '#profile-field']
+      ];
+      if (!isVacancy) optionalChecks.push(['role', '#role-field']);
+      optionalChecks.forEach(([name, selector]) => {
+        const field = form.elements[name];
+        const wrapper = form.querySelector(selector);
+        if (!field || !wrapper) return;
+        const fieldValid = !field.value.trim() || isMeaningfulInput(field.value.trim());
+        wrapper.classList.toggle('invalid', !fieldValid);
+        valid = valid && fieldValid;
+      });
       if (!valid) {
-        form.querySelector('.invalid input,.invalid select')?.focus();
+        form.querySelector('.invalid input,.invalid select,.invalid textarea')?.focus();
+        showToast('Revisa los campos señalados. No uses letras al azar para iniciar la entrevista.');
         return;
       }
       state.role = form.elements.role?.value.trim() || '';
@@ -1486,6 +1550,124 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
       renderConfiguration();
     });
     renderIcons();
+  }
+
+  function isMeaningfulInput(value) {
+    const original = String(value || '').trim();
+    if (!original) return false;
+    if (/^[A-ZÁÉÍÓÚÜÑ0-9.&/-]{2,12}$/.test(original)) return true;
+    const letters = original.toLowerCase().replace(/[^a-záéíóúüñ]/g, '');
+    if (letters.length < 3) return false;
+    if (!/[aeiouáéíóúü]/.test(letters)) return false;
+    if (/^(.)\1+$/.test(letters) || /(asdf|qwer|zxcv|hjkl|jhg|jhgh|abcde)/i.test(letters)) return false;
+    const unique = new Set(letters).size;
+    if (letters.length >= 6 && unique <= 2) return false;
+    return true;
+  }
+
+  async function processResumeFile(event, form) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    const status = document.getElementById('resume-status');
+    const profile = document.getElementById('profile');
+    const submit = form?.querySelector('button[type="submit"]');
+    const setStatus = (message, type = '') => {
+      if (!status) return;
+      status.className = `resume-status${type ? ` ${type}` : ''}`;
+      status.textContent = message;
+    };
+    if (file.size > MAX_RESUME_BYTES) {
+      setStatus('El archivo supera 8 MB. Usa una versión más liviana o escribe el perfil manualmente.', 'error');
+      event.target.value = '';
+      return;
+    }
+    if (!/\.(pdf|docx)$/i.test(file.name)) {
+      setStatus('Formato no admitido. Usa PDF o Word DOCX; los archivos DOC antiguos deben convertirse a DOCX.', 'error');
+      event.target.value = '';
+      return;
+    }
+    if (!state.aiAvailable && state.aiChecked) {
+      setStatus('La IA no está disponible para resumir el documento. Puedes escribir el perfil manualmente.', 'error');
+      return;
+    }
+    try {
+      event.target.disabled = true;
+      if (submit) submit.disabled = true;
+      setStatus('Leyendo la hoja de vida en este dispositivo…', 'loading');
+      const extracted = await extractResumeText(file);
+      if (extracted.length < 80 || countWords(extracted) < 15) {
+        throw new Error('No se encontró suficiente texto. Si el PDF es una imagen escaneada, escribe el perfil manualmente o usa un PDF con texto seleccionable.');
+      }
+      setStatus('Generando un resumen fiel y editable con IA…', 'loading');
+      const summary = await requestProfileSummary(extracted);
+      if (!profile || !summary) throw new Error('La IA no devolvió un resumen utilizable.');
+      profile.value = summary.slice(0, MAX_PROFILE);
+      profile.dispatchEvent(new Event('input'));
+      state.resumeFileName = file.name;
+      setStatus(`Resumen generado desde ${file.name}. Revísalo y edítalo antes de continuar.`, 'success');
+      showToast('Tu hoja de vida fue resumida. Puedes corregir o complementar el texto.');
+    } catch (error) {
+      setStatus(error?.message || 'No fue posible procesar la hoja de vida. Puedes escribir el perfil manualmente.', 'error');
+    } finally {
+      event.target.disabled = false;
+      if (submit) submit.disabled = false;
+      event.target.value = '';
+    }
+  }
+
+  async function extractResumeText(file) {
+    const buffer = await file.arrayBuffer();
+    if (/\.pdf$/i.test(file.name)) {
+      if (!window.pdfjsLib) throw new Error('No se pudo cargar el lector de PDF. Revisa la conexión e inténtalo nuevamente.');
+      window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
+      const pdf = await window.pdfjsLib.getDocument({ data: new Uint8Array(buffer) }).promise;
+      const pages = [];
+      const pageLimit = Math.min(pdf.numPages, 30);
+      for (let number = 1; number <= pageLimit; number += 1) {
+        const page = await pdf.getPage(number);
+        const content = await page.getTextContent();
+        let pageText = '';
+        content.items.forEach(item => {
+          pageText += `${String(item.str || '').trim()}${item.hasEOL ? '\n' : ' '}`;
+        });
+        pages.push(pageText);
+      }
+      return cleanResumeText(pages.join('\n'));
+    }
+    if (!window.mammoth) throw new Error('No se pudo cargar el lector de Word. Revisa la conexión e inténtalo nuevamente.');
+    const result = await window.mammoth.extractRawText({ arrayBuffer: buffer });
+    return cleanResumeText(result?.value || '');
+  }
+
+  function cleanResumeText(value) {
+    return String(value || '')
+      .replace(/\u0000/g, '')
+      .replace(/\r/g, '\n')
+      .replace(/[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}/g, '[correo omitido]')
+      .replace(/(?:\+?57\s*)?(?:3\d{2}|60[1-8])(?:[\s.-]*\d){7}/g, '[teléfono omitido]')
+      .replace(/\b(?:CC|C\.C\.|TI|T\.I\.)?\s*\d{7,12}\b/gi, '[identificación omitida]')
+      .replace(/[ \t]+/g, ' ')
+      .replace(/\n{3,}/g, '\n\n')
+      .trim()
+      .slice(0, MAX_RESUME_TEXT);
+  }
+
+  async function requestProfileSummary(text) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 30000);
+    try {
+      const response = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ action: 'summarize-profile', text }),
+        signal: controller.signal
+      });
+      const data = await response.json();
+      if (!response.ok || data?.ok === false) throw new Error(data?.error || 'No fue posible generar el resumen.');
+      return String(data?.summary || '').trim();
+    } finally {
+      clearTimeout(timeout);
+    }
   }
 
   function renderConfiguration() {
@@ -1599,6 +1781,7 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
         <div class="summary-item"><b>Modo</b><span>${escapeHtml(LABELS.mode[state.mode])}</span></div>
         <div class="summary-item"><b>Audio</b><span>Preguntas y respuestas por voz</span></div>
       </div>
+      ${state.adminTest ? '<div class="admin-test-note"><i data-lucide="flask-conical"></i><span><b>Modo de prueba administrativa.</b> Podrás omitir respuestas y recorrer todas las preguntas. En este modo no se generará una evaluación del desempeño.</span></div>' : ''}
       <div id="connection-box" class="notice info"><i data-lucide="loader-circle"></i><span>Comprobando el servicio de entrevista…</span></div>
       <div class="notice safe"><i data-lucide="mic-2"></i><span>El micrófono es opcional. Si lo usas, la grabación se envía temporalmente al servicio seguro de Cloudflare para mejorar la transcripción y analizar ritmo, pausas y variación de volumen. No se almacena. Siempre puedes escribir y corregir el texto antes de responder.</span></div>
       <label style="display:flex;gap:8px;align-items:center;font-size:11.5px;font-weight:650;margin-top:9px"><input id="auto-speak" type="checkbox"${state.autoSpeak ? ' checked' : ''}> Leer automáticamente cada pregunta en voz alta</label>
@@ -1639,6 +1822,7 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const data = await response.json();
       if (!data.ok) throw new Error('Servicio no disponible');
+      if (data.version !== REQUIRED_WORKER_VERSION) throw new Error('El Worker está desactualizado. Publica el index.js incluido en este paquete.');
       state.aiAvailable = true;
       box.className = 'notice safe';
       box.innerHTML = '<i data-lucide="sparkles"></i><span><b>IA segura disponible.</b> Las preguntas y la retroalimentación se adaptarán a la información que proporcionaste.</span>';
@@ -1646,7 +1830,7 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
       state.aiAvailable = false;
       state.aiFailure = error.message;
       box.className = 'notice warn';
-      box.innerHTML = '<i data-lucide="wifi-off"></i><span><b>Servicio de IA temporalmente no disponible.</b> Puedes continuar con el banco local de preguntas y recibir retroalimentación preliminar.</span>';
+      box.innerHTML = `<i data-lucide="wifi-off"></i><span><b>Servicio de IA no disponible o desactualizado.</b> ${escapeHtml(state.aiFailure)} No podrás iniciar la entrevista hasta corregirlo.</span>`;
     }
     renderIcons();
   }
@@ -1675,6 +1859,15 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
     if (state.aiAvailable) {
       try {
         const result = await callInterviewApi('start');
+        if (result?.contextValid === false) {
+          const issues = Array.isArray(result.issues) && result.issues.length
+            ? `<ul>${result.issues.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>`
+            : '';
+          renderContext();
+          addMsg('bot', `<div class="notice warn"><i data-lucide="triangle-alert"></i><span><b>La información no permite preparar una entrevista realista.</b> ${escapeHtml(result.message || 'Corrige o completa los datos antes de continuar.')}${issues}</span></div>`);
+          renderIcons();
+          return;
+        }
         question = normalizeQuestion(result.question, 0);
       } catch (error) {
         showAiInterruption(error, 'No fue posible generar la primera pregunta.');
@@ -1719,7 +1912,7 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
   function renderComposer() {
     els.optsWrap.classList.add('interview-mode');
     els.back.style.display = 'none';
-    const recognitionSupported = Boolean(window.SpeechRecognition || window.webkitSpeechRecognition);
+    const recognitionSupported = Boolean((navigator.mediaDevices?.getUserMedia && window.MediaRecorder) || window.SpeechRecognition || window.webkitSpeechRecognition);
     els.opts.innerHTML = `<div class="composer">
       <label class="sr-only" for="answer-box">Tu respuesta</label>
       <div class="composer-row">
@@ -1731,6 +1924,7 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
         <span id="audio-state" class="audio-state"><i data-lucide="keyboard"></i><span>${recognitionSupported ? 'Escribe o toca el micrófono' : 'Escribe tu respuesta; la voz no está disponible en este navegador'}</span></span>
         <span><button id="clear-answer" class="tool-btn" type="button">Borrar</button> · <span id="question-timer" class="timer">00:00</span></span>
       </div>
+      ${state.adminTest ? '<button id="admin-next-question" class="admin-skip-btn" type="button"><i data-lucide="skip-forward"></i> Omitir y ver siguiente pregunta</button>' : ''}
       <div class="privacy-note">Puedes revisar y corregir la transcripción antes de enviarla. Atajo: Ctrl/⌘ + Enter.</div>
     </div>`;
     const input = document.getElementById('answer-box');
@@ -1747,10 +1941,11 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
         if (!send.disabled) submitAnswer();
       }
     });
-    send.addEventListener('click', submitAnswer);
+    send.addEventListener('click', () => submitAnswer());
     mic?.addEventListener('click', toggleListening);
-    document.getElementById('clear-answer').addEventListener('click', () => {
-      stopListening(true);
+    document.getElementById('admin-next-question')?.addEventListener('click', () => submitAnswer({ adminSkip: true }));
+    document.getElementById('clear-answer').addEventListener('click', async () => {
+      await stopListening(true);
       input.value = '';
       input.dispatchEvent(new Event('input'));
       input.focus();
@@ -1758,20 +1953,21 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
     resetVoiceCapture();
     startQuestionTimer();
     renderIcons();
-    setTimeout(() => input.focus({ preventScroll: true }), 120);
+    if (window.matchMedia('(min-width: 768px)').matches) setTimeout(() => input.focus({ preventScroll: true }), 120);
     scrollBottom();
   }
 
-  async function submitAnswer() {
+  async function submitAnswer(options = {}) {
     const input = document.getElementById('answer-box');
     const send = document.getElementById('send-btn');
-    if (!input || !input.value.trim() || send.disabled) return;
-    const answer = input.value.trim();
+    const adminSkip = Boolean(state.adminTest && options.adminSkip);
+    if (!input || (!adminSkip && (!input.value.trim() || send.disabled))) return;
+    const answer = adminSkip ? '[Pregunta omitida durante la prueba administrativa]' : input.value.trim();
     const previousAnswers = state.answers.map(item => item.answer.trim().toLowerCase());
     const normalizedAnswer = answer.toLowerCase().replace(/[^a-záéíóúüñ0-9\s]/g, ' ').replace(/\s+/g, ' ').trim();
     const testAnswer = /(solo |solamente )?(estoy |era |es )?(probando|testeando)( la)? (aplicaci[oó]n|app|p[aá]gina|micr[oó]fono|sistema)/i.test(normalizedAnswer);
     const insufficient = countWords(answer) < 4 || testAnswer || previousAnswers.includes(answer.toLowerCase());
-    if (insufficient) {
+    if (insufficient && !state.adminTest) {
       stopQuestionTimer();
       stopListening(true);
       addMsg('usr', textToHtml(answer));
@@ -1786,9 +1982,10 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
     stopQuestionTimer();
     const delivery = finishVoiceCapture(answer);
     await stopListening(false);
-    const audio = await encodeRecordedAudio();
+    const audio = serverTranscript ? null : await encodeRecordedAudio();
+    if (serverTranscript) delivery.transcriptionSource = 'Whisper de Cloudflare';
     window.speechSynthesis?.cancel();
-    addMsg('usr', textToHtml(answer));
+    addMsg('usr', adminSkip ? '<i>Pregunta omitida en modo de prueba</i>' : textToHtml(answer));
     els.opts.innerHTML = '';
     showTyping();
 
@@ -1797,7 +1994,8 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
       competency: state.currentQuestion.competency || '',
       answer,
       delivery,
-      audio
+      audio,
+      testSkipped: adminSkip
     };
 
     let result = null;
@@ -1831,6 +2029,11 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
       if (coaching) addMsg('bot', `<b>Observación de entrenamiento:</b> ${textToHtml(coaching)}`);
     }
 
+    if (result?.testComplete) {
+      renderAdminTestComplete();
+      return;
+    }
+
     if (result?.done || state.answers.length >= state.totalQuestions) {
       if (!result?.feedback) {
         showAiInterruption(new Error('La IA no entregó retroalimentación.'), 'La sesión terminó, pero no se generará un informe automático incompleto.');
@@ -1850,14 +2053,64 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
     presentQuestion(nextQuestion);
   }
 
+  function renderAdminTestComplete() {
+    stopQuestionTimer();
+    stopListening(true);
+    clearConversation();
+    setStep('feedback', 100);
+    els.optsWrap.classList.remove('interview-mode');
+    addMsg('bot', '<b>Recorrido administrativo completado.</b> Estas preguntas se mostraron sin evaluar las respuestas. Puedes iniciar otra sesión para comprobar una combinación diferente de cargo, nivel o tipo de entrevista.');
+    els.opts.innerHTML = `<div class="setup-card">
+      <div class="setup-title">Preguntas recorridas</div>
+      <div class="admin-summary-list">${state.answers.map(item => `<div class="admin-summary-item">${escapeHtml(item.question)}</div>`).join('')}</div>
+      <div class="form-actions">
+        <button id="admin-new-test" class="primary-btn" type="button"><i data-lucide="rotate-ccw"></i> Nueva prueba</button>
+      </div>
+    </div>`;
+    document.getElementById('admin-new-test')?.addEventListener('click', resetApp);
+    renderIcons();
+    scrollBottom();
+  }
+
   function normalizeQuestion(question, index) {
     if (!question || typeof question.text !== 'string' || question.text.trim().length < 5) return null;
     return {
       id: String(question.id || `q-${index + 1}`),
-      text: question.text.trim().slice(0, 900),
+      text: guardQuestionText(question.text, index),
       competency: String(question.competency || LABELS.focus[state.focus]).slice(0, 80),
       interviewer: String(question.interviewer || interviewerLabel(index)).slice(0, 80)
     };
+  }
+
+  function guardQuestionText(value, index) {
+    const proposed = String(value || '').replace(/\s+/g, ' ').trim().slice(0, 900);
+    const forbiddenVoice = /\bestudiantes?\b|\b(?:el|la)\s+(?:candidat[oa]|aspirante|postulante)\b|perfil\s+(?:del|de\s+la)\s+(?:candidat[oa]|aspirante|postulante)/i;
+    const roleDefinition = /(?:cu[aá]l|define|describ[ea]|explic[ao]).{0,55}(?:perfil|descripci[oó]n|funciones?)\s+(?:del|de\s+este)\s+(?:cargo|puesto)|perfil\s+del\s+cargo/i;
+    const institutionalVoice = /\bESAP\b|simulador|actividad\s+de\s+orientaci[oó]n|informaci[oó]n\s+(?:proporcionada|suministrada)/i;
+    if (!proposed || forbiddenVoice.test(proposed) || roleDefinition.test(proposed) || institutionalVoice.test(proposed)) {
+      return fallbackDirectQuestion(index);
+    }
+    return proposed;
+  }
+
+  function fallbackDirectQuestion(index) {
+    const role = state.role || LABELS.area[state.area] || 'esta oportunidad';
+    const organization = state.organization || 'la organización';
+    const questions = [
+      `Para comenzar, cuéntame qué experiencias, conocimientos o habilidades te han preparado para desempeñarte en ${role}.`,
+      `¿Qué te motivó a postularte a ${role} y qué te interesa de ${organization}?`,
+      `Cuéntame sobre una experiencia concreta que demuestre una capacidad importante para ${role}.`,
+      'Háblame de una ocasión en la que tuviste que trabajar con otras personas para alcanzar un resultado. ¿Qué hiciste tú?',
+      'Cuéntame sobre un problema que identificaste y cómo participaste en su solución.',
+      'Cuando tienes varias tareas importantes con el mismo plazo, ¿cómo decides por dónde comenzar?',
+      'Describe una situación en la que tuviste que explicar una idea compleja con claridad.',
+      `¿Qué conocimiento técnico consideras más importante para ${role} y cómo lo has aplicado?`,
+      'Cuéntame sobre una retroalimentación que te haya ayudado a mejorar tu forma de trabajar.',
+      'Háblame de una decisión difícil que hayas tomado y de los criterios que utilizaste.',
+      `Si fueras seleccionado para ${role}, ¿qué necesitarías comprender durante tus primeras semanas para aportar resultados?`,
+      `¿Qué te gustaría preguntarnos sobre ${role} o sobre ${organization} antes de cerrar la entrevista?`
+    ];
+    return questions[Math.abs(Number(index) || 0) % questions.length];
   }
 
   function interviewerLabel(index) {
@@ -1927,7 +2180,7 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
     while (unique.length < state.totalQuestions) unique.push(...base.competency.filter(item => !seen.has(item[0])));
     return unique.slice(0, state.totalQuestions).map((item, index) => ({
       id: `local-${index + 1}`,
-      text: item[0],
+      text: guardQuestionText(item[0], index),
       competency: item[1],
       interviewer: interviewerLabel(index)
     }));
@@ -1972,7 +2225,8 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
       session: {
         id: state.sessionId,
         questionIndex: state.answers.length,
-        totalQuestions: state.totalQuestions
+        totalQuestions: state.totalQuestions,
+        testMode: state.adminTest
       },
       context: {
         scenario: state.scenario,
@@ -1985,9 +2239,10 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
         format: LABELS.format[state.format],
         channel: LABELS.channel[state.channel],
         focus: LABELS.focus[state.focus],
-        mode: state.mode
+        mode: state.mode,
+        variation: state.sessionId
       },
-      history: state.answers.slice(-8).map(item => ({
+      history: state.answers.slice(-12).map(item => ({
         question: item.question,
         competency: item.competency,
         answer: item.answer,
@@ -2019,7 +2274,7 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
     state.aiAvailable = false;
     state.aiFailure = error?.message || 'Servicio no disponible';
     state.localQuestions = buildLocalQuestions();
-    addMsg('bot', '<div class="notice warn"><i data-lucide="wifi-off"></i><span>La conexión con la IA se interrumpió. Continuaré la sesión con el banco local para no perder tu práctica.</span></div>');
+    addMsg('bot', '<div class="notice warn"><i data-lucide="wifi-off"></i><span>La conexión con la IA se interrumpió. La sesión queda en pausa para no sustituir el análisis con respuestas genéricas. Reintenta cuando tengas conexión.</span></div>');
   }
 
   function showAiInterruption(error, message) {
@@ -2045,7 +2300,7 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
         cache: 'no-store'
       });
       const data = await response.json();
-      return response.ok && data?.ok === true;
+      return response.ok && data?.ok === true && data?.version === REQUIRED_WORKER_VERSION;
     } catch (_) {
       return false;
     }
@@ -2322,34 +2577,48 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
     return instance;
   }
 
-  function toggleListening() {
-    if (listening) stopListening(false);
-    else startListening();
+  async function toggleListening() {
+    if (microphoneBusy) return;
+    microphoneBusy = true;
+    try {
+      if (listening) await stopListening(false);
+      else await startListening();
+    } finally {
+      microphoneBusy = false;
+    }
   }
 
   async function startListening() {
-    if (recognition) stopListening(true);
-    recognition = initRecognition();
-    if (!recognition) {
-      showToast('Este navegador no ofrece reconocimiento de voz. Usa Chrome o Edge actualizado, o escribe la respuesta.');
-      return;
-    }
+    if (listening) return;
+    if (recognition) await stopListening(true);
     window.speechSynthesis?.cancel();
+    stopSpokenAudio();
     const input = document.getElementById('answer-box');
     recognitionTarget = input;
     voiceBaseText = input?.value.trim() || '';
     voiceFinalText = '';
+    serverTranscript = '';
     voiceStartedAt = Date.now();
     voiceUsedThisAnswer = true;
     listening = true;
     updateMicUi(true);
-    startAudioAnalysis();
+    const recordingStarted = await startAudioAnalysis();
+    if (recordingStarted) return;
+
+    recognition = initRecognition();
+    if (!recognition) {
+      listening = false;
+      updateMicUi(false);
+      showToast('No fue posible abrir el micrófono. Revisa el permiso del navegador o escribe tu respuesta.');
+      return;
+    }
     try {
       recognition.start();
     } catch (error) {
       listening = false;
+      recognition = null;
       updateMicUi(false);
-      if (!/already started/i.test(error.message || '')) showToast('No fue posible iniciar el micrófono. Revisa el permiso del navegador.');
+      showToast('No fue posible iniciar el micrófono. Revisa el permiso del navegador.');
     }
   }
 
@@ -2365,7 +2634,11 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
     }
     updateMicUi(false);
     await finishAudioAnalysis();
-    if (!silent && voiceUsedThisAnswer) showToast('Transcripción detenida. Puedes corregirla antes de enviar.');
+    if (!silent && recordedAudioBlob) {
+      await transcribeRecordedAudio();
+    } else if (!silent && voiceUsedThisAnswer) {
+      showToast('Grabación detenida. Puedes corregir el texto antes de enviarlo.');
+    }
   }
 
   function updateMicUi(active) {
@@ -2396,6 +2669,7 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
     mediaRecorder = null;
     recordingStopped = null;
     resolveRecordingStopped = null;
+    serverTranscript = '';
   }
 
   function finishVoiceCapture(answer) {
@@ -2419,7 +2693,7 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
   }
 
   async function startAudioAnalysis() {
-    if (!navigator.mediaDevices?.getUserMedia) return;
+    if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) return false;
     audioSamples = [];
     try {
       audioStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
@@ -2439,26 +2713,37 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
         };
         mediaRecorder.start(250);
       }
-      audioContext = new (window.AudioContext || window.webkitAudioContext)();
-      const source = audioContext.createMediaStreamSource(audioStream);
-      audioAnalyser = audioContext.createAnalyser();
-      audioAnalyser.fftSize = 512;
-      source.connect(audioAnalyser);
-      const data = new Uint8Array(audioAnalyser.fftSize);
-      const sample = () => {
-        if (!audioAnalyser || !listening) return;
-        audioAnalyser.getByteTimeDomainData(data);
-        let sum = 0;
-        for (const value of data) {
-          const normalized = (value - 128) / 128;
-          sum += normalized * normalized;
+      try {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (AudioContextClass) {
+          audioContext = new AudioContextClass();
+          const source = audioContext.createMediaStreamSource(audioStream);
+          audioAnalyser = audioContext.createAnalyser();
+          audioAnalyser.fftSize = 512;
+          source.connect(audioAnalyser);
+          const data = new Uint8Array(audioAnalyser.fftSize);
+          const sample = () => {
+            if (!audioAnalyser || !listening) return;
+            audioAnalyser.getByteTimeDomainData(data);
+            let sum = 0;
+            for (const value of data) {
+              const normalized = (value - 128) / 128;
+              sum += normalized * normalized;
+            }
+            audioSamples.push(Math.sqrt(sum / data.length));
+            audioFrame = requestAnimationFrame(sample);
+          };
+          sample();
         }
-        audioSamples.push(Math.sqrt(sum / data.length));
-        audioFrame = requestAnimationFrame(sample);
-      };
-      sample();
+      } catch (_) {
+        // La grabación y Whisper siguen funcionando aunque no haya métricas acústicas locales.
+      }
+      return mediaRecorder?.state === 'recording';
     } catch (_) {
-      // SpeechRecognition may still work even if Web Audio analysis is blocked.
+      audioStream?.getTracks().forEach(track => track.stop());
+      audioStream = null;
+      mediaRecorder = null;
+      return false;
     }
   }
 
@@ -2493,6 +2778,46 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
       binary += String.fromCharCode(...bytes.subarray(index, index + chunkSize));
     }
     return { base64: btoa(binary), mimeType: recordedAudioBlob.type || 'audio/webm' };
+  }
+
+  async function transcribeRecordedAudio() {
+    const input = document.getElementById('answer-box');
+    const status = document.getElementById('audio-state');
+    const mic = document.getElementById('mic-btn');
+    const send = document.getElementById('send-btn');
+    const audio = await encodeRecordedAudio();
+    if (!audio || !input) {
+      showToast('No se detectó una grabación utilizable. Intenta nuevamente o escribe tu respuesta.');
+      return;
+    }
+    if (status) status.innerHTML = '<i data-lucide="loader-circle"></i><span>Transcribiendo la grabación…</span>';
+    if (mic) mic.disabled = true;
+    if (send) send.disabled = true;
+    renderIcons();
+    try {
+      const response = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ action: 'transcribe', audio })
+      });
+      const data = await response.json();
+      if (!response.ok || data?.ok === false) throw new Error(data?.error || 'No se pudo transcribir');
+      serverTranscript = String(data?.transcript || '').trim();
+      if (!serverTranscript) {
+        showToast('No se detectó voz clara. Toca el micrófono e inténtalo nuevamente.');
+      } else {
+        input.value = [voiceBaseText, serverTranscript].filter(Boolean).join(' ').replace(/\s+/g, ' ');
+        input.dispatchEvent(new Event('input'));
+        showToast('Grabación transcrita. Revisa el texto antes de enviarlo.');
+      }
+    } catch (error) {
+      showToast(`No fue posible transcribir: ${error.message || 'error de conexión'}.`);
+    } finally {
+      if (mic) mic.disabled = false;
+      if (send) send.disabled = !input.value.trim() || input.value.trim().length < 2;
+      if (status) status.innerHTML = '<i data-lucide="keyboard"></i><span>Revisa la respuesta o graba nuevamente</span>';
+      renderIcons();
+    }
   }
 
   async function speakText(text, button) {
@@ -2580,7 +2905,9 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
       <li>La herramienta sirve para practicar; no selecciona candidatos ni predice contrataciones.</li>
       <li>No evalúa apariencia, acento, género, personalidad ni supuestas emociones.</li>
       <li>No formula preguntas discriminatorias sobre vida familiar, religión, salud, afiliación política u otras características protegidas.</li>
-      <li>No conserva las respuestas ni el audio. Evita incluir datos sensibles.</li>
+      <li>No conserva las respuestas ni el audio. El audio se procesa temporalmente para transcribirlo y calcular indicadores observables.</li>
+      <li>Si cargas una hoja de vida, el archivo se lee en tu dispositivo; solo el texto extraído y depurado se envía temporalmente para generar el resumen.</li>
+      <li>Evita incluir números de documento, direcciones, teléfonos u otros datos sensibles.</li>
     </ul>`;
     addMsg('bot', html);
   }
