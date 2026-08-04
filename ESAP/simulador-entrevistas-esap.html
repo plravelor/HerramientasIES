@@ -73,7 +73,7 @@ input,textarea,select,button{max-width:100%}
   flex:1;min-width:0;min-height:0;
   display:flex;flex-direction:column;
   background:var(--chat-bg);
-  transition:background .35s ease;
+  transition:background .35s ease;overflow:hidden;
 }
 
 /* ── SIDEBAR (desktop only) ── */
@@ -215,6 +215,9 @@ input,textarea,select,button{max-width:100%}
 #opts-wrap.has-cont{border-top:1px solid var(--border)}
 #opts-wrap.has-cont #btn-cont{border-top:1px solid var(--border);position:relative}
 #opts-wrap.has-cont{max-height:56vh}
+#chat-panel.form-mode #msgs{flex:0 0 min(31vh,290px);min-height:150px;max-height:31vh}
+#chat-panel.form-mode #opts-wrap{flex:1 1 auto;max-height:none;min-height:0}
+#chat-panel.form-mode #opts-inner{overscroll-behavior:contain}
 
 /* ── CHIPS ── */
 .chips{display:flex;flex-wrap:wrap;gap:6px}
@@ -765,6 +768,7 @@ input,textarea,select,button{max-width:100%}
     display:flex;flex-direction:row;
     box-shadow:none;
   }
+  #sidebar,#chat-panel{height:100%;align-self:stretch}
   #sidebar{display:flex;width:260px}
   #sb-brand{padding:10px 18px 8px}
   #sb-logo{width:38px;height:38px;font-size:18px;border-radius:11px}
@@ -868,6 +872,7 @@ input,textarea,select,button{max-width:100%}
   .resume-upload{align-items:stretch}
   .resume-upload .secondary-btn{width:100%}
   .resume-status{min-width:0;width:100%}
+  #chat-panel.form-mode #msgs{flex-basis:min(29vh,230px);min-height:125px;max-height:29vh}
 }
 @media (max-width:380px){
   #hdr-logo{width:48px;height:22px}
@@ -962,6 +967,9 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
 .admin-summary-list{display:grid;gap:7px;margin-top:10px;counter-reset:admin-question}
 .admin-summary-item{counter-increment:admin-question;background:var(--gll);border:1px solid var(--gl);border-radius:9px;padding:9px 10px;font-size:11.5px;line-height:1.45;overflow-wrap:anywhere}
 .admin-summary-item::before{content:counter(admin-question) ". ";font-weight:800;color:var(--g)}
+.metrics-card{border:1px dashed var(--border);border-radius:11px;padding:10px;background:var(--gll)}
+.metrics-card .metrics-title{font-size:11.5px;font-weight:800;color:var(--gd);margin-bottom:3px}
+.metrics-card .form-grid{margin-top:8px}
 .resume-upload{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-top:3px;padding:10px;border:1px dashed var(--border);border-radius:10px;background:var(--gll)}
 .resume-upload .secondary-btn{padding:8px 10px;font-size:11.5px}
 .resume-status{flex:1;min-width:150px;font-size:10.5px;line-height:1.4;color:var(--muted);overflow-wrap:anywhere}
@@ -1155,7 +1163,7 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
   const DEFAULT_API_URL = 'https://entrevista-esap-worker.esap-entrevistas-pedro.workers.dev';
   const API_URL = String(window.SIMULADOR_API_URL || DEFAULT_API_URL).trim();
   const API_CONFIGURED = /^https:\/\//i.test(API_URL) && !/REEMPLAZAR-POR-SU-WORKER/i.test(API_URL);
-  const REQUIRED_WORKER_VERSION = '2026-08-04.5';
+  const REQUIRED_WORKER_VERSION = '2026-08-04.6';
   const MAX_VACANCY = 7000;
   const MAX_PROFILE = 5000;
   const MAX_RESUME_BYTES = 8 * 1024 * 1024;
@@ -1285,6 +1293,9 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
       resumeFileName: '',
       resumeFileType: '',
       resumeText: '',
+      resumeLocalContact: { email: '', phone: '', linkedin: '' },
+      program: '',
+      territorial: '',
       area: '',
       level: '',
       format: 'individual',
@@ -1299,6 +1310,7 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
       aiAvailable: false,
       aiChecked: false,
       aiFailure: '',
+      metricsConfigured: false,
       questionIndex: 0,
       currentQuestion: null,
       answers: [],
@@ -1425,6 +1437,7 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
 
   function setStep(step, progress) {
     state.step = step;
+    document.getElementById('chat-panel')?.classList.toggle('form-mode', ['context', 'goal', 'configuration', 'confirmation'].includes(step));
     els.progress.style.display = 'block';
     let pct = Number.isFinite(progress) ? progress : {
       welcome: 5,
@@ -1554,6 +1567,20 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
             <span class="file-privacy">Las sugerencias cambian según el área y el nivel seleccionados.</span>
             <span class="field-error">Escribe un cargo reconocible o deja este campo vacío.</span>
           </div>`}
+        <div class="field full metrics-card">
+          <div class="metrics-title">Datos opcionales para estadísticas de uso</div>
+          <span class="file-privacy">Puedes continuar sin responder. No solicitamos ni almacenamos tu número de documento. Si se activa la base de métricas, solo se registrarán estos datos generales y eventos de uso; nunca tus respuestas, audios ni hoja de vida.</span>
+          <div class="form-grid two">
+            <div class="field">
+              <label for="program">Programa académico <span class="hint">(opcional)</span></label>
+              <input class="text-in" id="program" maxlength="160" value="${escapeHtml(state.program)}" placeholder="Ej.: Administración Pública">
+            </div>
+            <div class="field">
+              <label for="territorial">Territorial, CETAP o sede <span class="hint">(opcional)</span></label>
+              <input class="text-in" id="territorial" maxlength="140" value="${escapeHtml(state.territorial)}" placeholder="Ej.: Territorial Antioquia">
+            </div>
+          </div>
+        </div>
         <div class="field full" id="profile-field">
           <label for="profile">Experiencia o perfil <span class="hint">(opcional, pero recomendado)</span></label>
           <textarea class="text-area" id="profile" maxlength="${MAX_PROFILE}" placeholder="Escribe libremente tu formación, experiencias, proyectos, prácticas, voluntariados y habilidades. También puedes cargar tu hoja de vida para generar un resumen editable.">${escapeHtml(state.profile)}</textarea>
@@ -1562,7 +1589,7 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
           <div class="resume-upload">
             <input class="sr-only" id="resume-file" type="file" accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
             <label class="secondary-btn" for="resume-file"><i data-lucide="file-up"></i> Cargar hoja de vida</label>
-            <span id="resume-status" class="resume-status">${state.resumeFileName ? `Resumen generado desde ${escapeHtml(state.resumeFileName)}. Puedes editarlo.` : 'Formatos admitidos: PDF con texto o Word DOCX, máximo 8 MB.'}</span>
+            <span id="resume-status" class="resume-status">${state.resumeFileName ? `Documento cargado: ${escapeHtml(state.resumeFileName)}. El perfil puede editarse manualmente.` : 'Formatos admitidos: PDF con texto o Word DOCX, máximo 8 MB.'}</span>
             <span class="file-privacy">El archivo se lee en este dispositivo y no se guarda. Para generar el resumen, se envía temporalmente solo el texto extraído al servicio de IA.</span>
           </div>
         </div>
@@ -1622,10 +1649,13 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
       state.organization = form.elements.organization?.value.trim() || '';
       state.vacancy = form.elements.vacancy?.value.trim() || '';
       state.profile = form.elements.profile.value.trim();
+      state.program = form.elements.program?.value.trim() || '';
+      state.territorial = form.elements.territorial?.value.trim() || '';
       state.area = form.elements.area?.value || state.area;
       state.level = form.elements.level?.value || state.level;
       contextMemory.role = state.role;
       contextMemory.organization = state.organization;
+      sendMetric('context_completed');
       renderGoalChoice();
     });
     renderIcons();
@@ -1647,8 +1677,8 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
     const hasResume = state.resumeText.length >= 120;
     els.opts.innerHTML = `<div class="choice-grid">
       ${choiceButton({ value: 'interview', group: 'goal', icon: 'messages-square', name: 'Simulación de entrevista', desc: 'Preguntas adaptativas y retroalimentación profesional.', selected: state.goal === 'interview' })}
-      ${choiceButton({ value: 'resume', group: 'goal', icon: 'file-user', name: 'Asesoría y nueva hoja de vida', desc: hasResume ? 'Audita el contenido, muestra los cambios y genera un Word editable.' : 'Primero debes cargar tu hoja de vida en PDF o Word.', selected: state.goal === 'resume' })}
-      ${choiceButton({ value: 'both', group: 'goal', icon: 'layers-3', name: 'Entrevista y hoja de vida', desc: hasResume ? 'Realiza la práctica y después genera la versión adaptada.' : 'Para esta opción, vuelve y carga tu hoja de vida.', selected: state.goal === 'both' })}
+      ${choiceButton({ value: 'resume', group: 'goal', icon: 'file-user', name: 'Asesoría y nueva hoja de vida', desc: hasResume ? 'Audita el contenido y solo genera un Word si toda afirmación supera la verificación de trazabilidad.' : 'Primero debes cargar tu hoja de vida en PDF o Word.', selected: state.goal === 'resume' })}
+      ${choiceButton({ value: 'both', group: 'goal', icon: 'layers-3', name: 'Entrevista y hoja de vida', desc: hasResume ? 'Realiza la práctica y después intenta crear una versión verificada para la vacante.' : 'Para esta opción, vuelve y carga tu hoja de vida.', selected: state.goal === 'both' })}
     </div>`;
     bindChoiceCards(els.opts, async (_group, value, button) => {
       if (value !== 'interview' && !hasResume) {
@@ -1698,10 +1728,6 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
       event.target.value = '';
       return;
     }
-    if (!state.aiAvailable && state.aiChecked) {
-      setStatus('La IA no está disponible para resumir el documento. Puedes escribir el perfil manualmente.', 'error');
-      return;
-    }
     try {
       event.target.disabled = true;
       if (submit) submit.disabled = true;
@@ -1710,16 +1736,28 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
       if (extracted.length < 80 || countWords(extracted) < 15) {
         throw new Error('No se encontró suficiente texto. Si el PDF es una imagen escaneada, escribe el perfil manualmente o usa un PDF con texto seleccionable.');
       }
-      setStatus('Generando un resumen fiel y editable con IA…', 'loading');
-      const summary = await requestProfileSummary(extracted);
-      if (!profile || !summary) throw new Error('La IA no devolvió un resumen utilizable.');
-      profile.value = summary.slice(0, MAX_PROFILE);
-      profile.dispatchEvent(new Event('input'));
       state.resumeFileName = file.name;
       state.resumeFileType = /\.pdf$/i.test(file.name) ? 'PDF' : 'DOCX';
       state.resumeText = extracted.slice(0, MAX_RESUME_TEXT);
-      setStatus(`Resumen generado desde ${file.name}. Revísalo y edítalo antes de continuar.`, 'success');
-      showToast('Tu hoja de vida fue resumida. Puedes corregir o complementar el texto.');
+      sendMetric('resume_uploaded');
+      if (state.aiChecked && !state.aiAvailable) {
+        setStatus(`Documento ${file.name} cargado. La IA no está disponible para resumirlo; puedes continuar y escribir el perfil manualmente.`, 'success');
+        showToast('La hoja de vida quedó cargada aunque el resumen de IA no esté disponible.');
+        return;
+      }
+      setStatus('Documento cargado. Generando un resumen fiel y editable con IA…', 'loading');
+      try {
+        const summary = await requestProfileSummary(extracted);
+        if (!profile || !summary) throw new Error('La IA no devolvió un resumen utilizable.');
+        state.aiAvailable = true;
+        profile.value = summary.slice(0, MAX_PROFILE);
+        profile.dispatchEvent(new Event('input'));
+        setStatus(`Resumen generado desde ${file.name}. Revísalo y edítalo antes de continuar.`, 'success');
+        showToast('Tu hoja de vida fue resumida. Puedes corregir o complementar el texto.');
+      } catch (summaryError) {
+        setStatus(`Documento ${file.name} cargado correctamente. No fue posible generar el resumen de IA: ${summaryError?.message || 'error temporal'}. Puedes continuar y escribir o editar el perfil.`, 'success');
+        showToast('La hoja de vida se conservó. Solo falló el resumen automático.');
+      }
     } catch (error) {
       setStatus(error?.message || 'No fue posible procesar la hoja de vida. Puedes escribir el perfil manualmente.', 'error');
     } finally {
@@ -1746,15 +1784,38 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
         });
         pages.push(pageText);
       }
-      return cleanResumeText(pages.join('\n'));
+      const rawText = pages.join('\n');
+      state.resumeLocalContact = extractLocalContact(rawText);
+      return cleanResumeText(rawText);
     }
     if (!window.mammoth) throw new Error('No se pudo cargar el lector de Word. Revisa la conexión e inténtalo nuevamente.');
     const result = await window.mammoth.extractRawText({ arrayBuffer: buffer });
-    return cleanResumeText(result?.value || '');
+    const rawText = result?.value || '';
+    state.resumeLocalContact = extractLocalContact(rawText);
+    return cleanResumeText(rawText);
+  }
+
+  function extractLocalContact(value) {
+    const source = String(value || '');
+    const email = source.match(/[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}/)?.[0] || '';
+    const phone = source.match(/(?:\+?57[\s.-]*)?(?:3\d{2}|60[1-8])(?:[\s.-]*\d){7}/)?.[0]?.replace(/\s+/g, ' ').trim() || '';
+    const linkedin = source.match(/(?:https?:\/\/)?(?:www\.)?linkedin\.com\/in\/[A-Za-z0-9_%./-]+/i)?.[0] || '';
+    return {
+      email: email.slice(0, 180),
+      phone: phone.slice(0, 80),
+      linkedin: linkedin.replace(/[),.;:]+$/, '').slice(0, 240)
+    };
+  }
+
+  function localContactLine(fallback = '') {
+    const contact = state.resumeLocalContact || {};
+    const parts = [contact.phone, contact.email, contact.linkedin]
+      .map(value => String(value || '').trim()).filter(Boolean);
+    return parts.length ? parts.join(' · ') : String(fallback || '[Completa ciudad · teléfono · correo · LinkedIn]');
   }
 
   function cleanResumeText(value) {
-    return String(value || '')
+    return repairSpacedUppercaseLines(String(value || ''))
       .replace(/\u0000/g, '')
       .replace(/\r/g, '\n')
       .replace(/[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}/g, '[correo omitido]')
@@ -1766,22 +1827,47 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
       .slice(0, MAX_RESUME_TEXT);
   }
 
+  function repairSpacedUppercaseLines(value) {
+    return String(value || '').split('\n').map(line => {
+      const letters = line.match(/[A-Za-zÁÉÍÓÚÜÑáéíóúüñ]/g) || [];
+      const uppercase = line.match(/[A-ZÁÉÍÓÚÜÑ]/g) || [];
+      if (letters.length < 4 || uppercase.length / letters.length < 0.8) return line;
+      let repaired = line;
+      for (let pass = 0; pass < 6; pass += 1) {
+        const next = repaired.replace(/\b([A-ZÁÉÍÓÚÜÑ])\s+(?=[A-ZÁÉÍÓÚÜÑ]{2,}\b)/g, '$1');
+        if (next === repaired) break;
+        repaired = next;
+      }
+      return repaired;
+    }).join('\n');
+  }
+
   async function requestProfileSummary(text) {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 30000);
-    try {
-      const response = await fetch(API_URL, {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ action: 'summarize-profile', text }),
-        signal: controller.signal
-      });
-      const data = await response.json();
-      if (!response.ok || data?.ok === false) throw new Error(data?.error || 'No fue posible generar el resumen.');
-      return String(data?.summary || '').trim();
-    } finally {
-      clearTimeout(timeout);
+    let lastError = null;
+    for (let attempt = 1; attempt <= 2; attempt += 1) {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 45000);
+      try {
+        const response = await fetch(API_URL, {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ action: 'summarize-profile', text }),
+          signal: controller.signal
+        });
+        let data = null;
+        try { data = await response.json(); } catch (_) {}
+        if (!response.ok || data?.ok === false) throw new Error(data?.error || `El servicio respondió ${response.status}.`);
+        const summary = String(data?.summary || '').trim();
+        if (!summary) throw new Error('La IA no devolvió un resumen utilizable.');
+        return summary;
+      } catch (error) {
+        lastError = error?.name === 'AbortError' ? new Error('El servicio tardó demasiado en responder.') : error;
+        if (attempt < 2) await sleep(650);
+      } finally {
+        clearTimeout(timeout);
+      }
     }
+    throw lastError || new Error('No fue posible generar el resumen.');
   }
 
   function renderConfiguration() {
@@ -1896,13 +1982,13 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
         <div class="summary-item"><b>Audio</b><span>Preguntas y respuestas por voz</span></div>
       </div>
       ${state.adminTest ? '<div class="admin-test-note"><i data-lucide="flask-conical"></i><span><b>Modo de prueba administrativa.</b> Podrás omitir respuestas y recorrer todas las preguntas. En este modo no se generará una evaluación del desempeño.</span></div>' : ''}
-      ${state.scenario === 'vacancy' && countWords(state.vacancy) < 35 ? '<div class="notice warn"><i data-lucide="file-warning"></i><span><b>Convocatoria poco detallada.</b> Con el cargo y tu trayectoria se puede hacer una práctica general, pero no una entrevista técnica específica sin inventar requisitos. Si tienes funciones, estudios requeridos, experiencia exigida o competencias, vuelve y pégalos.</span></div>' : ''}
+      ${state.scenario === 'vacancy' && countWords(state.vacancy) < 35 ? '<div class="notice warn"><i data-lucide="file-warning"></i><span><b>Convocatoria poco detallada.</b> Con el cargo y tu trayectoria se puede hacer una práctica general, pero no una entrevista técnica específica ni una hoja de vida adaptada sin inventar requisitos. Para mayor precisión, pega funciones, formación, experiencia y conocimientos exigidos.</span></div>' : ''}
       <div id="connection-box" class="notice info"><i data-lucide="loader-circle"></i><span>Comprobando el servicio de entrevista…</span></div>
       <div class="notice safe"><i data-lucide="mic-2"></i><span>El micrófono es opcional. En navegadores compatibles verás una transcripción provisional mientras hablas; al detener, Cloudflare genera una transcripción final más precisa. La grabación se usa temporalmente para transcribir y calcular métricas aproximadas de ritmo, pausas y volumen; no se almacena. Siempre puedes corregir el texto antes de responder.</span></div>
       <label style="display:flex;gap:8px;align-items:center;font-size:11.5px;font-weight:650;margin-top:9px"><input id="auto-speak" type="checkbox"${state.autoSpeak ? ' checked' : ''}> Leer automáticamente cada pregunta en voz alta</label>
       <div id="voice-options" class="voice-options"${state.autoSpeak ? '' : ' hidden'} aria-label="Tipo de voz">
-        <label class="voice-option"><input type="radio" name="voice-gender" value="female"${state.voiceGender === 'female' ? ' checked' : ''}> Voz femenina · Diana</label>
-        <label class="voice-option"><input type="radio" name="voice-gender" value="male"${state.voiceGender === 'male' ? ' checked' : ''}> Voz masculina · Álvaro</label>
+        <label class="voice-option"><input type="radio" name="voice-gender" value="female"${state.voiceGender === 'female' ? ' checked' : ''}> Voz femenina natural en español · Diana</label>
+        <label class="voice-option"><input type="radio" name="voice-gender" value="male"${state.voiceGender === 'male' ? ' checked' : ''}> Voz masculina natural en español · Álvaro</label>
       </div>
       <div class="form-actions">
         <button class="secondary-btn" id="edit-config" type="button"><i data-lucide="pencil"></i> Editar</button>
@@ -1950,6 +2036,7 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
       if (!data.ok) throw new Error('Servicio no disponible');
       if (data.version !== REQUIRED_WORKER_VERSION) throw new Error('El Worker está desactualizado. Publica el index.js incluido en este paquete.');
       state.aiAvailable = true;
+      state.metricsConfigured = data.metricsConfigured === true;
       box.className = 'notice safe';
       box.innerHTML = '<i data-lucide="sparkles"></i><span><b>IA segura disponible.</b> Las preguntas y la retroalimentación se adaptarán a la información que proporcionaste.</span>';
     } catch (error) {
@@ -2006,12 +2093,10 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
       showAiInterruption(new Error('La IA no entregó una pregunta válida.'), 'No fue posible generar la primera pregunta.');
       return;
     }
-    if (state.contextWarnings.length) {
-      addMsg('bot', `<div class="notice warn"><i data-lucide="file-warning"></i><span><b>Límite de personalización:</b><ul>${state.contextWarnings.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul></span></div>`);
-    }
+    sendMetric('interview_started');
     await sleep(350);
     showTyping();
-    await presentQuestion(question);
+    await presentQuestion(question, { speakPrefix: intro });
   }
 
   function interviewIntro() {
@@ -2032,7 +2117,7 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
     setStep('interview', 62 + (state.questionIndex / Math.max(1, state.totalQuestions)) * 32);
     const speaker = question.interviewer || interviewerLabel(state.questionIndex);
     const speakerIcon = state.format === 'panel' ? 'users-round' : state.channel === 'async' ? 'video' : 'user-round';
-    const spokenQuestion = [question.transition, question.text].filter(Boolean).join(' ');
+    const spokenQuestion = [options.speakPrefix, question.transition, question.text].filter(Boolean).join(' ');
     hideTyping();
     if (options.before) addMsg('bot', textToHtml(options.before), { speaker, speakerIcon });
     const turnHtml = `${question.transition ? `<div class="interview-transition">${textToHtml(question.transition)}</div>` : ''}<div>${textToHtml(question.text)}</div>`;
@@ -2208,6 +2293,7 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
         return;
       }
       state.feedback = result.feedback;
+      sendMetric('interview_completed');
       await renderFeedbackV4();
       return;
     }
@@ -2459,6 +2545,37 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
       mode: state.mode,
       variation: state.sessionId
     };
+  }
+
+  function sendMetric(eventType, extra = {}) {
+    if (!API_CONFIGURED) return;
+    const metric = {
+      eventType,
+      sessionId: state.sessionId,
+      scenario: state.scenario,
+      goal: state.goal,
+      area: LABELS.area[state.area] || state.area,
+      level: LABELS.level[state.level] || state.level,
+      territorial: state.territorial,
+      program: state.program,
+      channel: LABELS.channel[state.channel] || state.channel,
+      usedVoice: state.answers.some(item => item?.delivery?.usedVoice === true),
+      resumeUploaded: Boolean(state.resumeFileName),
+      questions: state.answers.length,
+      ...extra
+    };
+    fetch(API_URL, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ action: 'metrics', metric }),
+      keepalive: true
+    }).then(async response => {
+      if (!response.ok) return;
+      try {
+        const data = await response.json();
+        state.metricsConfigured = data?.metricsConfigured === true;
+      } catch (_) {}
+    }).catch(() => {});
   }
 
   function switchToLocal(error) {
@@ -2744,19 +2861,21 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
     const answerReviews = state.answers.map((answer, index) => {
       const number = index + 1;
       const item = reviewMap.get(number) || {};
+      const score = Math.max(1, Math.min(4, Math.round(Number(item.score) || 2)));
+      const verdict = ({ 1: 'insuficiente', 2: 'parcial', 3: 'sólida', 4: 'muy sólida' })[score];
       return {
         questionNumber: number,
         question: answer.question,
         answer: answer.answer,
-        verdict: text(item.verdict, 'parcial', 30),
-        score: Math.max(1, Math.min(4, Math.round(Number(item.score) || 2))),
+        verdict,
+        score,
         dimensionScores: Object.fromEntries(Object.entries(item.dimensionScores || {}).map(([key, value]) => [key, Math.max(0, Math.min(4, Math.round(Number(value) || 0)))])),
         issues: list(item.issues, 7).map(issue => ({ dimension: text(issue?.dimension, '', 40), diagnosis: text(issue?.diagnosis), action: text(issue?.action) })),
         observation: text(item.observation, 'No hay evidencia suficiente para una observación específica.'),
         whatWorked: text(item.whatWorked, 'No hubo evidencia suficiente para identificar un acierto concreto.'),
         missing: text(item.missing, 'Faltó delimitar la acción personal y el resultado.'),
         suggestion: text(item.suggestion, 'Distingue el contexto, tu responsabilidad, tu acción y el resultado.'),
-        betterStructure: text(item.betterStructure, 'Contexto breve → responsabilidad → acción personal → resultado o aprendizaje.'),
+        betterStructure: text(item.betterStructure, 'Contexto breve → responsabilidad → acción personal → resultado o aprendizaje.').replace(/^Estructura\s*:\s*/i, ''),
         exampleStart: text(item.exampleStart, 'En [situación], mi responsabilidad fue [tarea]. Yo decidí [acción] y el resultado fue [resultado verificable].')
       };
     });
@@ -2874,7 +2993,7 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
     clearConversation();
     setStep('feedback', 100);
     els.back.style.display = 'inline-flex';
-    addMsg('bot', '<b>Prepararé una propuesta de hoja de vida adaptada.</b> Primero verás el registro de cambios. El archivo original no se modifica y no se inventarán datos para llenar vacíos.');
+    addMsg('bot', '<b>Verificaré si es posible preparar una hoja de vida adaptada y fiel.</b> Primero contrastaré cada afirmación con tu archivo y la convocatoria. Si la trazabilidad no es suficiente, el Word se bloqueará en lugar de completar o inventar datos.');
     const report = document.createElement('section');
     report.className = 'report';
     report.innerHTML = '<div class="report-section" id="standalone-resume-panel"><p><i data-lucide="loader-circle"></i> Analizando la hoja de vida y la oportunidad…</p></div>';
@@ -2899,9 +3018,12 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
     container.innerHTML = '<p><i data-lucide="loader-circle"></i> Contrastando el documento con el cargo sin inventar información…</p>';
     renderIcons();
     try {
+      sendMetric('resume_requested');
       state.resumePackage = await requestResumePackage();
+      sendMetric(state.resumePackage?.canGenerate === true ? 'resume_generated' : 'resume_blocked');
       container.innerHTML = resumePackageHtml(state.resumePackage, standalone);
       container.querySelector('[data-download-docx]')?.addEventListener('click', downloadResumeDocx);
+      container.querySelector('[data-copy-application]')?.addEventListener('click', copyApplicationMessage);
       container.querySelector('[data-new-practice]')?.addEventListener('click', () => restart(true));
       bindReportSpeech(container);
       renderIcons();
@@ -2913,17 +3035,32 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
   }
 
   function resumePackageHtml(pkg, standalone) {
+    const integrityIssues = Array.isArray(pkg?.integrityIssues) ? pkg.integrityIssues : [];
+    const pending = Array.isArray(pkg?.pendingInformation) ? pkg.pendingInformation : [];
+    if (pkg?.canGenerate !== true || !pkg?.document) {
+      return `${reportHeading('shield-alert', 'Word bloqueado para proteger la veracidad')}
+        <div class="notice warn"><i data-lucide="shield-alert"></i><span><b>No se creó una hoja de vida nueva.</b> ${escapeHtml(pkg?.contextLimit || 'La propuesta no superó la verificación de trazabilidad.')}</span></div>
+        <p>${escapeHtml(pkg?.executiveSummary || '')}</p>
+        ${integrityIssues.length ? `<h4>Motivos del bloqueo</h4><ul>${integrityIssues.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>` : ''}
+        ${pending.length ? `<h4>Información necesaria para volver a intentarlo</h4><ul>${pending.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>` : ''}
+        <div class="notice safe"><i data-lucide="badge-check"></i><span>Tu archivo original no se modificó. Es preferible no generar un Word que atribuya al candidato el cargo objetivo, cambie nombres de empleos o agregue requisitos no demostrados.</span></div>
+        ${standalone ? '<div class="form-actions"><button class="secondary-btn" type="button" data-new-practice><i data-lucide="rotate-ccw"></i> Volver al inicio</button></div>' : ''}`;
+    }
     const doc = pkg?.document || {};
+    const fit = pkg?.fit && typeof pkg.fit === 'object' ? pkg.fit : {};
     const changes = Array.isArray(pkg?.changeLog) ? pkg.changeLog : [];
     const experience = Array.isArray(doc.experience) ? doc.experience : [];
     const education = Array.isArray(doc.education) ? doc.education : [];
     return `${reportHeading('file-pen-line', 'Propuesta de hoja de vida adaptada')}
       <div class="notice warn"><i data-lucide="info"></i><span>${escapeHtml(pkg.contextLimit || '')}</span></div>
       <p>${escapeHtml(pkg.executiveSummary || '')}</p>
+      <h4>Correspondencia candidato–vacante</h4>
+      <div class="answer-review"><p><span class="rating-pill">Ajuste ${escapeHtml(fit.level || 'sin determinar')}</span></p>${fit.reason ? `<p>${escapeHtml(fit.reason)}</p>` : ''}${Array.isArray(fit.strengths) && fit.strengths.length ? `<p><b>Fortalezas respaldadas:</b></p><ul>${fit.strengths.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>` : ''}${Array.isArray(fit.gaps) && fit.gaps.length ? `<p><b>Brechas o evidencia faltante:</b></p><ul>${fit.gaps.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>` : ''}</div>
       <h4>Qué cambié antes de crear el Word</h4>
       <div class="change-log">${changes.length ? changes.map(item => `<div class="change-card"><span class="change-type">${escapeHtml(item.type)}</span> <b>${escapeHtml(item.section)}</b>${item.before ? `<p><b>Antes:</b> ${escapeHtml(item.before)}</p>` : ''}${item.after ? `<p><b>Propuesta:</b> ${escapeHtml(item.after)}</p>` : ''}<p><b>Por qué:</b> ${escapeHtml(item.reason)}</p><p class="privacy-note">${escapeHtml(item.evidenceStatus)}</p></div>`).join('') : '<p>No hubo cambios estructurados que mostrar; revisa el documento antes de usarlo.</p>'}</div>
       ${pkg.pendingInformation?.length ? `<h4>Datos que conviene confirmar</h4><ul>${pkg.pendingInformation.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul><p class="privacy-note">Estos datos no se añadieron al Word porque la hoja de vida no los comprobó.</p>` : ''}
-      <div class="resume-doc-preview"><h3>${escapeHtml(doc.fullName || '[Nombre completo]')}</h3><p>${escapeHtml(doc.contactLine || '')}</p><h4>${escapeHtml(doc.targetTitle || 'Perfil profesional')}</h4><p>${escapeHtml(doc.profile || '')}</p>${doc.coreCompetencies?.length ? `<h4>Competencias respaldadas</h4><p>${escapeHtml(doc.coreCompetencies.join(' · '))}</p>` : ''}${experience.length ? `<h4>Experiencia</h4>${experience.map(item => `<p><b>${escapeHtml(item.role)}</b>${item.organization ? ` · ${escapeHtml(item.organization)}` : ''}${item.dates ? ` · ${escapeHtml(item.dates)}` : ''}</p><ul>${(item.bullets || []).map(value => `<li>${escapeHtml(value)}</li>`).join('')}</ul>`).join('')}` : ''}${education.length ? `<h4>Formación</h4>${education.map(item => `<p><b>${escapeHtml(item.credential)}</b>${item.institution ? ` · ${escapeHtml(item.institution)}` : ''}${item.dates ? ` · ${escapeHtml(item.dates)}` : ''}</p>`).join('')}` : ''}</div>
+      <div class="resume-doc-preview"><h3>${escapeHtml(doc.fullName || '[Nombre completo]')}</h3><p>${escapeHtml(localContactLine(doc.contactLine))}</p><h4>${escapeHtml(doc.targetTitle || 'Perfil profesional')}</h4><p>${escapeHtml(doc.profile || '')}</p>${doc.coreCompetencies?.length ? `<h4>Competencias respaldadas</h4><p>${escapeHtml(doc.coreCompetencies.join(' · '))}</p>` : ''}${experience.length ? `<h4>Experiencia</h4>${experience.map(item => `<p><b>${escapeHtml(item.role)}</b>${item.organization ? ` · ${escapeHtml(item.organization)}` : ''}${item.dates ? ` · ${escapeHtml(item.dates)}` : ''}</p><ul>${(item.bullets || []).map(value => `<li>${escapeHtml(value)}</li>`).join('')}</ul>`).join('')}` : ''}${education.length ? `<h4>Formación</h4>${education.map(item => `<p><b>${escapeHtml(item.credential)}</b>${item.institution ? ` · ${escapeHtml(item.institution)}` : ''}${item.dates ? ` · ${escapeHtml(item.dates)}` : ''}</p>`).join('')}` : ''}</div>
+      ${pkg.applicationMessage?.body ? `<h4>Mensaje breve de postulación</h4><div class="answer-review"><p><b>Asunto:</b> ${escapeHtml(pkg.applicationMessage.subject || '')}</p><p style="white-space:pre-line">${escapeHtml(pkg.applicationMessage.body)}</p><button class="secondary-btn" type="button" data-copy-application><i data-lucide="copy"></i> Copiar mensaje</button></div>` : ''}
       <div class="notice safe"><i data-lucide="shield-check"></i><span>El Word usa una columna, títulos simples y texto editable. Revisa cada dato antes de enviarlo y sigue el formato oficial si la convocatoria exige uno.</span></div>
       <div class="form-actions"><button class="primary-btn" type="button" data-download-docx><i data-lucide="file-down"></i> Descargar Word editable</button>${standalone ? '<button class="secondary-btn" type="button" data-new-practice><i data-lucide="rotate-ccw"></i> Volver al inicio</button>' : ''}</div>`;
   }
@@ -2937,7 +3074,7 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
     button.disabled = true;
     try {
       const d = window.docx;
-      const data = state.resumePackage.document;
+      const data = { ...state.resumePackage.document, contactLine: localContactLine(state.resumePackage.document.contactLine) };
       const children = [];
       const paragraph = (text, options = {}) => new d.Paragraph({
         text: String(text || ''),
@@ -2992,6 +3129,18 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
     }
   }
 
+  async function copyApplicationMessage() {
+    const message = state.resumePackage?.applicationMessage;
+    if (!message?.body) return;
+    const value = `${message.subject || ''}\n\n${message.body}`.trim();
+    try {
+      await navigator.clipboard.writeText(value);
+      showToast('Mensaje de postulación copiado.');
+    } catch (_) {
+      showToast('No fue posible copiarlo automáticamente; selecciónalo y cópialo manualmente.');
+    }
+  }
+
   function downloadBlob(blob, fileName) {
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement('a');
@@ -3041,7 +3190,7 @@ html[data-fs="lg"] .fs-toggle { background: var(--gl); color: var(--g); border-c
     <div class="report-section">${reportHeading('messages-square', 'Auditoría de cada pregunta y respuesta')}${buildSessionReviewHtmlV4(feedback)}</div>
     ${resumeReviewHtml(feedback.resumeReview)}
     <div class="report-section">${reportHeading('footprints', 'Plan de práctica')}<ol>${feedback.nextSteps.map(item => `<li>${escapeHtml(formatPlanStep(item))}</li>`).join('')}</ol></div>
-    ${state.resumeText ? `<div class="report-section" id="resume-offer">${reportHeading('file-user', '¿Quieres una hoja de vida adaptada?')}<p>Generaré una propuesta editable en Word basada únicamente en los datos comprobados de tu archivo. Antes de descargarla verás qué se modificó, agregó, reordenó u omitió.</p><div class="form-actions"><button class="primary-btn" id="build-resume-after" type="button"><i data-lucide="file-pen-line"></i> Preparar mi hoja de vida</button></div></div>` : ''}
+    ${state.resumeText ? `<div class="report-section" id="resume-offer">${reportHeading('file-user', '¿Quieres una hoja de vida adaptada?')}<p>Intentaré construir una propuesta editable basada únicamente en datos comprobados de tu archivo. El Word solo estará disponible si cada afirmación supera la verificación de trazabilidad y la convocatoria contiene requisitos suficientes.</p><div class="form-actions"><button class="primary-btn" id="build-resume-after" type="button"><i data-lucide="file-pen-line"></i> Verificar y preparar mi hoja de vida</button></div></div>` : ''}
     <div class="form-actions report-actions"><button class="secondary-btn" id="copy-report" type="button"><i data-lucide="copy"></i> Copiar</button><button class="secondary-btn" id="download-pdf" type="button"><i data-lucide="file-down"></i> Descargar PDF completo</button><button class="secondary-btn" id="print-report" type="button"><i data-lucide="printer"></i> Imprimir</button><button class="primary-btn" id="new-practice" type="button"><i data-lucide="rotate-ccw"></i> Nueva práctica</button></div>`;
     els.msgs.insertBefore(report, els.typing);
     document.getElementById('copy-report').addEventListener('click', copyReport);
