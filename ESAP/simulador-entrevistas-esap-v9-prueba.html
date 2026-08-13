@@ -18,8 +18,13 @@ body{overflow:hidden}.app{height:100vh;height:100dvh;min-height:0;display:grid;g
 .progressbar{height:4px;background:#d8e0ea}.progressbar span{display:block;height:100%;background:var(--g);width:0;transition:width .25s}.interview-shell{max-width:1040px;margin:0 auto}.chat{display:grid;gap:14px}.bubble{max-width:760px;background:#fff;border:1px solid #dfe3e8;border-radius:13px;padding:14px 16px;box-shadow:0 5px 18px rgba(28,40,55,.06)}.bubble.user{margin-left:auto;background:#eef4ff;border-color:#d8e6fb}.speaker{display:flex;align-items:center;gap:7px;font-size:9.5px;text-transform:uppercase;letter-spacing:.5px;font-weight:850;color:var(--g);margin-bottom:7px}.bubble p{margin:0;font-size:13px;line-height:1.62}.bubble .meta{font-size:10px;color:var(--mut);margin-top:8px}.speak-small{border:1px solid #cbd6e5;background:#fff;color:var(--g);border-radius:8px;padding:6px 8px;margin-top:8px;font-size:10px;font-weight:800;cursor:pointer}.answer-card{margin:18px 0 0;background:#fff;border:1px solid #d8dee8;border-radius:14px;padding:16px;box-shadow:var(--shadow)}.answer-card h3{font-size:13px;margin:0 0 8px}.meter{height:8px;border-radius:20px;background:#e8edf3;overflow:hidden;margin:10px 0}.meter span{display:block;height:100%;width:0;background:#2f6bc5;transition:width .12s}.rec-controls{display:flex;gap:8px;flex-wrap:wrap}.timer{font-variant-numeric:tabular-nums;font-size:12px;font-weight:800;color:var(--mut)}.transcript{margin-top:12px}.transcript textarea{width:100%;min-height:90px;border:1px solid #d1dae5;border-radius:10px;padding:10px;resize:vertical;line-height:1.5}.mini-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}.mini{background:#f5f7fa;border-radius:9px;padding:9px}.mini small{display:block;font-size:9px;color:var(--mut)}.mini b{font-size:12px}.loading{display:inline-flex;gap:8px;align-items:center}.dot{width:7px;height:7px;border-radius:50%;background:var(--g);animation:pulse 1s infinite alternate}.dot:nth-child(2){animation-delay:.2s}.dot:nth-child(3){animation-delay:.4s}@keyframes pulse{to{opacity:.25;transform:translateY(-2px)}}
 .report{max-width:1040px;margin:0 auto;display:grid;gap:14px}.report-card{background:#fff;border:1px solid #dce2e9;border-radius:14px;padding:18px 20px;box-shadow:0 5px 18px rgba(28,40,55,.05);overflow-wrap:anywhere}.report-card h2,.report-card h3{font-family:'Fraunces',Georgia,serif;margin:0 0 9px}.report-card h2{font-size:24px}.report-card h3{font-size:18px}.report-card p,.report-card li{font-size:12px;line-height:1.68}.report-card ul,.report-card ol{padding-left:20px}.report-title{display:flex;align-items:start;gap:10px}.report-title>*:first-child{flex:1}.priority{border-left:3px solid #2764ba;background:#f5f8fd;border-radius:0 10px 10px 0;padding:11px 13px;margin:10px 0}.priority b{font-size:12px}.tag{display:inline-block;border-radius:20px;background:#e9f1fd;color:#174f9f;font-size:9.5px;font-weight:800;padding:4px 8px;margin:2px}.answer-review{border-top:1px solid #e8ebef;padding-top:12px;margin-top:12px}.answer-review:first-of-type{border-top:0}.level{display:inline-block;padding:5px 9px;border-radius:20px;background:#edf3fd;color:#184f9f;font-size:10px;font-weight:850}.errorbox{max-width:850px;margin:40px auto;background:#fff;border:1px solid #efc0c0;border-radius:14px;padding:20px;color:#802222}.setup{max-width:900px;margin:20px auto;background:#fff;border:1px solid #ead29a;border-radius:14px;padding:20px}.setup code{display:block;background:#f5f5f5;padding:9px;border-radius:8px;overflow:auto;font-size:11px}
 .footer-note{font-size:9.5px;color:#7c8798;text-align:center;margin-top:16px;line-height:1.5}
-@media(max-width:930px){html,body{height:auto;min-height:100%;overflow:auto}.app{height:auto;min-height:100vh;min-height:100dvh;grid-template-columns:1fr;overflow:visible}.sidebar{display:none}.main{min-height:100vh;min-height:100dvh;overflow:visible;display:block}.stage{overflow:visible;padding:18px 12px 48px}.grid2,.summary,.choice-grid{grid-template-columns:minmax(0,1fr)}.voice-row{grid-template-columns:minmax(0,1fr)}.mini-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.top{padding:15px;position:sticky;top:0;z-index:20}.top .mini-logo{display:none}.top h1{font-size:16px}.top p{font-size:9.5px}.panel-head,.panel-body{padding-left:16px;padding-right:16px}}
-@media print{.sidebar,.top,.no-print,.answer-card,.progressbar{display:none!important}body{overflow:visible;background:#fff}.app,.main{display:block;height:auto}.stage{overflow:visible;padding:0}.report-card{box-shadow:none;break-inside:avoid}.report{display:block}.report-card{margin-bottom:12px}}
+/* Legibilidad: texto de lectura en 16 px efectivos; texto auxiliar nunca menor de 13 px. */
+html{font-size:16px}.panel-head h2{font-size:clamp(1.65rem,2.7vw,2rem)}.panel-head p,.field input,.field textarea,.field select,.choice,.check,.btn{font-size:1rem}.field label{font-size:1rem}.subcard h3{font-size:1rem}.subcard p,.status{font-size:.94rem}.sumitem small{font-size:.78rem}.sumitem b{font-size:1rem}.top h1{font-size:clamp(1.05rem,2vw,1.4rem)}.top p{font-size:.82rem}.side-brand p,.steps li{font-size:.94rem}.quick button{font-size:.9rem}.bubble{max-width:820px}.speaker{font-size:.78rem}.bubble p{font-size:1.05rem;line-height:1.65}.bubble .meta,.speak-small{font-size:.86rem}.answer-card h3{font-size:1.15rem}.answer-instruction{font-size:1rem;color:var(--mut);line-height:1.6;margin:0 0 12px}.timer{font-size:1rem}.transcript textarea{font-size:1rem}.report-card p,.report-card li{font-size:1rem;line-height:1.7}.priority b{font-size:1rem}.tag{font-size:.8rem}.answer-review h4{font-size:1.08rem;line-height:1.45}.mini small{font-size:.8rem}.mini b{font-size:.95rem}.footer-note{font-size:.82rem}.privacy-copy{font-size:1rem;line-height:1.75}
+.wait-overlay{position:fixed;inset:0;z-index:10000;display:grid;place-items:center;padding:18px;background:rgba(8,20,38,.48);backdrop-filter:blur(2px)}.wait-card{width:min(520px,100%);background:#fff;border:1px solid #d5dfed;border-radius:16px;box-shadow:0 22px 60px rgba(8,20,38,.28);padding:22px}.wait-top{display:flex;gap:14px;align-items:flex-start}.wait-spinner{width:28px;height:28px;border:4px solid #d9e5f8;border-top-color:var(--g);border-radius:50%;animation:spin .8s linear infinite;flex:0 0 auto}.wait-card h2{font-size:1.2rem;margin:0 0 5px}.wait-card p{font-size:1rem;line-height:1.55;color:var(--mut);margin:0}.wait-time{margin-top:14px!important;color:var(--g)!important;font-weight:800;font-variant-numeric:tabular-nums}.wait-range{font-size:.9rem!important;margin-top:5px!important}.wait-track{height:7px;border-radius:12px;background:#e6edf7;overflow:hidden;margin-top:15px}.wait-track span{display:block;height:100%;width:42%;background:linear-gradient(90deg,#1f64c9,#80acef);border-radius:inherit;animation:waitslide 1.35s ease-in-out infinite}.technical-details{margin-top:12px;border:1px solid #dde5ef;border-radius:10px;padding:10px 12px;background:#fafbfd}.technical-details summary{cursor:pointer;font-size:.92rem;font-weight:800;color:var(--g)}.technical-details p{font-size:.92rem}.sample-warning{background:#fff8e6;border-left:3px solid #dda200;border-radius:0 9px 9px 0;padding:10px 12px;margin-top:10px;font-size:.94rem;line-height:1.55}.voice-limit-note{background:#fff7df;border:1px solid #efd69d;color:#765100;border-radius:10px;padding:11px 13px;font-size:.95rem;line-height:1.55;margin:10px 0}.mode-explainer{display:grid;gap:8px;margin-top:12px}.mode-explainer p{margin:0;font-size:.94rem;line-height:1.55}.star-card{border:1px solid #cfe0f6;background:#f4f8fe;border-radius:12px;padding:14px 16px}.star-card p{margin:6px 0}.star-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:10px}.star-grid div{background:#fff;border:1px solid #dce7f5;border-radius:9px;padding:10px;font-size:.92rem;line-height:1.45}.star-grid b{color:var(--g)}
+@keyframes spin{to{transform:rotate(360deg)}}@keyframes waitslide{0%{transform:translateX(-110%)}50%{transform:translateX(135%)}100%{transform:translateX(-110%)}}
+@media(max-width:930px){html,body{height:auto;min-height:100%;overflow-x:hidden;overflow-y:auto}.app{height:auto;min-height:100vh;min-height:100dvh;grid-template-columns:minmax(0,1fr);overflow:visible}.sidebar{display:none}.main{width:100%;min-height:100vh;min-height:100dvh;overflow:visible;display:block}.stage{width:100%;overflow:visible;padding:18px 12px 48px}.panel,.interview-shell,.report{width:100%;min-width:0}.grid2,.summary,.choice-grid{grid-template-columns:minmax(0,1fr)}.voice-row{grid-template-columns:minmax(0,1fr)}.mini-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.top{padding:15px;position:sticky;top:0;z-index:20}.top .mini-logo{display:none}.top h1{font-size:1.05rem}.top p{font-size:.82rem}.top button{flex:0 0 auto}.panel-head,.panel-body{padding-left:16px;padding-right:16px}.star-grid{grid-template-columns:minmax(0,1fr)}.wait-card{padding:18px}.panel-head h2{font-size:1.65rem}}
+@media(max-width:560px){.top{align-items:flex-start;gap:9px}.top>div:nth-child(2){min-width:0}.top h1,.top p{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.top button{padding:9px 10px;font-size:.88rem}.stage{padding-left:9px;padding-right:9px}.panel-head,.panel-body{padding-left:14px;padding-right:14px}.bubble{max-width:100%}.rec-controls .btn{flex:1 1 150px}.report-title{flex-wrap:wrap}.report-title .btn{width:100%}.mini-metrics{grid-template-columns:minmax(0,1fr)}}
+@media print{.sidebar,.top,.no-print,.answer-card,.progressbar,.wait-overlay{display:none!important}body{overflow:visible;background:#fff;font-size:11pt}.app,.main{display:block;height:auto}.stage{overflow:visible;padding:0}.report{display:block}.report-card{box-shadow:none;break-inside:auto;padding:16px 18px;margin-bottom:12px}.report-card h2,.report-card h3,.answer-review h4{break-after:avoid}.report-card p,.report-card li{font-size:10.5pt;line-height:1.55}.priority,.star-grid>div{break-inside:avoid}.answer-review{break-inside:auto}.answer-review h4{font-size:11.5pt}.technical-details{break-inside:auto}.technical-details>summary{break-after:avoid}.technical-details>*{display:block!important}.star-grid{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
@@ -65,7 +70,7 @@ import { getAI, getGenerativeModel, GoogleAIBackend, ResponseModality, Schema } 
    - NO pegues aquí una API key secreta de Gemini/Google AI Studio.
    - APP_CHECK_SITE_KEY es la clave pública de sitio de reCAPTCHA.
 */
-const APP_VERSION = '2026-08-13.9.2';
+const APP_VERSION = '2026-08-13.9.3';
 const FIREBASE_CONFIG = {
   apiKey: 'AIzaSyAK180FpLYDFyCQ9afEPYN8tamMk2LL66Q',
   authDomain: 'simulador-entrevistas-esap.firebaseapp.com',
@@ -97,12 +102,15 @@ const state = {
   acceptedPrivacy: false, questions: [], currentQuestion: null, answers: [], skipped: [],
   feedback: null, questionNumber: 0, usedVoice: false, recording: null,
   visitorId: getVisitorId(), sessionId: uid(), firebaseReady: false, firebaseError: '',
+  voiceQuotaLimited: false, voiceRetryAt: 0, voiceLimitNoticeShown: false, waitHistory: {},
+  openingPrefetch: null, openingFingerprint: '',
 };
 
 let firebaseApp, ai, questionModel, turnModel, feedbackModel;
 let audioContext = null, voiceNextTime = 0, voiceSources = new Set(), voiceBusy = false;
 let voiceRequestId = 0;
 const voiceCache = new Map();
+let waitTimer = null, waitStartedAt = 0, waitKind = '', waitTarget = 0;
 let mediaStream = null, mediaRecorder = null, mediaChunks = [], recordStartedAt = 0, recordTimer = null, levelRAF = null;
 
 const VOICES = [
@@ -127,6 +135,16 @@ REGLAS:
 - Las transiciones deben ser naturales y breves. Si existe un vínculo real con la respuesta anterior, úsalo.
   Si no existe, NO inventes una transición; haz la siguiente pregunta directamente.
 - No uses frases mecánicas repetitivas como «dejemos ese punto allí» o «pasemos a otra competencia».
+- El CANAL sí cambia la simulación:
+  * PRESENCIAL: tono conversacional y repreguntas naturales cuando la respuesta lo justifique. No afirmes evaluar postura, gestos ni contacto visual: esta herramienta no usa cámara.
+  * VIDEOLLAMADA: preguntas y transiciones concisas, propias de una conversación remota. Puedes explorar comunicación o coordinación remota solo cuando el cargo o la trayectoria lo hagan pertinente. No afirmes evaluar imagen o lenguaje corporal.
+  * VIDEO/ASÍNCRONA: cada consigna debe entenderse por sí sola, sin depender de una conversación en tiempo real. Evita repreguntas que exijan interacción inmediata y evita transiciones conversacionales; transition debe quedar vacía.
+- El FORMATO sí cambia quién pregunta:
+  * INDIVIDUAL: conserva una sola voz y perspectiva de persona entrevistadora.
+  * PANEL: alterna de manera realista perspectivas de Talento Humano, jefatura del área y, cuando la convocatoria lo respalde, una perspectiva técnica o de actores clave. En panelist escribe el rol que formula cada pregunta; no inventes nombres propios.
+- En PANEL no repitas la misma pregunta desde dos perspectivas. En VIDEO/ASÍNCRONA no uses una respuesta previa para convertir la siguiente consigna en una repregunta.
+- Antes de formular una pregunta compara su propósito con todas las preguntas ya realizadas. Si es sustancialmente equivalente, reemplázala por otra competencia o ángulo.
+- Si la convocatoria no contiene funciones o requisitos suficientes, cualquier conocimiento sectorial razonable es una HIPÓTESIS DE PREPARACIÓN, no un requisito confirmado ni excluyente. No uses «indispensable», «obligatorio» o «requerido» salvo que la convocatoria lo diga explícitamente.
 - Español latinoamericano profesional y natural, sin español peninsular marcado.
 - No infieras personalidad, salud mental, ansiedad, inteligencia, edad, género, origen ni otras características sensibles a partir de la voz.
 `;
@@ -154,6 +172,13 @@ sobre el audio original, junto con métricas acústicas aproximadas calculadas l
 - No repitas «sé más específico» con distintas palabras: identifica el problema exacto (pertinencia, evidencia, rol personal,
   criterio, resultado, estructura, exceso de generalidad, entrega oral, etc.).
 - Distingue qué quedó demostrado de qué no quedó demostrado.
+- No conviertas conocimientos sectoriales plausibles en requisitos confirmados cuando la convocatoria sea breve. Usa expresiones como «tema que conviene preparar y confirmar», y nunca «indispensable» salvo evidencia textual en la convocatoria.
+- No concluyas idoneidad, empleabilidad, falta de profesionalismo, inseguridad, autoridad, solvencia o incapacidad personal a partir de una respuesta. Describe únicamente la evidencia que quedó disponible o ausente en esta práctica.
+- Evalúa la RESPUESTA y la SESIÓN, no la persona. Si alguien usa frases de prueba, di «esta respuesta no aportó evidencia»; no digas «el candidato no es evaluable», «no toma en serio el proceso» ni atribuyas falta de preparación.
+- Dirígete a la persona en segunda persona («tu respuesta», «puedes practicar»), no hables de «el candidato» o «el estudiante» en tercera persona.
+- No presentes POT, Plan de Desarrollo, MGA, normas, metodologías u otros elementos técnicos como brechas del perfil si no aparecen explícitamente en la convocatoria o en la pregunta sustentada. Como máximo, preséntalos como temas que conviene investigar y confirmar antes de una entrevista real.
+- Si recomiendas STAR, escribe siempre la primera vez: «STAR (Situación, Tarea, Acción y Resultado)» y explica cómo aplicarla al ejemplo real de la persona.
+- Las cifras de duración, palabras por minuto y pausas son datos auxiliares, no calificaciones. No propongas un rango universal ideal. Si una muestra dura menos de 20 segundos o tiene menos de 30 palabras, indica que no permite interpretar ritmo ni pausas de forma estable.
 - No inventes una respuesta ideal con experiencias que el candidato no mencionó. Enseña cómo reorganizar o profundizar lo real.
 - La evaluación de voz no puede diagnosticar seguridad, ansiedad, personalidad, inteligencia, sinceridad ni empleabilidad.
 - Las mediciones de pausas/volumen son aproximadas y dependen del micrófono y del ambiente.
@@ -165,7 +190,7 @@ natural, con pausas breves en la puntuación, sin tono publicitario, teatral ni 
 No agregues, omitas, reformules ni comentes ninguna palabra del texto.`;
 
 const questionSchema = Schema.object({ properties: {
-  transition: Schema.string(), question: Schema.string(), competency: Schema.string(), intent: Schema.string()
+  transition: Schema.string(), question: Schema.string(), competency: Schema.string(), intent: Schema.string(), panelist: Schema.string()
 }});
 
 const issueSchema = Schema.object({ properties: {
@@ -237,6 +262,31 @@ function getVisitorId(){
 function setStep(step, pct){ state.step=step; progress.style.width=`${pct}%`;stage.scrollTop=0;if(innerWidth<=930)window.scrollTo(0,0); $$('#steps li').forEach(li=>{const order=['welcome','context','configuration','confirmation','interview','feedback'];const a=order.indexOf(li.dataset.step),b=order.indexOf(step);li.classList.toggle('active',a===b);li.classList.toggle('done',a<b);}); }
 function toast(text,type='ok'){ const el=document.createElement('div');el.className=`status ${type}`;el.style.position='fixed';el.style.right='18px';el.style.bottom='18px';el.style.maxWidth='420px';el.style.zIndex='9999';el.textContent=text;document.body.appendChild(el);setTimeout(()=>el.remove(),4300); }
 
+const WAIT_DEFAULTS={interview:[6,20],answer:[7,25],voice:[2,12],feedback:[12,40],question:[4,18]};
+function waitEstimate(kind){
+  const values=state.waitHistory[kind]||[];
+  if(values.length){const sorted=[...values].sort((a,b)=>a-b),median=sorted[Math.floor(sorted.length/2)];return [Math.max(1,Math.round(median*.65)),Math.max(3,Math.round(median*1.55))];}
+  return WAIT_DEFAULTS[kind]||[4,20];
+}
+function beginWait(kind,title,detail){
+  endWait(false);waitKind=kind;waitStartedAt=performance.now();
+  const [low,high]=waitEstimate(kind);waitTarget=Math.round((low+high)/2);
+  const el=document.createElement('div');el.id='wait-overlay';el.className='wait-overlay';el.setAttribute('role','status');el.setAttribute('aria-live','polite');el.setAttribute('aria-busy','true');
+  el.innerHTML=`<div class="wait-card"><div class="wait-top"><span class="wait-spinner" aria-hidden="true"></span><div><h2 id="wait-title">${esc(title)}</h2><p id="wait-detail">${esc(detail)}</p></div></div><p class="wait-time" id="wait-time">Han transcurrido 0 s</p><p class="wait-range" id="wait-range">Tiempo habitual orientativo: ${low}–${high} s.</p><div class="wait-track" aria-hidden="true"><span></span></div></div>`;
+  document.body.appendChild(el);
+  const tick=()=>{const seconds=Math.floor((performance.now()-waitStartedAt)/1000),remaining=waitTarget-seconds;const time=$('#wait-time');if(time)time.textContent=remaining>0?`Han transcurrido ${seconds} s · estimación orientativa: ~${remaining} s más`:`Han transcurrido ${seconds} s · está tardando más de lo habitual, pero sigue procesando`};tick();waitTimer=setInterval(tick,500);
+}
+function updateWait(title,detail,kind=waitKind){
+  if(!$('#wait-overlay')){beginWait(kind,title,detail);return;}
+  if(title&&$('#wait-title'))$('#wait-title').textContent=title;if(detail&&$('#wait-detail'))$('#wait-detail').textContent=detail;
+  if(kind!==waitKind){if(waitKind&&waitStartedAt){const elapsed=(performance.now()-waitStartedAt)/1000;(state.waitHistory[waitKind]||(state.waitHistory[waitKind]=[])).push(elapsed);state.waitHistory[waitKind]=state.waitHistory[waitKind].slice(-8);}waitKind=kind;waitStartedAt=performance.now();const [low,high]=waitEstimate(kind);waitTarget=Math.round((low+high)/2);if($('#wait-range'))$('#wait-range').textContent=`Tiempo habitual orientativo: ${low}–${high} s.`;}
+}
+function endWait(record=true){
+  if(waitTimer)clearInterval(waitTimer);waitTimer=null;
+  if(record&&waitKind&&waitStartedAt){const seconds=(performance.now()-waitStartedAt)/1000;(state.waitHistory[waitKind]||(state.waitHistory[waitKind]=[])).push(seconds);state.waitHistory[waitKind]=state.waitHistory[waitKind].slice(-8);}
+  $('#wait-overlay')?.remove();waitStartedAt=0;waitKind='';waitTarget=0;
+}
+
 function renderWelcome(){
   setStep('welcome',6);
   stage.innerHTML=`<div class="panel"><div class="panel-head"><h2>Practica una entrevista laboral con IA y voz natural</h2><p>La entrevista se adapta al cargo, a la convocatoria y a lo que respondas. Al finalizar recibirás observaciones sobre el contenido de tus respuestas y sobre aspectos audibles de tu forma de expresarte.</p></div><div class="panel-body">
@@ -282,9 +332,12 @@ function renderConfiguration(){
    <div class="field"><label>Voz de la persona entrevistadora</label><div class="voice-row"><select id="voice">${voices}</select><button class="btn" id="test-voice">Probar voz</button>${TEST_MODE?'<button class="btn" id="test-ai">Probar IA</button>':''}</div></div>
   </div>
   <label class="check"><input id="autospeak" type="checkbox" ${state.autoSpeak?'checked':''}><span>Leer automáticamente el saludo, las transiciones y cada pregunta en voz alta.</span></label>
+  <div class="subcard mode-explainer" id="mode-explainer"><h3>Qué cambiará en esta práctica</h3><p id="channel-help"></p><p id="format-help"></p></div>
   <div id="firebase-status" class="status ${state.firebaseReady?'ok':'warn'}">${state.firebaseReady?'La configuración de la práctica con IA está lista. Usa «Probar voz» para comprobar la reproducción antes de comenzar.':'El servicio de IA todavía no está disponible. Recarga la página e inténtalo de nuevo.'}</div>
   <div class="actions"><button class="btn" id="back-context">Volver</button><button class="btn primary" id="go-confirm">Continuar</button></div></div></div>`;
   $('#back-context').onclick=renderContext;
+  const refreshModeHelp=()=>{const channel=$('#channel').value,format=$('#format').value;$('#channel-help').innerHTML=channel==='presencial'?'<b>Presencial:</b> conversación y repreguntas naturales. Esta herramienta no usa cámara y no evalúa gestos ni postura.':channel==='videollamada'?'<b>Videollamada:</b> interacción remota y respuestas concisas. Esta herramienta no evalúa imagen ni lenguaje corporal.':'<b>Video / asíncrona:</b> consignas independientes, como una grabación sin conversación en tiempo real; no habrá repreguntas conversacionales.';$('#format-help').innerHTML=format==='panel'?'<b>Panel:</b> alternará perspectivas de Talento Humano, jefatura del área y, si la convocatoria lo permite, una mirada técnica.':'<b>Individual:</b> una sola persona entrevistadora mantendrá la conversación.';};
+  $('#channel').onchange=refreshModeHelp;$('#format').onchange=refreshModeHelp;refreshModeHelp();
   $('#voice').onchange=e=>{state.voice=e.target.value;localStorage.setItem('esap-v9-voice',state.voice)};
   $('#test-voice').onclick=async()=>{ state.voice=$('#voice').value; await unlockAudio(); await naturalSpeak('Hola. Esta es una muestra de la voz que usaré durante tu entrevista. Hablemos de tu experiencia y de cómo abordas situaciones relacionadas con el cargo.', $('#test-voice')); };
   if(TEST_MODE)$('#test-ai').onclick=async()=>{ const b=$('#test-ai'); b.disabled=true; const old=b.textContent; b.textContent='Probando…'; try { const r=await questionModel.generateContent('Genera una única pregunta breve y profesional para una práctica general de entrevista laboral. No inventes datos.'); const data=safeJson(r.response.text()); if(!data?.question) throw new Error('La IA respondió, pero no devolvió el JSON esperado.'); console.info('[AI_DIAGNOSTIC_OK]',data); toast('IA de entrevista funcionando correctamente.','ok'); } catch(error) { console.error('[AI_DIAGNOSTIC_FAIL]',error); toast(`Prueba de IA fallida: ${friendlyError(error)}`,'err'); } finally { b.disabled=false; b.textContent=old; } };
@@ -297,26 +350,43 @@ function renderConfirmation(){
     <div class="sumitem"><small>Objetivo</small><b>${esc(state.role||'Práctica general')}${state.organization?` · ${esc(state.organization)}`:''}</b></div>
     <div class="sumitem"><small>Preguntas</small><b>${state.questionCount}</b></div>
     <div class="sumitem"><small>Canal</small><b>${esc(channelLabel(state.channel))}</b></div>
+    <div class="sumitem"><small>Formato</small><b>${state.format==='panel'?'Panel':'Individual'}</b></div>
     <div class="sumitem"><small>Lectura en voz alta</small><b>${state.autoSpeak?'Activada':'Desactivada'}</b></div>
   </div>
   ${state.vacancy.length<120?'<div class="status warn"><b>Convocatoria con pocos detalles.</b> La entrevista podrá adaptarse al cargo y a tu trayectoria, pero no inventará requisitos técnicos específicos.</div>':''}
   <div class="status"><b>Cómo se evaluará:</b> si respondes por voz, se analizarán el contenido de tu respuesta y aspectos audibles como claridad, ritmo, pausas, repeticiones y muletillas identificables. Estas observaciones son formativas y no constituyen un diagnóstico ni una decisión de selección.</div>
   <div class="actions"><button class="btn" id="back-config">Editar</button><button class="btn primary" id="start">Comenzar entrevista</button></div></div></div>`;
   $('#back-config').onclick=renderConfiguration;$('#start').onclick=startInterview;
+  prefetchOpening();
+}
+
+function openingFingerprint(){return JSON.stringify([state.scenario,state.role,state.organization,state.vacancy,state.profile,state.channel,state.format,state.questionCount,state.voice,state.autoSpeak]);}
+function prefetchOpening(){
+  if(!state.firebaseReady)return;
+  const fingerprint=openingFingerprint();if(state.openingPrefetch&&state.openingFingerprint===fingerprint)return;state.openingFingerprint=fingerprint;
+  state.openingPrefetch=(async()=>{
+    const q=await generateFirstQuestion();let audio=null;
+    const intro='Gracias por participar. Empezaremos con algunas preguntas para conocer tu perfil y tu manera de abordar situaciones relacionadas con el cargo. Responde con ejemplos concretos cuando sea posible.';
+    refreshVoiceCooldown();
+    if(state.autoSpeak&&!state.voiceQuotaLimited){try{audio=await prepareNaturalVoice(`${intro} ${joinTransition(q)}`);}catch(error){handleVoiceFailure(error);}}
+    return{q,audio,intro,fingerprint};
+  })().catch(error=>{console.warn('[OPENING_PREFETCH_FAIL]',error);return null;});
 }
 
 async function startInterview(){
   if(!state.firebaseReady){toast('El servicio de IA no está disponible en este momento. Recarga la página e inténtalo de nuevo.','err');return;}
   const btn=$('#start');btn.disabled=true;btn.textContent='Preparando…';
+  beginWait('interview','Preparando la entrevista','Estoy creando una primera pregunta pertinente para el cargo y la información que proporcionaste.');
   try{
     await unlockAudio();
     state.answers=[];state.skipped=[];state.questions=[];state.feedback=null;state.questionNumber=1;state.sessionId=uid();
     sendMetric('interview_started');
-    const q=await generateFirstQuestion();state.currentQuestion=q;state.questions.push(q);renderInterview();
-    const intro='Gracias por participar. Empezaremos con algunas preguntas para conocer tu perfil y tu manera de abordar situaciones relacionadas con el cargo. Responde con ejemplos concretos cuando sea posible.';
-    addBotMessage(intro,'Entrevistador/a');addBotMessage(joinTransition(q),state.format==='panel'?'Panel entrevistador':'Entrevistador/a',true);
-    if(state.autoSpeak) await naturalSpeak(`${intro} ${joinTransition(q)}`);
-  }catch(error){handleAIError(error,'No fue posible iniciar la entrevista.');renderConfirmation();}
+    const prefetched=state.openingPrefetch&&state.openingFingerprint===openingFingerprint()?await state.openingPrefetch:null;
+    const q=prefetched?.q||await generateFirstQuestion();state.currentQuestion=q;state.questions.push(q);
+    const intro=prefetched?.intro||'Gracias por participar. Empezaremos con algunas preguntas para conocer tu perfil y tu manera de abordar situaciones relacionadas con el cargo. Responde con ejemplos concretos cuando sea posible.';
+    if(prefetched?.audio){renderInterview();addBotMessage(intro,state.format==='panel'?'Coordinación del panel':'Entrevistador/a');addBotMessage(joinTransition(q),questionSpeaker(q),true);endWait();void playPreparedVoice(prefetched.audio).catch(handleVoiceFailure);}
+    else await revealQuestion(q,intro);
+  }catch(error){endWait();handleAIError(error,'No fue posible iniciar la entrevista.');renderConfirmation();}
 }
 
 async function generateFirstQuestion(){
@@ -324,16 +394,32 @@ async function generateFirstQuestion(){
   return parseModelJson(await questionModel.generateContent(prompt),'primera pregunta');
 }
 
-function contextPrompt(){return `ESCENARIO: ${state.scenario}\nCARGO: ${state.role||'[práctica general sin cargo específico]'}\nORGANIZACIÓN: ${state.organization||'[no informada]'}\nCANAL: ${state.channel}\nCONVOCATORIA: ${state.vacancy||'[no se proporcionó descripción adicional]'}\nPERFIL DEL CANDIDATO: ${state.profile||'[no se proporcionó perfil adicional]'}`;}
+function contextPrompt(){return `ESCENARIO: ${state.scenario}\nCARGO: ${state.role||'[práctica general sin cargo específico]'}\nORGANIZACIÓN: ${state.organization||'[no informada]'}\nCANAL: ${state.channel}\nFORMATO: ${state.format}\nCONVOCATORIA: ${state.vacancy||'[no se proporcionó descripción adicional]'}\nPERFIL DEL CANDIDATO: ${state.profile||'[no se proporcionó perfil adicional]'}`;}
 function joinTransition(q){return [q?.transition,q?.question].filter(Boolean).join(' ').trim();}
+function questionSpeaker(q){return state.format==='panel'?(q?.panelist?.trim()||'Panel entrevistador'):'Entrevistador/a';}
+
+async function revealQuestion(q,intro=''){
+  const spoken=[intro,joinTransition(q)].filter(Boolean).join(' ').trim();
+  let preparedAudio=null;
+  if(state.autoSpeak&&!state.voiceQuotaLimited){
+    updateWait('Preparando la voz natural','La pregunta aparecerá justo cuando comience su lectura en voz alta.','voice');
+    try{preparedAudio=await prepareNaturalVoice(spoken)}catch(error){handleVoiceFailure(error);}
+  }
+  renderInterview();
+  if(intro)addBotMessage(intro,state.format==='panel'?'Coordinación del panel':'Entrevistador/a');
+  addBotMessage(joinTransition(q),questionSpeaker(q),true);
+  endWait();
+  if(preparedAudio)void playPreparedVoice(preparedAudio).catch(handleVoiceFailure);
+}
 
 function renderInterview(){
   setStep('interview',58 + Math.round((Math.max(0,state.questionNumber-1)/state.questionCount)*30));
   stage.innerHTML=`<div class="interview-shell"><div class="status" id="counter">Pregunta ${state.questionNumber} de ${state.questionCount}${TEST_MODE?' · MODO PRUEBA':''}</div><div class="chat" id="chat"></div><div class="answer-card" id="answer-card">
-    <h3>Tu respuesta</h3><p style="font-size:11px;color:var(--mut);margin:0 0 9px">La opción recomendada es responder por voz. El audio se conserva solo en memoria durante esta sesión y se envía temporalmente al servicio de IA para analizar esta respuesta.</p>
+    <h3>Tu respuesta</h3><p class="answer-instruction">Cuando estés listo/a, pulsa <b>«Empezar a responder»</b>. Comienza a hablar cuando aparezca el aviso <b>«Grabando»</b> y, al terminar, pulsa <b>«Terminar respuesta»</b>.</p>
+    ${voiceLimitNote()}
     <div class="rec-controls"><button class="btn primary" id="record-start">● Empezar a responder</button><button class="btn" id="record-stop" disabled>■ Terminar respuesta</button>${TEST_MODE?'<button class="btn warn" id="skip">Omitir pregunta</button>':''}<span class="timer" id="timer">00:00</span></div>
     <div class="meter"><span id="level"></span></div><div id="record-status" class="status hidden"></div>
-    <details style="margin-top:10px"><summary style="font-size:11px;font-weight:800;cursor:pointer">No puedo usar el micrófono: responder por escrito</summary><div class="transcript"><textarea id="typed-answer" placeholder="Escribe tu respuesta aquí. La evaluación oral no estará disponible."></textarea><div class="actions"><button class="btn" id="send-typed">Enviar respuesta escrita</button></div></div></details>
+    <details class="technical-details"><summary>No puedo usar el micrófono: responder por escrito</summary><div class="transcript"><textarea id="typed-answer" placeholder="Escribe tu respuesta aquí. La evaluación oral no estará disponible."></textarea><div class="actions"><button class="btn" id="send-typed">Enviar respuesta escrita</button></div></div></details>
   </div><p class="footer-note">Herramienta formativa. No decide procesos de selección. La evaluación oral describe aspectos observables y no diagnostica características personales.</p></div>`;
   $('#record-start').onclick=startRecording;$('#record-stop').onclick=stopRecording;$('#send-typed').onclick=sendTypedAnswer;if(TEST_MODE)$('#skip').onclick=skipQuestion;
 }
@@ -355,6 +441,7 @@ async function startRecording(){
 }
 async function stopRecording(){
   if(!mediaRecorder||mediaRecorder.state==='inactive')return;
+  beginWait('answer','Procesando tu respuesta','Estoy cerrando la grabación. Después analizaré por separado el contenido y la forma audible de la respuesta.');
   $('#record-stop').disabled=true;showRecordStatus('Procesando el audio y preparando el análisis…','');
   const stopped=new Promise(resolve=>mediaRecorder.addEventListener('stop',resolve,{once:true}));mediaRecorder.stop();await stopped;stopTimer();stopLevelMeter();mediaStream?.getTracks().forEach(t=>t.stop());
   const blob=new Blob(mediaChunks,{type:mediaRecorder.mimeType||mediaChunks[0]?.type||'audio/webm'});mediaRecorder=null;mediaStream=null;
@@ -370,52 +457,57 @@ function showRecordStatus(text,type=''){const el=$('#record-status');if(!el)retu
 async function processAudioAnswer(blob){
   try{
     if(blob.size>18*1024*1024)throw new Error('La grabación es demasiado grande para enviarla como audio directo. Intenta una respuesta más breve.');
-    const local=await analyzeAudioLocally(blob);
+    updateWait('Preparando el audio','Calculo mediciones aproximadas y preparo el envío temporal en paralelo, sin eliminar información del audio.','answer');
+    const [local,audioPart]=await Promise.all([analyzeAudioLocally(blob),blobToPart(blob)]);
     showRecordStatus('Analizando el audio original, el contenido y la entrega oral…','');
-    const result=await analyzeTurnWithAudio(blob,local);
-    finalizeTurn(result.analysis,local,true,result.nextQuestion);
+    updateWait('Analizando tu respuesta','La IA está escuchando el audio original y contrastándolo con la pregunta.','answer');
+    const result=await analyzeTurnWithAudio(audioPart,local);
+    await finalizeTurn(result.analysis,local,true,result.nextQuestion);
     sendMetric('answer_analyzed');
-  }catch(error){handleAIError(error,'No fue posible analizar esta respuesta de audio.');showRecordStatus(`Error: ${friendlyError(error)}`,'err');$('#record-start').disabled=false;if(TEST_MODE&&$('#skip'))$('#skip').disabled=false;}
+  }catch(error){endWait();handleAIError(error,'No fue posible analizar esta respuesta de audio.');showRecordStatus(`Error: ${friendlyError(error)}`,'err');$('#record-start').disabled=false;if(TEST_MODE&&$('#skip'))$('#skip').disabled=false;}
 }
 
-async function sendTypedAnswer(){const text=$('#typed-answer').value.trim();if(!text){toast('Escribe una respuesta antes de enviarla.','warn');return;}showRecordStatus('Analizando la respuesta escrita…','');try{const result=await analyzeTypedTurn(text);const local={durationSec:0,silenceRatio:null,pauseCount:null,longPauseCount:null,maxPauseSec:null,volumeVariation:null,wpm:null};finalizeTurn(result.analysis,local,false,result.nextQuestion);sendMetric('answer_analyzed');}catch(error){handleAIError(error,'No fue posible analizar la respuesta.');}}
+async function sendTypedAnswer(){const text=$('#typed-answer').value.trim();if(!text){toast('Escribe una respuesta antes de enviarla.','warn');return;}beginWait('answer','Analizando tu respuesta','La IA está contrastando el texto con la pregunta y preparando el siguiente paso.');showRecordStatus('Analizando la respuesta escrita…','');try{const result=await analyzeTypedTurn(text);const local={durationSec:0,silenceRatio:null,pauseCount:null,longPauseCount:null,maxPauseSec:null,volumeVariation:null,wpm:null};await finalizeTurn(result.analysis,local,false,result.nextQuestion);sendMetric('answer_analyzed');}catch(error){endWait();handleAIError(error,'No fue posible analizar la respuesta.');}}
 
-async function analyzeTurnWithAudio(blob,local){
-  const audioPart=await blobToPart(blob);
+async function analyzeTurnWithAudio(audioPart,local){
   const prompt=`Analiza la RESPUESTA ${state.questionNumber} escuchando el audio original.\nPREGUNTA: ${state.currentQuestion.question}\nCOMPETENCIA/INTENCIÓN: ${state.currentQuestion.competency} / ${state.currentQuestion.intent}\nMÉTRICAS ACÚSTICAS LOCALES APROXIMADAS: ${JSON.stringify(local)}\n${contextPrompt()}\nPREGUNTAS YA CUBIERTAS: ${state.questions.map((q,i)=>`${i+1}. ${q.question} [${q.competency}]`).join('\n')}\nResponde con el esquema JSON. En transcript intenta conservar muletillas, repeticiones y reinicios realmente audibles, sin limpiar artificialmente el habla. answerStatus debe distinguir, por ejemplo, directa/parcial/evasiva/no_responde. Si esta no es la última pregunta (${state.questionNumber} < ${state.questionCount}), genera nextQuestion que avance la entrevista sin repetir. Si es la última, omite nextQuestion.`;
   return parseModelJson(await turnModel.generateContent([prompt,audioPart]),'análisis de audio');
 }
 async function analyzeTypedTurn(text){const prompt=`No hay audio disponible. Analiza únicamente esta RESPUESTA ESCRITA ${state.questionNumber}:\n${text}\nPREGUNTA: ${state.currentQuestion.question}\n${contextPrompt()}\nEn audibleDelivery deja listas vacías y explica que no hubo audio; no inventes observaciones orales. Si no es la última pregunta, genera nextQuestion. Si es la última, omite nextQuestion.`;return parseModelJson(await turnModel.generateContent(prompt),'análisis escrito');}
 
-function finalizeTurn(analysis,local,audioAvailable,nextQuestion){
+async function finalizeTurn(analysis,local,audioAvailable,nextQuestion){
   const transcript=String(analysis?.transcript||'').trim();local.wpm=local.durationSec>0?Math.round((transcript.split(/\s+/).filter(Boolean).length/local.durationSec)*60):null;
   state.answers.push({number:state.questionNumber,question:{...state.currentQuestion},analysis,local,audioAvailable,transcript});
   addUserMessage(transcript||'[La respuesta fue procesada, pero no hubo una transcripción utilizable.]');
   const shortStatus=analysis.answeredQuestion?`La respuesta fue analizada. ${analysis.answerStatus||''}`:'La respuesta parece no contestar directamente la pregunta.';
   showRecordStatus(shortStatus,analysis.answeredQuestion?'ok':'warn');
-  setTimeout(async()=>{
-    if(state.questionNumber>=state.questionCount){await finishInterview();return;}
-    state.questionNumber+=1;
-    let q=nextQuestion;
-    if(!q?.question)q=await generateFallbackNextQuestion();
-    state.currentQuestion=q;state.questions.push(q);
-    renderInterview();addBotMessage(joinTransition(q),state.format==='panel'?'Panel entrevistador':'Entrevistador/a',true);
-    if(state.autoSpeak)await naturalSpeak(joinTransition(q));
-  },500);
+  if(state.questionNumber>=state.questionCount){await finishInterview();return;}
+  updateWait('Preparando la siguiente pregunta','La pregunta se adapta a lo que realmente respondiste y evita repetir lo ya cubierto.','question');
+  state.questionNumber+=1;
+  const q=await ensureFreshQuestion(nextQuestion);
+  state.currentQuestion=q;state.questions.push(q);
+  await revealQuestion(q);
 }
 
-async function generateFallbackNextQuestion(){const summaries=state.answers.map(a=>`P${a.number}: estado=${a.analysis.answerStatus}; demostrado=${a.analysis.recruiterTakeaway}; faltante=${a.analysis.missingCore}`).join('\n');const prompt=`Genera la pregunta ${state.questionNumber} de ${state.questionCount}. ${contextPrompt()}\nRESUMEN DE RESPUESTAS PREVIAS:\n${summaries}\nCOMPETENCIAS YA PREGUNTADAS: ${state.questions.map(q=>q.competency).join(', ')}. Avanza sin repetir. Si hay conexión real con la última respuesta, transition puede enlazarla; si no, déjala vacía.`;return parseModelJson(await questionModel.generateContent(prompt),'siguiente pregunta');}
+const QUESTION_STOPWORDS=new Set('como cual cuáles cuáles que qué para por una unos unas con sin sobre desde hasta esta este estos estas donde cuando quién quien cargo experiencia ejemplo manera forma podría puedes puede has haber del las los al sus tus una'.split(' '));
+function questionTerms(text){return new Set(String(text||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').match(/[a-zñ]{4,}/g)?.filter(w=>!QUESTION_STOPWORDS.has(w))||[]);}
+function questionSimilarity(a,b){const x=questionTerms(a),y=questionTerms(b);if(!x.size||!y.size)return 0;let common=0;for(const w of x)if(y.has(w))common++;return common/Math.min(x.size,y.size);}
+function isRepeatedQuestion(q){return !q?.question||state.questions.some(old=>questionSimilarity(q.question,old.question)>=.68||(q.competency&&old.competency&&String(q.competency).toLowerCase()===String(old.competency).toLowerCase()&&questionSimilarity(q.question,old.question)>=.48));}
+async function ensureFreshQuestion(candidate){if(!isRepeatedQuestion(candidate))return candidate;return generateFallbackNextQuestion('La propuesta anterior era sustancialmente equivalente a una pregunta ya realizada. Cambia de competencia y de propósito; no basta con parafrasearla.');}
+async function generateFallbackNextQuestion(extra=''){const summaries=state.answers.map(a=>`P${a.number}: estado=${a.analysis.answerStatus}; demostrado=${a.analysis.recruiterTakeaway}; faltante=${a.analysis.missingCore}`).join('\n');const prompt=`Genera la pregunta ${state.questionNumber} de ${state.questionCount}. ${contextPrompt()}\nRESUMEN DE RESPUESTAS PREVIAS:\n${summaries}\nPREGUNTAS PROHIBIDAS PORQUE YA SE HICIERON:\n${state.questions.map((q,i)=>`${i+1}. ${q.question} [${q.competency}]`).join('\n')}\n${extra}\nAvanza a una competencia y un propósito diferentes. Si hay conexión real con la última respuesta, transition puede enlazarla; si no, déjala vacía. En formato panel, identifica en panelist el rol del integrante que pregunta.`;return parseModelJson(await questionModel.generateContent(prompt),'siguiente pregunta');}
 
-async function skipQuestion(){if(!TEST_MODE)return;state.skipped.push({number:state.questionNumber,question:state.currentQuestion});sendMetric('question_skipped');if(state.questionNumber>=state.questionCount){if(state.answers.length)await finishInterview();else{toast('Responde al menos una pregunta para obtener retroalimentación.','warn');renderConfirmation();}return;}state.questionNumber+=1;try{const q=await generateFallbackNextQuestion();state.currentQuestion=q;state.questions.push(q);renderInterview();addBotMessage(joinTransition(q),state.format==='panel'?'Panel entrevistador':'Entrevistador/a',true);if(state.autoSpeak)await naturalSpeak(joinTransition(q));}catch(error){handleAIError(error,'No fue posible generar la siguiente pregunta.');}}
+async function skipQuestion(){if(!TEST_MODE)return;state.skipped.push({number:state.questionNumber,question:state.currentQuestion});sendMetric('question_skipped');if(state.questionNumber>=state.questionCount){if(state.answers.length)await finishInterview();else{toast('Responde al menos una pregunta para obtener retroalimentación.','warn');renderConfirmation();}return;}beginWait('question','Buscando otra pregunta','El modo de prueba omitirá esta pregunta sin incluirla en tu evaluación.');state.questionNumber+=1;try{const q=await generateFallbackNextQuestion();state.currentQuestion=q;state.questions.push(q);await revealQuestion(q);}catch(error){endWait();handleAIError(error,'No fue posible generar la siguiente pregunta.');}}
 
 async function finishInterview(){
   if(!state.answers.length){toast('No hay respuestas para retroalimentar.','warn');return;}
+  if(!$('#wait-overlay'))beginWait('feedback','Preparando tu retroalimentación','La IA está integrando la pertinencia, la evidencia, la estructura y los aspectos audibles de todas tus respuestas.');
+  else updateWait('Preparando tu retroalimentación','La IA está integrando la pertinencia, la evidencia, la estructura y los aspectos audibles de todas tus respuestas.','feedback');
   setStep('feedback',92);stage.innerHTML=`<div class="report"><div class="report-card"><div class="loading"><span class="dot"></span><span class="dot"></span><span class="dot"></span><b>Preparando una retroalimentación integral de la entrevista…</b></div><p>El informe combina la auditoría directa del audio de cada respuesta con las métricas acústicas aproximadas calculadas en tu navegador.</p></div></div>`;
   try{
     const payload=state.answers.map(a=>({number:a.number,question:a.question,analysis:a.analysis,localMetrics:a.local,audioAvailable:a.audioAvailable}));
-    const prompt=`Construye el informe final de esta práctica.\n${contextPrompt()}\nTOTAL PREVISTO: ${state.questionCount}; RESPUESTAS ANALIZADAS: ${state.answers.length}; OMITIDAS: ${state.skipped.length}.\nAUDITORÍAS POR RESPUESTA (cada una ya se hizo escuchando el audio original cuando existía):\n${JSON.stringify(payload)}\nEn priorities incluye entre 3 y 6 prioridades SOLO si la evidencia lo justifica. affectedQuestions son números reales. Una respuesta puede aparecer en varias prioridades. Si no hubo evidencia suficiente para una fortaleza, no la inventes. En oralDeliverySummary integra lo audible con las métricas locales y sus limitaciones.`;
-    state.feedback=parseModelJson(await feedbackModel.generateContent(prompt),'retroalimentación final');sendMetric('feedback_generated');sendMetric('interview_completed');renderFeedback();
-  }catch(error){handleAIError(error,'No fue posible generar la retroalimentación final.');stage.innerHTML=`<div class="errorbox"><h3>No se pudo generar el informe</h3><p>${esc(friendlyError(error))}</p><button class="btn" id="retry-feedback">Reintentar</button></div>`;$('#retry-feedback').onclick=finishInterview;}
+    const prompt=`Construye el informe final de esta práctica.\n${contextPrompt()}\nTOTAL PREVISTO: ${state.questionCount}; RESPUESTAS ANALIZADAS: ${state.answers.length}; OMITIDAS: ${state.skipped.length}.\nAUDITORÍAS POR RESPUESTA (cada una ya se hizo escuchando el audio original cuando existía):\n${JSON.stringify(payload)}\nEn priorities incluye entre 3 y 6 prioridades SOLO si la evidencia lo justifica. affectedQuestions son números reales. Una respuesta puede aparecer en varias prioridades. Si no hubo evidencia suficiente para una fortaleza, no la inventes. En oralDeliverySummary integra lo audible con las métricas locales y sus limitaciones. Revisa una última vez cada afirmación: debe estar respaldada por la convocatoria o por una respuesta. Si las respuestas fueron pruebas sin contenido, describe la falta de evidencia de ESTA SESIÓN y ofrece una práctica concreta, sin juzgar idoneidad, personalidad, seriedad o profesionalismo de la persona. No conviertas conocimientos plausibles del cargo en requisitos confirmados. Dirígete siempre a la persona como «tú».`;
+    state.feedback=parseModelJson(await feedbackModel.generateContent(prompt),'retroalimentación final');sendMetric('feedback_generated');sendMetric('interview_completed');endWait();renderFeedback();
+  }catch(error){endWait();handleAIError(error,'No fue posible generar la retroalimentación final.');stage.innerHTML=`<div class="errorbox"><h3>No se pudo generar el informe</h3><p>${esc(friendlyError(error))}</p><button class="btn" id="retry-feedback">Reintentar</button></div>`;$('#retry-feedback').onclick=finishInterview;}
 }
 
 function renderFeedback(){
@@ -429,6 +521,7 @@ function renderFeedback(){
    <section class="report-card"><div class="report-title"><div><h2>Tu retroalimentación</h2><span class="level">${esc(f.overallLevel||'Práctica evaluada')}</span></div><button class="btn no-print section-speak">🔊 Escuchar</button></div><p>${esc(f.summary)}</p><p><b>Qué podría llevarse un reclutador de esta entrevista:</b> ${esc(f.recruiterTakeaway)}</p></section>
    <section class="report-card"><div class="report-title"><h3>Fortalezas demostradas</h3><button class="btn no-print section-speak">🔊 Escuchar</button></div>${strengths}</section>
    <section class="report-card"><div class="report-title"><h3>Mejoras prioritarias</h3><button class="btn no-print section-speak">🔊 Escuchar</button></div>${priorities||'<p>No se generaron prioridades utilizables.</p>'}</section>
+   <section class="report-card star-card"><div class="report-title"><h3>Cómo usar STAR en tus ejemplos</h3><button class="btn no-print section-speak">🔊 Escuchar</button></div><p><b>STAR</b> significa <b>Situación, Tarea, Acción y Resultado</b>. No es una fórmula para inventar logros: sirve para ordenar una experiencia real y dejar claro qué hiciste tú.</p><div class="star-grid"><div><b>S · Situación</b><br>Contexto breve y problema real.</div><div><b>T · Tarea</b><br>Responsabilidad u objetivo que te correspondía.</div><div><b>A · Acción</b><br>Decisiones y acciones que realizaste personalmente.</div><div><b>R · Resultado</b><br>Cambio, producto, aprendizaje o efecto verificable; usa cifras solo si las conoces.</div></div></section>
    ${comps?`<section class="report-card"><div class="report-title"><h3>Evidencia por competencia</h3><button class="btn no-print section-speak">🔊 Escuchar</button></div>${comps}</section>`:''}
    <section class="report-card"><div class="report-title"><h3>Cómo sonó la entrega</h3><button class="btn no-print section-speak">🔊 Escuchar</button></div><p>${esc(oral.summary)}</p><p><b>Muletillas y vacilaciones:</b> ${esc(oral.fillers)}</p><p><b>Pausas:</b> ${esc(oral.pauses)}</p><p><b>Ritmo:</b> ${esc(oral.pace)}</p><p><b>Claridad:</b> ${esc(oral.clarity)}</p><p class="hint"><b>Nota técnica:</b> ${esc(oral.technicalCaution)}</p></section>
    <section class="report-card"><div class="report-title"><h3>Auditoría de cada respuesta</h3><button class="btn no-print section-speak">🔊 Escuchar</button></div>${reviews}</section>
@@ -440,40 +533,52 @@ function renderFeedback(){
   $('#print-report').onclick=()=>window.print();$('#again').onclick=resetPractice;
 }
 
-function renderAnswerReview(a){const x=a.analysis||{},d=x.audibleDelivery||{},m=a.local||{};const issues=(x.issues||[]).map(i=>`<li><b>${esc(i.dimension)}:</b> ${esc(i.finding)} <b>Impacto:</b> ${esc(i.impact)} <b>Práctica:</b> ${esc(i.coaching)}</li>`).join('');const filler=(d.fillersDetected||[]).length?esc(d.fillersDetected.join(', ')):'No se identificaron con suficiente certeza; esto no demuestra ausencia.';return `<div class="answer-review"><h4>Pregunta ${a.number}: ${esc(a.question.question)}</h4><p><b>Transcripción aproximada:</b> ${esc(x.transcript)}</p><p><b>¿Respondió?</b> ${x.answeredQuestion?'Sí, al menos sustancialmente':'No o solo parcialmente'} · ${esc(x.answerStatus)}</p><p><b>Qué podría llevarse un reclutador:</b> ${esc(x.recruiterTakeaway)}</p><p><b>Qué quedó sin demostrar:</b> ${esc(x.missingCore)}</p>${issues?`<ul>${issues}</ul>`:''}<p><b>Entrega audible:</b> ${esc(d.paceAssessment)}; ${esc(d.clarityAssessment)}. <b>Muletillas identificables:</b> ${filler}</p>${a.audioAvailable?`<div class="mini-metrics"><div class="mini"><small>Duración</small><b>${fmtSec(m.durationSec)}</b></div><div class="mini"><small>Ritmo aprox.</small><b>${m.wpm??'—'} ppm</b></div><div class="mini"><small>Pausas ≥0,6 s</small><b>${m.pauseCount??'—'}</b></div><div class="mini"><small>Pausa más larga</small><b>${m.maxPauseSec!=null?m.maxPauseSec.toFixed(1)+' s':'—'}</b></div></div>`:'<p class="hint">Respuesta escrita: no hay análisis oral.</p>'}</div>`;}
+function renderAnswerReview(a){
+  const x=a.analysis||{},d=x.audibleDelivery||{},m=a.local||{};
+  const issues=(x.issues||[]).map(i=>`<li><b>${esc(i.dimension)}:</b> ${esc(i.finding)} <b>Impacto:</b> ${esc(i.impact)} <b>Práctica:</b> ${esc(i.coaching)}</li>`).join('');
+  const filler=(d.fillersDetected||[]).length?esc(d.fillersDetected.join(', ')):'No se identificaron con suficiente certeza; esto no demuestra ausencia.';
+  const words=String(x.transcript||'').split(/\s+/).filter(Boolean).length;
+  const stable=Number(m.durationSec)>=20&&words>=30;
+  const metrics=a.audioAvailable?`${stable?'':'<div class="sample-warning"><b>Muestra demasiado breve para interpretar el ritmo.</b> Con menos de 20 segundos o 30 palabras, una cifra de palabras por minuto o de pausas puede cambiar drásticamente por una sola palabra o silencio.</div>'}<details class="technical-details"><summary>Ver mediciones técnicas aproximadas</summary><p>Sirven como pistas para comparar tus propios intentos, no como puntaje ni estándar de selección. No existe un número universal ideal de palabras por minuto o pausas: la pregunta, el contenido, el micrófono y el ambiente cambian su interpretación.</p><div class="mini-metrics"><div class="mini"><small>Duración</small><b>${fmtSec(m.durationSec)}</b></div><div class="mini"><small>Ritmo aproximado</small><b>${stable&&m.wpm!=null?m.wpm+' palabras/min':'No interpretable'}</b></div><div class="mini"><small>Pausas de 0,6 s o más</small><b>${stable?(m.pauseCount??'—'):'No interpretable'}</b></div><div class="mini"><small>Pausa más larga</small><b>${stable&&m.maxPauseSec!=null?m.maxPauseSec.toFixed(1)+' s':'No interpretable'}</b></div></div><p><b>Cómo leerlas:</b> una pausa puede ser una toma de aire o un momento normal para pensar; el ritmo solo cobra sentido junto con claridad, pertinencia y estructura. Estas cifras no permiten inferir seguridad, ansiedad, personalidad ni idoneidad.</p></details>`:'<p class="hint">Respuesta escrita: no hay análisis oral.</p>';
+  return `<div class="answer-review"><h4>Pregunta ${a.number}: ${esc(a.question.question)}</h4><p><b>Transcripción aproximada:</b> ${esc(x.transcript)}</p><p><b>¿Respondió?</b> ${x.answeredQuestion?'Sí, al menos sustancialmente':'No o solo parcialmente'} · ${esc(x.answerStatus)}</p><p><b>Qué podría llevarse un reclutador:</b> ${esc(x.recruiterTakeaway)}</p><p><b>Qué quedó sin demostrar:</b> ${esc(x.missingCore)}</p>${issues?`<ul>${issues}</ul>`:''}<p><b>Entrega audible:</b> ${esc(d.paceAssessment)}; ${esc(d.clarityAssessment)}. <b>Muletillas identificables:</b> ${filler}</p>${metrics}</div>`;
+}
 
 async function naturalSpeak(text,button){
   text=String(text||'').replace(/\s+/g,' ').trim();if(!text||!state.firebaseReady)return;
-  if(voiceBusy){stopNaturalVoice();await sleep(100)}
-  const requestId=++voiceRequestId;voiceBusy=true;state.usedVoice=true;sendMetric('voice_played');if(button){button.disabled=true;button.dataset.old=button.textContent;button.textContent='Preparando voz…'}
+  refreshVoiceCooldown();
+  if(state.voiceQuotaLimited){const seconds=Math.max(1,Math.ceil((state.voiceRetryAt-Date.now())/1000));toast(`La lectura natural está en pausa por límite de uso. Podrás reintentarla en aproximadamente ${seconds} s. El análisis y la retroalimentación siguen disponibles.`,'warn');return;}
+  if(voiceBusy){stopNaturalVoice();await sleep(80)}
+  if(button){button.disabled=true;button.dataset.old=button.textContent;button.textContent='Preparando voz…'}
   try{
-    await unlockAudio();voiceNextTime=audioContext.currentTime+0.05;
-    const key=`${state.voice}|${text}`;
-    let audio=voiceCache.get(key);
-    if(!audio){
-      const ttsModel=getGenerativeModel(ai,{
-        model:TTS_MODEL,
-        generationConfig:{
-          responseModalities:[ResponseModality.AUDIO],
-          speechConfig:{
-            languageCode:'es-419',
-            voiceConfig:{prebuiltVoiceConfig:{voiceName:state.voice}}
-          }
-        }
-      });
-      const prompt=`${VOICE_DIRECTION}\n\nTEXTO INICIO\n${text}\nTEXTO FIN`;
-      const result=await ttsModel.generateContent(prompt);
-      audio=getAudioInlineData(result?.response);
-      if(!audio?.data)throw new Error('El servicio no devolvió audio para este texto.');
-      voiceCache.set(key,audio);
-      if(voiceCache.size>24)voiceCache.delete(voiceCache.keys().next().value);
-    }
-    if(requestId!==voiceRequestId)return;
+    const audio=await prepareNaturalVoice(text);
     if(button)button.textContent='Reproduciendo…';
-    queuePcmChunk(audio.data,sampleRateFromMime(audio.mimeType));
-    await waitForVoiceQueue();
-  }catch(error){console.error('[NATURAL_VOICE_FAIL]',error);sendMetric('voice_failed');toast(`No fue posible reproducir la lectura en voz alta. ${friendlyError(error)}`,'warn');}
-  finally{voiceBusy=false;if(button){button.disabled=false;button.textContent=button.dataset.old||'🔊 Escuchar'}}
+    await playPreparedVoice(audio);
+  }catch(error){handleVoiceFailure(error);}
+  finally{if(button){button.disabled=false;button.textContent=button.dataset.old||'🔊 Escuchar'}}
+}
+async function prepareNaturalVoice(text){
+  text=String(text||'').replace(/\s+/g,' ').trim();
+  if(!text)throw new Error('No hay texto para leer.');
+  refreshVoiceCooldown();
+  if(state.voiceQuotaLimited)throw new Error('VOICE_QUOTA_LIMITED');
+  const key=`${state.voice}|${text}`;let audio=voiceCache.get(key);if(audio)return audio;
+  const ttsModel=getGenerativeModel(ai,{model:TTS_MODEL,generationConfig:{responseModalities:[ResponseModality.AUDIO],speechConfig:{languageCode:'es-419',voiceConfig:{prebuiltVoiceConfig:{voiceName:state.voice}}}}});
+  const result=await ttsModel.generateContent(`${VOICE_DIRECTION}\n\nTEXTO INICIO\n${text}\nTEXTO FIN`);
+  audio=getAudioInlineData(result?.response);if(!audio?.data)throw new Error('El servicio no devolvió audio para este texto.');
+  voiceCache.set(key,audio);if(voiceCache.size>24)voiceCache.delete(voiceCache.keys().next().value);return audio;
+}
+async function playPreparedVoice(audio){
+  if(!audio?.data)return;if(voiceBusy){stopNaturalVoice();await sleep(60)}
+  const requestId=++voiceRequestId;voiceBusy=true;state.usedVoice=true;sendMetric('voice_played');
+  try{await unlockAudio();voiceNextTime=audioContext.currentTime+0.02;if(requestId!==voiceRequestId)return;queuePcmChunk(audio.data,sampleRateFromMime(audio.mimeType));await waitForVoiceQueue();}finally{if(requestId===voiceRequestId)voiceBusy=false;}
+}
+function isQuotaError(error){return /quota|rate|429|resource exhausted|VOICE_QUOTA_LIMITED/i.test(String(error?.message||error||''));}
+function refreshVoiceCooldown(){if(state.voiceQuotaLimited&&state.voiceRetryAt&&Date.now()>=state.voiceRetryAt){state.voiceQuotaLimited=false;state.voiceRetryAt=0;state.voiceLimitNoticeShown=false;}}
+function voiceLimitNote(){refreshVoiceCooldown();if(!state.voiceQuotaLimited)return'';const seconds=Math.max(1,Math.ceil((state.voiceRetryAt-Date.now())/1000));return `<div class="voice-limit-note"><b>Lectura natural temporalmente en pausa.</b> Se alcanzó el límite específico de generación de voz. Podrás reintentar en aproximadamente ${seconds} s. Las preguntas, el análisis de tus respuestas y la retroalimentación continúan usando IA; mientras tanto puedes leer la pregunta en pantalla.</div>`;}
+function handleVoiceFailure(error){
+  console.error('[NATURAL_VOICE_FAIL]',error);sendMetric('voice_failed');
+  if(isQuotaError(error)){state.voiceQuotaLimited=true;state.voiceRetryAt=Date.now()+75_000;if(!state.voiceLimitNoticeShown){state.voiceLimitNoticeShown=true;toast('La lectura natural alcanzó temporalmente su límite. Se reintentará después de una pausa; las preguntas, el análisis de respuestas y la retroalimentación siguen usando IA.','warn');}return;}
+  toast(`No fue posible reproducir la lectura en voz alta. ${friendlyError(error)}`,'warn');
 }
 function stopNaturalVoice(){voiceRequestId++;for(const s of voiceSources){try{s.stop()}catch{}}voiceSources.clear();if(audioContext)voiceNextTime=audioContext.currentTime;voiceBusy=false;}
 async function unlockAudio(){if(!audioContext)audioContext=new (window.AudioContext||window.webkitAudioContext)();if(audioContext.state==='suspended')await audioContext.resume();}
@@ -499,8 +604,8 @@ async function sendMetric(eventType){try{await fetch(METRICS_WORKER_URL,{method:
 function channelLabel(v){return({videollamada:'Videollamada',presencial:'Presencial',asincrona:'Video / asincrónica'})[v]||v}
 function fmtSec(v){if(v==null)return'—';const s=Math.round(v);return s<60?`${s} s`:`${Math.floor(s/60)} min ${s%60} s`}
 function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
-function resetPractice(){stopNaturalVoice();if(mediaRecorder&&mediaRecorder.state!=='inactive')try{mediaRecorder.stop()}catch{}mediaStream?.getTracks().forEach(t=>t.stop());state.answers=[];state.questions=[];state.skipped=[];state.feedback=null;state.questionNumber=0;state.sessionId=uid();renderWelcome();}
-function showPrivacy(){stage.innerHTML=`<div class="panel"><div class="panel-head"><h2>Privacidad y alcance</h2></div><div class="panel-body"><p style="font-size:12px;line-height:1.7">El texto y el audio necesarios para la práctica se envían temporalmente a Google Gemini por medio de Firebase. Las respuestas de audio se analizan para contrastar su contenido con la pregunta y describir aspectos audibles de la entrega oral. La herramienta no conserva una copia de tus respuestas ni de tus grabaciones.</p><p style="font-size:12px;line-height:1.7">El sistema de estadísticas recibe únicamente eventos anónimos de uso y, si decides escribirlos, el programa académico y la territorial, CETAP o sede. No recibe respuestas, audios ni transcripciones.</p><p style="font-size:12px;line-height:1.7">En el nivel gratuito de Gemini Developer API, Google informa que el contenido puede usarse para mejorar sus productos. No introduzcas números de documento, direcciones, teléfonos ni otra información sensible. Esta práctica es formativa y no debe utilizarse como decisión automatizada de selección.</p><div class="actions"><button class="btn primary" id="privacy-back">Volver</button></div></div></div>`;$('#privacy-back').onclick=()=>({welcome:renderWelcome,context:renderContext,configuration:renderConfiguration,confirmation:renderConfirmation,interview:renderInterview,feedback:renderFeedback}[state.step]||renderWelcome)();}
+function resetPractice(){endWait(false);stopNaturalVoice();if(mediaRecorder&&mediaRecorder.state!=='inactive')try{mediaRecorder.stop()}catch{}mediaStream?.getTracks().forEach(t=>t.stop());state.answers=[];state.questions=[];state.skipped=[];state.feedback=null;state.questionNumber=0;state.sessionId=uid();state.openingPrefetch=null;state.openingFingerprint='';renderWelcome();}
+function showPrivacy(){stage.innerHTML=`<div class="panel"><div class="panel-head"><h2>Privacidad y alcance</h2></div><div class="panel-body"><p class="privacy-copy">El texto y el audio necesarios para la práctica se envían temporalmente a Google Gemini por medio de Firebase. Las respuestas de audio se analizan para contrastar su contenido con la pregunta y describir aspectos audibles de la entrega oral. La herramienta no conserva una copia de tus respuestas ni de tus grabaciones.</p><p class="privacy-copy">El sistema de estadísticas recibe únicamente eventos anónimos de uso y, si decides escribirlos, el programa académico y la territorial, CETAP o sede. No recibe respuestas, audios ni transcripciones.</p><p class="privacy-copy">En el nivel gratuito de Gemini Developer API, Google informa que el contenido puede usarse para mejorar sus productos. No introduzcas números de documento, direcciones, teléfonos ni otra información sensible. Esta práctica es formativa y no debe utilizarse como decisión automatizada de selección.</p><div class="actions"><button class="btn primary" id="privacy-back">Volver</button></div></div></div>`;$('#privacy-back').onclick=()=>({welcome:renderWelcome,context:renderContext,configuration:renderConfiguration,confirmation:renderConfirmation,interview:renderInterview,feedback:renderFeedback}[state.step]||renderWelcome)();}
 
 $('#new-practice').onclick=resetPractice;$('#restart-top').onclick=resetPractice;$('#privacy-btn').onclick=showPrivacy;$('#admin-link').onclick=()=>location.href='admin-panel.html';
 await initFirebase();renderWelcome();
