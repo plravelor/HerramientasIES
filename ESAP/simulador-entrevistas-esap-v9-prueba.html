@@ -7,18 +7,18 @@
 <title>Simulador de Entrevistas Laborales – ESAP</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap');
-*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:#17202a;background:#e7ebf1}button,input,textarea,select{font:inherit}.hidden{display:none!important}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;min-height:100%;font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:#17202a;background:#e7ebf1}button,input,textarea,select{font:inherit}.hidden{display:none!important}
 :root{--g:#003da5;--gd:#002a75;--gl:#e6eefc;--gll:#f3f7fd;--card:#fff;--line:#dbe2eb;--txt:#17202a;--mut:#657286;--ok:#267443;--okbg:#edf8ef;--warn:#885d00;--warnbg:#fff7df;--err:#a22727;--errbg:#fff0f0;--shadow:0 10px 34px rgba(25,45,72,.11);--logo:url("data:image/png;base64,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")}
-body{overflow:hidden}.app{height:100vh;display:grid;grid-template-columns:392px minmax(0,1fr)}
+body{overflow:hidden}.app{height:100vh;height:100dvh;min-height:0;display:grid;grid-template-columns:392px minmax(0,1fr);overflow:hidden}
 .sidebar{background:linear-gradient(165deg,#003d9c,#2b5fbb);color:#fff;display:flex;flex-direction:column;min-height:0}.side-brand{padding:28px 24px 18px;border-bottom:1px solid rgba(255,255,255,.2)}.logo{width:170px;height:54px;background:var(--logo) left center/contain no-repeat}.side-brand p{font-size:13px;font-weight:650;margin:15px 0 0}.side-scroll{padding:18px 24px;overflow:auto;flex:1}.eyebrow{font-size:11px;letter-spacing:1.3px;text-transform:uppercase;font-weight:800;opacity:.76;margin:0 0 14px}.steps{list-style:none;padding:0;margin:0;display:grid;gap:2px}.steps li{position:relative;padding:10px 8px 10px 26px;font-size:13px;opacity:.72}.steps li:before{content:'';position:absolute;left:3px;top:16px;width:8px;height:8px;border:2px solid rgba(255,255,255,.55);border-radius:50%;background:transparent}.steps li:after{content:'';position:absolute;left:7px;top:28px;width:2px;height:24px;background:rgba(255,255,255,.22)}.steps li:last-child:after{display:none}.steps li.done,.steps li.active{opacity:1}.steps li.done:before,.steps li.active:before{background:#fff;border-color:#fff}.steps li.active{font-weight:800}.quick{margin-top:26px;display:grid;gap:9px}.quick button{border:0;background:rgba(255,255,255,.12);color:#fff;border-radius:10px;padding:10px 12px;text-align:left;cursor:pointer;font-weight:700;font-size:12px}.quick button:hover{background:rgba(255,255,255,.2)}.side-foot{padding:14px 20px;border-top:1px solid rgba(255,255,255,.18);font-size:10.5px;line-height:1.5;opacity:.82}
-.main{min-width:0;display:grid;grid-template-rows:auto 1fr;background:#f5f3ef}.top{background:var(--g);color:#fff;padding:18px 28px;display:flex;align-items:center;gap:16px}.top .mini-logo{width:122px;height:40px;background:var(--logo) left center/contain no-repeat;border-right:1px solid rgba(255,255,255,.4);padding-right:16px}.top h1{font-size:20px;margin:0}.top p{font-size:11px;margin:3px 0 0;opacity:.86}.top .spacer{flex:1}.top button{border:0;border-radius:9px;padding:9px 13px;background:rgba(255,255,255,.15);color:#fff;font-weight:750;cursor:pointer}
-.stage{overflow:auto;padding:28px clamp(18px,4vw,54px) 46px}.panel{max-width:1060px;margin:0 auto;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}.panel-head{padding:22px 24px 14px}.panel-head h2{font-family:'Fraunces',Georgia,serif;font-size:25px;margin:0 0 7px}.panel-head p{margin:0;color:var(--mut);font-size:12.5px;line-height:1.6}.panel-body{padding:10px 24px 24px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}.field{display:grid;gap:6px}.field.full{grid-column:1/-1}.field label{font-size:12px;font-weight:800}.hint{color:var(--mut);font-weight:500}.field input,.field textarea,.field select{width:100%;border:1px solid #cfd8e5;border-radius:11px;background:#fff;padding:11px 12px;color:var(--txt);outline:none}.field textarea{min-height:102px;resize:vertical;line-height:1.55}.field input:focus,.field textarea:focus,.field select:focus{border-color:#6e9ce2;box-shadow:0 0 0 3px #e9f1fd}.subcard{border:1px solid #d9e4f4;background:#f5f8fd;border-radius:12px;padding:14px;margin:15px 0}.subcard h3{font-size:12.5px;margin:0 0 5px;color:#073785}.subcard p{font-size:11.5px;color:var(--mut);line-height:1.55;margin:0}.check{display:flex;gap:9px;align-items:flex-start;font-size:11.5px;line-height:1.5;margin-top:10px}.check input{margin-top:2px}.actions{display:flex;justify-content:flex-end;gap:10px;margin-top:18px;flex-wrap:wrap}.btn{border:1px solid #b8c8df;background:#fff;color:var(--g);border-radius:10px;padding:10px 15px;font-weight:800;cursor:pointer}.btn.primary{background:var(--g);border-color:var(--g);color:#fff;box-shadow:0 5px 14px rgba(0,61,165,.18)}.btn.ghost{border-color:transparent;background:#edf3fc}.btn.warn{border-color:#efd69d;background:#fff8e6;color:#7b5600}.btn:disabled{opacity:.52;cursor:not-allowed}.status{margin:12px 0;border-radius:10px;padding:10px 12px;font-size:11.5px;line-height:1.5;background:#edf3fd;color:#164d9f}.status.ok{background:var(--okbg);color:var(--ok)}.status.warn{background:var(--warnbg);color:var(--warn)}.status.err{background:var(--errbg);color:var(--err)}
-.choice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.choice{border:1px solid #d2dbe7;border-radius:11px;padding:12px;background:#fff;cursor:pointer}.choice input{margin-right:7px}.choice:has(input:checked){border-color:#5d8ed8;background:#f1f6ff}.voice-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:end}
+.main{min-width:0;min-height:0;overflow:hidden;display:grid;grid-template-rows:auto auto minmax(0,1fr);background:#f5f3ef}.top{background:var(--g);color:#fff;padding:18px 28px;display:flex;align-items:center;gap:16px}.top .mini-logo{width:122px;height:40px;background:var(--logo) left center/contain no-repeat;border-right:1px solid rgba(255,255,255,.4);padding-right:16px}.top h1{font-size:20px;margin:0}.top p{font-size:11px;margin:3px 0 0;opacity:.86}.top .spacer{flex:1}.top button{border:0;border-radius:9px;padding:9px 13px;background:rgba(255,255,255,.15);color:#fff;font-weight:750;cursor:pointer}
+.stage{min-width:0;min-height:0;overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:28px clamp(18px,4vw,54px) 64px}.panel{max-width:1060px;margin:0 auto;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}.panel-head{padding:22px 24px 14px}.panel-head h2{font-family:'Fraunces',Georgia,serif;font-size:25px;margin:0 0 7px}.panel-head p{margin:0;color:var(--mut);font-size:12.5px;line-height:1.6}.panel-body{padding:10px 24px 24px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;min-width:0}.grid2>*{min-width:0}.field{display:grid;gap:6px;min-width:0}.field.full{grid-column:1/-1}.field label{font-size:12px;font-weight:800;overflow-wrap:anywhere}.hint{color:var(--mut);font-weight:500}.field input,.field textarea,.field select{width:100%;min-width:0;max-width:100%;border:1px solid #cfd8e5;border-radius:11px;background:#fff;padding:11px 12px;color:var(--txt);outline:none}.field textarea{min-height:102px;resize:vertical;line-height:1.55}.field input:focus,.field textarea:focus,.field select:focus{border-color:#6e9ce2;box-shadow:0 0 0 3px #e9f1fd}.subcard{border:1px solid #d9e4f4;background:#f5f8fd;border-radius:12px;padding:14px;margin:15px 0;min-width:0;overflow-wrap:anywhere}.subcard h3{font-size:12.5px;margin:0 0 5px;color:#073785}.subcard p{font-size:11.5px;color:var(--mut);line-height:1.55;margin:0}.check{display:flex;gap:9px;align-items:flex-start;font-size:11.5px;line-height:1.5;margin-top:10px}.check input{margin-top:2px}.actions{display:flex;justify-content:flex-end;gap:10px;margin-top:18px;flex-wrap:wrap}.btn{border:1px solid #b8c8df;background:#fff;color:var(--g);border-radius:10px;padding:10px 15px;font-weight:800;cursor:pointer;max-width:100%;white-space:normal}.btn.primary{background:var(--g);border-color:var(--g);color:#fff;box-shadow:0 5px 14px rgba(0,61,165,.18)}.btn.ghost{border-color:transparent;background:#edf3fc}.btn.warn{border-color:#efd69d;background:#fff8e6;color:#7b5600}.btn:disabled{opacity:.52;cursor:not-allowed}.status{margin:12px 0;border-radius:10px;padding:10px 12px;font-size:11.5px;line-height:1.5;background:#edf3fd;color:#164d9f;overflow-wrap:anywhere}.status.ok{background:var(--okbg);color:var(--ok)}.status.warn{background:var(--warnbg);color:var(--warn)}.status.err{background:var(--errbg);color:var(--err)}
+.choice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.choice{border:1px solid #d2dbe7;border-radius:11px;padding:12px;background:#fff;cursor:pointer}.choice input{margin-right:7px}.choice:has(input:checked){border-color:#5d8ed8;background:#f1f6ff}.voice-row{display:grid;grid-template-columns:minmax(0,1fr) repeat(2,auto);gap:10px;align-items:end}
 .summary{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.sumitem{background:#f2f6fc;border:1px solid #dfE8f4;border-radius:10px;padding:10px 12px}.sumitem small{display:block;font-size:9.5px;text-transform:uppercase;color:var(--g);font-weight:850;letter-spacing:.5px}.sumitem b{font-size:12px;line-height:1.5}
 .progressbar{height:4px;background:#d8e0ea}.progressbar span{display:block;height:100%;background:var(--g);width:0;transition:width .25s}.interview-shell{max-width:1040px;margin:0 auto}.chat{display:grid;gap:14px}.bubble{max-width:760px;background:#fff;border:1px solid #dfe3e8;border-radius:13px;padding:14px 16px;box-shadow:0 5px 18px rgba(28,40,55,.06)}.bubble.user{margin-left:auto;background:#eef4ff;border-color:#d8e6fb}.speaker{display:flex;align-items:center;gap:7px;font-size:9.5px;text-transform:uppercase;letter-spacing:.5px;font-weight:850;color:var(--g);margin-bottom:7px}.bubble p{margin:0;font-size:13px;line-height:1.62}.bubble .meta{font-size:10px;color:var(--mut);margin-top:8px}.speak-small{border:1px solid #cbd6e5;background:#fff;color:var(--g);border-radius:8px;padding:6px 8px;margin-top:8px;font-size:10px;font-weight:800;cursor:pointer}.answer-card{margin:18px 0 0;background:#fff;border:1px solid #d8dee8;border-radius:14px;padding:16px;box-shadow:var(--shadow)}.answer-card h3{font-size:13px;margin:0 0 8px}.meter{height:8px;border-radius:20px;background:#e8edf3;overflow:hidden;margin:10px 0}.meter span{display:block;height:100%;width:0;background:#2f6bc5;transition:width .12s}.rec-controls{display:flex;gap:8px;flex-wrap:wrap}.timer{font-variant-numeric:tabular-nums;font-size:12px;font-weight:800;color:var(--mut)}.transcript{margin-top:12px}.transcript textarea{width:100%;min-height:90px;border:1px solid #d1dae5;border-radius:10px;padding:10px;resize:vertical;line-height:1.5}.mini-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}.mini{background:#f5f7fa;border-radius:9px;padding:9px}.mini small{display:block;font-size:9px;color:var(--mut)}.mini b{font-size:12px}.loading{display:inline-flex;gap:8px;align-items:center}.dot{width:7px;height:7px;border-radius:50%;background:var(--g);animation:pulse 1s infinite alternate}.dot:nth-child(2){animation-delay:.2s}.dot:nth-child(3){animation-delay:.4s}@keyframes pulse{to{opacity:.25;transform:translateY(-2px)}}
 .report{max-width:1040px;margin:0 auto;display:grid;gap:14px}.report-card{background:#fff;border:1px solid #dce2e9;border-radius:14px;padding:18px 20px;box-shadow:0 5px 18px rgba(28,40,55,.05);overflow-wrap:anywhere}.report-card h2,.report-card h3{font-family:'Fraunces',Georgia,serif;margin:0 0 9px}.report-card h2{font-size:24px}.report-card h3{font-size:18px}.report-card p,.report-card li{font-size:12px;line-height:1.68}.report-card ul,.report-card ol{padding-left:20px}.report-title{display:flex;align-items:start;gap:10px}.report-title>*:first-child{flex:1}.priority{border-left:3px solid #2764ba;background:#f5f8fd;border-radius:0 10px 10px 0;padding:11px 13px;margin:10px 0}.priority b{font-size:12px}.tag{display:inline-block;border-radius:20px;background:#e9f1fd;color:#174f9f;font-size:9.5px;font-weight:800;padding:4px 8px;margin:2px}.answer-review{border-top:1px solid #e8ebef;padding-top:12px;margin-top:12px}.answer-review:first-of-type{border-top:0}.level{display:inline-block;padding:5px 9px;border-radius:20px;background:#edf3fd;color:#184f9f;font-size:10px;font-weight:850}.errorbox{max-width:850px;margin:40px auto;background:#fff;border:1px solid #efc0c0;border-radius:14px;padding:20px;color:#802222}.setup{max-width:900px;margin:20px auto;background:#fff;border:1px solid #ead29a;border-radius:14px;padding:20px}.setup code{display:block;background:#f5f5f5;padding:9px;border-radius:8px;overflow:auto;font-size:11px}
 .footer-note{font-size:9.5px;color:#7c8798;text-align:center;margin-top:16px;line-height:1.5}
-@media(max-width:930px){body{overflow:auto}.app{height:auto;min-height:100vh;grid-template-columns:1fr}.sidebar{display:none}.main{min-height:100vh}.stage{padding:18px 12px 32px}.grid2,.summary,.choice-grid{grid-template-columns:1fr}.mini-metrics{grid-template-columns:repeat(2,1fr)}.top{padding:15px}.top .mini-logo{display:none}}
+@media(max-width:930px){html,body{height:auto;min-height:100%;overflow:auto}.app{height:auto;min-height:100vh;min-height:100dvh;grid-template-columns:1fr;overflow:visible}.sidebar{display:none}.main{min-height:100vh;min-height:100dvh;overflow:visible;display:block}.stage{overflow:visible;padding:18px 12px 48px}.grid2,.summary,.choice-grid{grid-template-columns:minmax(0,1fr)}.voice-row{grid-template-columns:minmax(0,1fr)}.mini-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.top{padding:15px;position:sticky;top:0;z-index:20}.top .mini-logo{display:none}.top h1{font-size:16px}.top p{font-size:9.5px}.panel-head,.panel-body{padding-left:16px;padding-right:16px}}
 @media print{.sidebar,.top,.no-print,.answer-card,.progressbar{display:none!important}body{overflow:visible;background:#fff}.app,.main{display:block;height:auto}.stage{overflow:visible;padding:0}.report-card{box-shadow:none;break-inside:avoid}.report{display:block}.report-card{margin-bottom:12px}}
 </style>
 </head>
@@ -43,7 +43,7 @@ body{overflow:hidden}.app{height:100vh;display:grid;grid-template-columns:392px 
         <button id="admin-link">Panel de administración</button>
       </div>
     </div>
-    <div class="side-foot">V9.1 · IA: Firebase AI Logic + Gemini · Métricas: Cloudflare D1. Las respuestas y audios no se envían al Worker de métricas.</div>
+    <div class="side-foot">Herramienta formativa de Orientación Socioeconómica. La práctica no decide procesos de selección.</div>
   </aside>
   <main class="main">
     <header class="top"><div class="mini-logo"></div><div><h1>Simulador de Entrevistas Laborales</h1><p>Orientación Socioeconómica · práctica oral personalizada</p></div><div class="spacer"></div><button id="restart-top">↻ Reiniciar</button></header>
@@ -53,19 +53,19 @@ body{overflow:hidden}.app{height:100vh;display:grid;grid-template-columns:392px 
 </div>
 
 <script type="module">
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js';
-import { initializeAppCheck, ReCaptchaEnterpriseProvider } from 'https://www.gstatic.com/firebasejs/12.16.0/firebase-app-check.js';
-import { getAI, getGenerativeModel, getLiveGenerativeModel, GoogleAIBackend, ResponseModality, Schema } from 'https://www.gstatic.com/firebasejs/12.16.0/firebase-ai.js';
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js';
+import { initializeAppCheck, ReCaptchaEnterpriseProvider } from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-app-check.js';
+import { getAI, getGenerativeModel, GoogleAIBackend, ResponseModality, Schema } from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-ai.js';
 
 /* ================================================================
-   CONFIGURACIÓN V9 — SOLO DEBES EDITAR ESTE BLOQUE
+   CONFIGURACIÓN DEL SERVICIO — NO PEGAR CLAVES SECRETAS
    ================================================================
    IMPORTANTE:
    - firebaseConfig pertenece a la configuración pública de tu app Firebase.
    - NO pegues aquí una API key secreta de Gemini/Google AI Studio.
    - APP_CHECK_SITE_KEY es la clave pública de sitio de reCAPTCHA.
 */
-const APP_VERSION = '2026-08-13.9.1';
+const APP_VERSION = '2026-08-13.9.2';
 const FIREBASE_CONFIG = {
   apiKey: 'AIzaSyAK180FpLYDFyCQ9afEPYN8tamMk2LL66Q',
   authDomain: 'simulador-entrevistas-esap.firebaseapp.com',
@@ -77,7 +77,7 @@ const FIREBASE_CONFIG = {
 const APP_CHECK_SITE_KEY = '6Lc4SIQtAAAAAF1E80_cUXbkpmd0XtPfZZGKhAcR';
 const METRICS_WORKER_URL = 'https://entrevista-esap-worker.esap-entrevistas-pedro.workers.dev';
 const TEXT_MODEL = 'gemini-3.6-flash';
-const LIVE_MODEL = 'gemini-2.5-flash-native-audio-preview-12-2025';
+const TTS_MODEL = 'gemini-3.1-flash-tts-preview';
 /* ================================================================ */
 
 const TEST_MODE = new URLSearchParams(location.search).get('modo') === 'prueba';
@@ -93,7 +93,7 @@ const state = {
   step: 'welcome', scenario: 'targeted', role: localStorage.getItem('esap-v9-role') || '',
   organization: localStorage.getItem('esap-v9-org') || '', vacancy: '', profile: '',
   program: '', territorial: '', channel: 'videollamada', format: 'individual',
-  questionCount: 8, autoSpeak: true, voice: localStorage.getItem('esap-v9-voice') || 'Achird',
+  questionCount: 8, autoSpeak: true, voice: localStorage.getItem('esap-v9-voice') || 'Sulafat',
   acceptedPrivacy: false, questions: [], currentQuestion: null, answers: [], skipped: [],
   feedback: null, questionNumber: 0, usedVoice: false, recording: null,
   visitorId: getVisitorId(), sessionId: uid(), firebaseReady: false, firebaseError: '',
@@ -101,10 +101,15 @@ const state = {
 
 let firebaseApp, ai, questionModel, turnModel, feedbackModel;
 let audioContext = null, voiceNextTime = 0, voiceSources = new Set(), voiceBusy = false;
+let voiceRequestId = 0;
+const voiceCache = new Map();
 let mediaStream = null, mediaRecorder = null, mediaChunks = [], recordStartedAt = 0, recordTimer = null, levelRAF = null;
 
 const VOICES = [
-  ['Achird','Amigable'], ['Schedar','Pareja'], ['Erinome','Clara'], ['Algieba','Suave'], ['Umbriel','Tranquila'], ['Orus','Firme'], ['Kore','Firme']
+  ['Sulafat','Femenina · cálida'], ['Erinome','Femenina · clara'],
+  ['Achernar','Femenina · suave'], ['Kore','Femenina · firme'],
+  ['Charon','Masculina · informativa'], ['Sadaltager','Masculina · conocedora'],
+  ['Achird','Masculina · amigable'], ['Orus','Masculina · firme']
 ];
 
 const INTERVIEW_SYSTEM = `
@@ -154,13 +159,10 @@ sobre el audio original, junto con métricas acústicas aproximadas calculadas l
 - Las mediciones de pausas/volumen son aproximadas y dependen del micrófono y del ambiente.
 `;
 
-const VOICE_SYSTEM = `
-Eres únicamente la voz de un entrevistador laboral profesional. HABLA SIEMPRE EN ESPAÑOL LATINOAMERICANO,
-con una realización neutral cercana al uso colombiano. Evita pronunciación, vocabulario y giros del español de España
-(vosotros, vale, ordenador, distinción marcada c/z). Tono humano, sobrio, cálido y profesional; ritmo conversacional natural,
-sin tono publicitario ni teatral. Cuando recibas un bloque marcado TEXTO_A_LEER, pronuncia solamente ese contenido,
-sin agregar saludos, explicaciones, comentarios ni reformulaciones. Respeta signos de puntuación y pausas naturales.
-`;
+const VOICE_DIRECTION = `Lee solamente el texto delimitado. Usa español latinoamericano neutral, cercano al uso colombiano.
+La voz corresponde a una persona entrevistadora profesional: humana, sobria, cálida y atenta. Mantén un ritmo conversacional
+natural, con pausas breves en la puntuación, sin tono publicitario, teatral ni robótico. Evita una pronunciación peninsular marcada.
+No agregues, omitas, reformules ni comentes ninguna palabra del texto.`;
 
 const questionSchema = Schema.object({ properties: {
   transition: Schema.string(), question: Schema.string(), competency: Schema.string(), intent: Schema.string()
@@ -232,19 +234,19 @@ function getVisitorId(){
   if(!id){ id = uid(); localStorage.setItem('esap-v9-visitor', id); }
   return id;
 }
-function setStep(step, pct){ state.step=step; progress.style.width=`${pct}%`; $$('#steps li').forEach(li=>{const order=['welcome','context','configuration','confirmation','interview','feedback'];const a=order.indexOf(li.dataset.step),b=order.indexOf(step);li.classList.toggle('active',a===b);li.classList.toggle('done',a<b);}); }
+function setStep(step, pct){ state.step=step; progress.style.width=`${pct}%`;stage.scrollTop=0;if(innerWidth<=930)window.scrollTo(0,0); $$('#steps li').forEach(li=>{const order=['welcome','context','configuration','confirmation','interview','feedback'];const a=order.indexOf(li.dataset.step),b=order.indexOf(step);li.classList.toggle('active',a===b);li.classList.toggle('done',a<b);}); }
 function toast(text,type='ok'){ const el=document.createElement('div');el.className=`status ${type}`;el.style.position='fixed';el.style.right='18px';el.style.bottom='18px';el.style.maxWidth='420px';el.style.zIndex='9999';el.textContent=text;document.body.appendChild(el);setTimeout(()=>el.remove(),4300); }
 
 function renderWelcome(){
   setStep('welcome',6);
-  stage.innerHTML=`<div class="panel"><div class="panel-head"><h2>Practica una entrevista laboral con IA y voz natural</h2><p>La entrevista se adapta al cargo, a la convocatoria y a lo que respondas. El sistema escucha el audio original para evaluar tanto el contenido como aspectos observables de la entrega oral.</p></div><div class="panel-body">
-  <div class="subcard"><h3>Qué cambia en V9.1</h3><p>La voz del entrevistador se genera con Gemini Live Native Audio. Tus respuestas de voz se analizan directamente con Gemini 3.6 Flash y, además, el navegador calcula métricas acústicas aproximadas de pausas, duración y variación de volumen. Cloudflare queda únicamente para métricas anónimas de uso.</p></div>
-  <div class="status warn"><b>Privacidad del nivel gratuito:</b> el audio y el texto necesarios para la práctica se envían temporalmente a Google Gemini mediante Firebase AI Logic. En el nivel gratuito, Google informa que el contenido puede utilizarse para mejorar sus productos. No incluyas números de documento, direcciones, teléfonos ni otra información sensible. Esta página no guarda tus audios ni respuestas en Cloudflare/D1.</div>
+  stage.innerHTML=`<div class="panel"><div class="panel-head"><h2>Practica una entrevista laboral con IA y voz natural</h2><p>La entrevista se adapta al cargo, a la convocatoria y a lo que respondas. Al finalizar recibirás observaciones sobre el contenido de tus respuestas y sobre aspectos audibles de tu forma de expresarte.</p></div><div class="panel-body">
+  <div class="subcard"><h3>Antes de comenzar</h3><p>Busca un lugar tranquilo, prepara un ejemplo concreto de tu experiencia y responde como lo harías ante una persona entrevistadora. Si no puedes usar el micrófono, también podrás escribir.</p></div>
+  <div class="status warn"><b>Privacidad del nivel gratuito:</b> el audio y el texto necesarios para la práctica se envían temporalmente al servicio de IA. En el nivel gratuito, Google informa que el contenido puede utilizarse para mejorar sus productos. No incluyas números de documento, direcciones, teléfonos ni otra información sensible. La herramienta no conserva una copia de tus audios ni respuestas.</div>
   <label class="check"><input id="privacy-consent" type="checkbox" ${state.acceptedPrivacy?'checked':''}><span>Entiendo el tratamiento descrito y quiero usar la práctica con IA.</span></label>
   ${TEST_MODE?'<div class="status">Modo de prueba activo: podrás omitir preguntas y obtener retroalimentación si respondes al menos una.</div>':''}
   <div class="actions"><button class="btn primary" id="go-context">Continuar</button></div></div></div>`;
   $('#privacy-consent').addEventListener('change',e=>state.acceptedPrivacy=e.target.checked);
-  $('#go-context').addEventListener('click',()=>{ if(!state.acceptedPrivacy){toast('Debes aceptar la información de privacidad para usar Gemini.','warn');return;} renderContext(); });
+  $('#go-context').addEventListener('click',()=>{ if(!state.acceptedPrivacy){toast('Debes aceptar la información de privacidad para usar la práctica con IA.','warn');return;} renderContext(); });
 }
 
 function renderContext(){
@@ -272,20 +274,20 @@ function renderContext(){
 
 function renderConfiguration(){
   setStep('configuration',38);
-  const voices=VOICES.map(([v,d])=>`<option value="${v}" ${state.voice===v?'selected':''}>${v} · ${d}</option>`).join('');
+  const voices=VOICES.map(([v,d])=>`<option value="${v}" ${state.voice===v?'selected':''}>${d}</option>`).join('');
   stage.innerHTML=`<div class="panel"><div class="panel-head"><h2>Configura la entrevista</h2><p>La voz natural es parte central de la práctica. Puedes escuchar una muestra antes de comenzar.</p></div><div class="panel-body"><div class="grid2">
    <div class="field"><label>Canal</label><select id="channel"><option value="videollamada" ${state.channel==='videollamada'?'selected':''}>Videollamada</option><option value="presencial" ${state.channel==='presencial'?'selected':''}>Presencial</option><option value="asincrona" ${state.channel==='asincrona'?'selected':''}>Video / entrevista asincrónica</option></select></div>
    <div class="field"><label>Número de preguntas</label><select id="qcount"><option value="5" ${state.questionCount===5?'selected':''}>5 preguntas</option><option value="8" ${state.questionCount===8?'selected':''}>8 preguntas</option></select></div>
    <div class="field"><label>Formato</label><select id="format"><option value="individual" ${state.format==='individual'?'selected':''}>Entrevista individual</option><option value="panel" ${state.format==='panel'?'selected':''}>Panel / varias personas entrevistadoras</option></select></div>
-   <div class="field"><label>Voz del entrevistador</label><div class="voice-row"><select id="voice">${voices}</select><button class="btn" id="test-voice">Probar voz</button><button class="btn" id="test-ai">Probar IA</button></div></div>
+   <div class="field"><label>Voz de la persona entrevistadora</label><div class="voice-row"><select id="voice">${voices}</select><button class="btn" id="test-voice">Probar voz</button>${TEST_MODE?'<button class="btn" id="test-ai">Probar IA</button>':''}</div></div>
   </div>
   <label class="check"><input id="autospeak" type="checkbox" ${state.autoSpeak?'checked':''}><span>Leer automáticamente el saludo, las transiciones y cada pregunta en voz alta.</span></label>
-  <div id="firebase-status" class="status ${state.firebaseReady?'ok':'warn'}">${state.firebaseReady?'Firebase AI Logic está inicializado. La prueba real del modelo se hará cuando pidas la voz o empieces la entrevista.':`Firebase todavía no está listo: ${esc(state.firebaseError||'revisando configuración…')}`}</div>
+  <div id="firebase-status" class="status ${state.firebaseReady?'ok':'warn'}">${state.firebaseReady?'La configuración de la práctica con IA está lista. Usa «Probar voz» para comprobar la reproducción antes de comenzar.':'El servicio de IA todavía no está disponible. Recarga la página e inténtalo de nuevo.'}</div>
   <div class="actions"><button class="btn" id="back-context">Volver</button><button class="btn primary" id="go-confirm">Continuar</button></div></div></div>`;
   $('#back-context').onclick=renderContext;
   $('#voice').onchange=e=>{state.voice=e.target.value;localStorage.setItem('esap-v9-voice',state.voice)};
   $('#test-voice').onclick=async()=>{ state.voice=$('#voice').value; await unlockAudio(); await naturalSpeak('Hola. Esta es una muestra de la voz que usaré durante tu entrevista. Hablemos de tu experiencia y de cómo abordas situaciones relacionadas con el cargo.', $('#test-voice')); };
-  $('#test-ai').onclick=async()=>{ const b=$('#test-ai'); b.disabled=true; const old=b.textContent; b.textContent='Probando…'; try { const r=await questionModel.generateContent('Genera una única pregunta breve y profesional para una práctica general de entrevista laboral. No inventes datos.'); const data=safeJson(r.response.text()); if(!data?.question) throw new Error('La IA respondió, pero no devolvió el JSON esperado.'); console.info('[AI_DIAGNOSTIC_OK]',data); toast('IA de entrevista funcionando correctamente.','ok'); } catch(error) { console.error('[AI_DIAGNOSTIC_FAIL]',error); toast(`Prueba de IA fallida: ${friendlyError(error)}`,'err'); } finally { b.disabled=false; b.textContent=old; } };
+  if(TEST_MODE)$('#test-ai').onclick=async()=>{ const b=$('#test-ai'); b.disabled=true; const old=b.textContent; b.textContent='Probando…'; try { const r=await questionModel.generateContent('Genera una única pregunta breve y profesional para una práctica general de entrevista laboral. No inventes datos.'); const data=safeJson(r.response.text()); if(!data?.question) throw new Error('La IA respondió, pero no devolvió el JSON esperado.'); console.info('[AI_DIAGNOSTIC_OK]',data); toast('IA de entrevista funcionando correctamente.','ok'); } catch(error) { console.error('[AI_DIAGNOSTIC_FAIL]',error); toast(`Prueba de IA fallida: ${friendlyError(error)}`,'err'); } finally { b.disabled=false; b.textContent=old; } };
   $('#go-confirm').onclick=()=>{state.channel=$('#channel').value;state.questionCount=Number($('#qcount').value);state.format=$('#format').value;state.voice=$('#voice').value;state.autoSpeak=$('#autospeak').checked;renderConfirmation();};
 }
 
@@ -295,16 +297,16 @@ function renderConfirmation(){
     <div class="sumitem"><small>Objetivo</small><b>${esc(state.role||'Práctica general')}${state.organization?` · ${esc(state.organization)}`:''}</b></div>
     <div class="sumitem"><small>Preguntas</small><b>${state.questionCount}</b></div>
     <div class="sumitem"><small>Canal</small><b>${esc(channelLabel(state.channel))}</b></div>
-    <div class="sumitem"><small>Voz</small><b>${esc(state.voice)} · español latinoamericano por instrucción de sistema</b></div>
+    <div class="sumitem"><small>Lectura en voz alta</small><b>${state.autoSpeak?'Activada':'Desactivada'}</b></div>
   </div>
   ${state.vacancy.length<120?'<div class="status warn"><b>Convocatoria con pocos detalles.</b> La entrevista podrá adaptarse al cargo y a tu trayectoria, pero no inventará requisitos técnicos específicos.</div>':''}
-  <div class="status"><b>Cómo se evaluará:</b> Gemini escuchará el audio original de cada respuesta y lo contrastará con la pregunta. El navegador calculará de forma separada métricas aproximadas de duración, pausas y variación de volumen. La retroalimentación final distinguirá contenido y entrega oral.</div>
+  <div class="status"><b>Cómo se evaluará:</b> si respondes por voz, se analizarán el contenido de tu respuesta y aspectos audibles como claridad, ritmo, pausas, repeticiones y muletillas identificables. Estas observaciones son formativas y no constituyen un diagnóstico ni una decisión de selección.</div>
   <div class="actions"><button class="btn" id="back-config">Editar</button><button class="btn primary" id="start">Comenzar entrevista</button></div></div></div>`;
   $('#back-config').onclick=renderConfiguration;$('#start').onclick=startInterview;
 }
 
 async function startInterview(){
-  if(!state.firebaseReady){toast('Firebase AI Logic no está configurado todavía. Revisa el bloque FIREBASE_CONFIG y App Check.','err');return;}
+  if(!state.firebaseReady){toast('El servicio de IA no está disponible en este momento. Recarga la página e inténtalo de nuevo.','err');return;}
   const btn=$('#start');btn.disabled=true;btn.textContent='Preparando…';
   try{
     await unlockAudio();
@@ -328,7 +330,7 @@ function joinTransition(q){return [q?.transition,q?.question].filter(Boolean).jo
 function renderInterview(){
   setStep('interview',58 + Math.round((Math.max(0,state.questionNumber-1)/state.questionCount)*30));
   stage.innerHTML=`<div class="interview-shell"><div class="status" id="counter">Pregunta ${state.questionNumber} de ${state.questionCount}${TEST_MODE?' · MODO PRUEBA':''}</div><div class="chat" id="chat"></div><div class="answer-card" id="answer-card">
-    <h3>Tu respuesta</h3><p style="font-size:11px;color:var(--mut);margin:0 0 9px">La opción recomendada es responder por voz. El audio se conserva solo en memoria durante esta sesión y se envía a Gemini para analizar esta respuesta.</p>
+    <h3>Tu respuesta</h3><p style="font-size:11px;color:var(--mut);margin:0 0 9px">La opción recomendada es responder por voz. El audio se conserva solo en memoria durante esta sesión y se envía temporalmente al servicio de IA para analizar esta respuesta.</p>
     <div class="rec-controls"><button class="btn primary" id="record-start">● Empezar a responder</button><button class="btn" id="record-stop" disabled>■ Terminar respuesta</button>${TEST_MODE?'<button class="btn warn" id="skip">Omitir pregunta</button>':''}<span class="timer" id="timer">00:00</span></div>
     <div class="meter"><span id="level"></span></div><div id="record-status" class="status hidden"></div>
     <details style="margin-top:10px"><summary style="font-size:11px;font-weight:800;cursor:pointer">No puedo usar el micrófono: responder por escrito</summary><div class="transcript"><textarea id="typed-answer" placeholder="Escribe tu respuesta aquí. La evaluación oral no estará disponible."></textarea><div class="actions"><button class="btn" id="send-typed">Enviar respuesta escrita</button></div></div></details>
@@ -369,7 +371,7 @@ async function processAudioAnswer(blob){
   try{
     if(blob.size>18*1024*1024)throw new Error('La grabación es demasiado grande para enviarla como audio directo. Intenta una respuesta más breve.');
     const local=await analyzeAudioLocally(blob);
-    showRecordStatus('Gemini está escuchando el audio original y evaluando contenido y entrega oral…','');
+    showRecordStatus('Analizando el audio original, el contenido y la entrega oral…','');
     const result=await analyzeTurnWithAudio(blob,local);
     finalizeTurn(result.analysis,local,true,result.nextQuestion);
     sendMetric('answer_analyzed');
@@ -443,29 +445,43 @@ function renderAnswerReview(a){const x=a.analysis||{},d=x.audibleDelivery||{},m=
 async function naturalSpeak(text,button){
   text=String(text||'').replace(/\s+/g,' ').trim();if(!text||!state.firebaseReady)return;
   if(voiceBusy){stopNaturalVoice();await sleep(100)}
-  voiceBusy=true;state.usedVoice=true;sendMetric('voice_played');if(button){button.disabled=true;button.dataset.old=button.textContent;button.textContent='Reproduciendo…'}
+  const requestId=++voiceRequestId;voiceBusy=true;state.usedVoice=true;sendMetric('voice_played');if(button){button.disabled=true;button.dataset.old=button.textContent;button.textContent='Preparando voz…'}
   try{
     await unlockAudio();voiceNextTime=audioContext.currentTime+0.05;
-    const liveModel=getLiveGenerativeModel(ai,{model:LIVE_MODEL,systemInstruction:VOICE_SYSTEM,generationConfig:{responseModalities:[ResponseModality.AUDIO],speechConfig:{voiceConfig:{prebuiltVoiceConfig:{voiceName:state.voice}}},outputAudioTranscription:{}}});
-    const session=await liveModel.connect();
-    const prompt=`TEXTO_A_LEER:\n${text}\nFIN_TEXTO_A_LEER`;
-    await session.send(prompt, true);
-    const messages=session.receive();
-    for await(const message of messages){
-      if(message.type!=='serverContent')continue;
-      if(message.modelTurn?.parts){for(const part of message.modelTurn.parts){if(part.inlineData?.data)queuePcmChunk(part.inlineData.data,24000);}}
-      if(message.turnComplete){await session.close();break;}
-      if(message.interrupted)break;
+    const key=`${state.voice}|${text}`;
+    let audio=voiceCache.get(key);
+    if(!audio){
+      const ttsModel=getGenerativeModel(ai,{
+        model:TTS_MODEL,
+        generationConfig:{
+          responseModalities:[ResponseModality.AUDIO],
+          speechConfig:{
+            languageCode:'es-419',
+            voiceConfig:{prebuiltVoiceConfig:{voiceName:state.voice}}
+          }
+        }
+      });
+      const prompt=`${VOICE_DIRECTION}\n\nTEXTO INICIO\n${text}\nTEXTO FIN`;
+      const result=await ttsModel.generateContent(prompt);
+      audio=getAudioInlineData(result?.response);
+      if(!audio?.data)throw new Error('El servicio no devolvió audio para este texto.');
+      voiceCache.set(key,audio);
+      if(voiceCache.size>24)voiceCache.delete(voiceCache.keys().next().value);
     }
+    if(requestId!==voiceRequestId)return;
+    if(button)button.textContent='Reproduciendo…';
+    queuePcmChunk(audio.data,sampleRateFromMime(audio.mimeType));
     await waitForVoiceQueue();
-  }catch(error){console.error('[NATURAL_VOICE_FAIL]',error);sendMetric('voice_failed');toast(`La voz natural no pudo reproducirse: ${friendlyError(error)}`,'warn');}
+  }catch(error){console.error('[NATURAL_VOICE_FAIL]',error);sendMetric('voice_failed');toast(`No fue posible reproducir la lectura en voz alta. ${friendlyError(error)}`,'warn');}
   finally{voiceBusy=false;if(button){button.disabled=false;button.textContent=button.dataset.old||'🔊 Escuchar'}}
 }
-function stopNaturalVoice(){for(const s of voiceSources){try{s.stop()}catch{}}voiceSources.clear();if(audioContext)voiceNextTime=audioContext.currentTime;voiceBusy=false;}
+function stopNaturalVoice(){voiceRequestId++;for(const s of voiceSources){try{s.stop()}catch{}}voiceSources.clear();if(audioContext)voiceNextTime=audioContext.currentTime;voiceBusy=false;}
 async function unlockAudio(){if(!audioContext)audioContext=new (window.AudioContext||window.webkitAudioContext)();if(audioContext.state==='suspended')await audioContext.resume();}
 function queuePcmChunk(base64,sampleRate){const bytes=base64ToBytes(base64);const samples=new Float32Array(Math.floor(bytes.length/2));const view=new DataView(bytes.buffer,bytes.byteOffset,bytes.byteLength);for(let i=0;i<samples.length;i++)samples[i]=view.getInt16(i*2,true)/32768;const buffer=audioContext.createBuffer(1,samples.length,sampleRate);buffer.copyToChannel(samples,0);const src=audioContext.createBufferSource();src.buffer=buffer;src.connect(audioContext.destination);const start=Math.max(audioContext.currentTime+0.02,voiceNextTime);src.start(start);voiceNextTime=start+buffer.duration;voiceSources.add(src);src.onended=()=>voiceSources.delete(src);}
 async function waitForVoiceQueue(){while(audioContext&&audioContext.currentTime<voiceNextTime-0.03)await sleep(60)}
 function base64ToBytes(b64){const bin=atob(b64);const arr=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)arr[i]=bin.charCodeAt(i);return arr;}
+function getAudioInlineData(response){const parts=response?.candidates?.[0]?.content?.parts||[];const part=parts.find(p=>p.inlineData?.data&&String(p.inlineData.mimeType||'').startsWith('audio/'));return part?.inlineData||null;}
+function sampleRateFromMime(mimeType){const match=String(mimeType||'').match(/rate=(\d+)/i);return match?Number(match[1]):24000;}
 
 async function blobToPart(blob){const data=await blobToBase64(blob);return{inlineData:{data,mimeType:(blob.type||'audio/webm').split(';')[0]}};}
 function blobToBase64(blob){return new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(String(r.result).split(',')[1]);r.onerror=reject;r.readAsDataURL(blob)});}
@@ -476,7 +492,7 @@ async function analyzeAudioLocally(blob){
 }
 
 function parseModelJson(result,label){const text=result?.response?.text?.()||'';const data=safeJson(text);if(!data)throw new Error(`La IA respondió a ${label}, pero no devolvió JSON válido.`);return data;}
-function friendlyError(error){const raw=String(error?.message||error||'Error desconocido');if(/quota|rate|429|resource exhausted/i.test(raw))return 'Se alcanzó temporalmente un límite gratuito de Gemini. Intenta de nuevo más tarde.';if(/app.?check|attest|403|permission/i.test(raw))return 'Firebase/App Check rechazó la solicitud. Revisa la configuración y el dominio autorizado.';if(/network|fetch|offline/i.test(raw))return 'Hay un problema de conexión de red.';return raw.slice(0,420);}
+function friendlyError(error){const raw=String(error?.message||error||'Error desconocido');if(/quota|rate|429|resource exhausted/i.test(raw))return 'Se alcanzó temporalmente el límite de uso de la IA. Intenta de nuevo más tarde.';if(/app.?check|attest|403|permission/i.test(raw))return 'La comprobación de seguridad rechazó la solicitud. Recarga la página y vuelve a intentarlo.';if(/model.*not found|not found.*model|404/i.test(raw))return 'El modelo de voz no está disponible todavía para este proyecto.';if(/network|fetch|offline/i.test(raw))return 'Hay un problema de conexión de red.';return raw.slice(0,260);}
 function handleAIError(error,prefix){console.error('[AI_FAIL]',error);sendMetric('ai_failed');toast(`${prefix} ${friendlyError(error)}`,'err');}
 
 async function sendMetric(eventType){try{await fetch(METRICS_WORKER_URL,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({action:'metrics',eventType,sessionId:state.sessionId,visitorId:state.visitorId,scenario:state.scenario,goal:'interview-practice',area:state.role?'cargo-especifico':'general',level:'',territorial:state.territorial,program:state.program,channel:state.channel,usedVoice:state.usedVoice,questions:state.questionCount})});}catch(error){console.debug('[METRIC_FAIL]',error)}}
@@ -484,7 +500,7 @@ function channelLabel(v){return({videollamada:'Videollamada',presencial:'Presenc
 function fmtSec(v){if(v==null)return'—';const s=Math.round(v);return s<60?`${s} s`:`${Math.floor(s/60)} min ${s%60} s`}
 function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
 function resetPractice(){stopNaturalVoice();if(mediaRecorder&&mediaRecorder.state!=='inactive')try{mediaRecorder.stop()}catch{}mediaStream?.getTracks().forEach(t=>t.stop());state.answers=[];state.questions=[];state.skipped=[];state.feedback=null;state.questionNumber=0;state.sessionId=uid();renderWelcome();}
-function showPrivacy(){stage.innerHTML=`<div class="panel"><div class="panel-head"><h2>Privacidad y alcance</h2></div><div class="panel-body"><p style="font-size:12px;line-height:1.7">V9 usa Firebase AI Logic para acceder a Gemini desde el navegador. La voz del entrevistador se genera con Gemini Live y las respuestas de audio se envían a Gemini para análisis. Cloudflare recibe únicamente eventos anónimos de uso y los campos opcionales de programa/territorial. No se envían al Worker respuestas, audios ni transcripciones.</p><p style="font-size:12px;line-height:1.7">En el nivel gratuito de Gemini Developer API, Google informa que el contenido puede usarse para mejorar sus productos. Por eso la herramienta pide no introducir datos sensibles. Esta práctica es formativa y no debe utilizarse como decisión automatizada de selección.</p><div class="actions"><button class="btn primary" id="privacy-back">Volver</button></div></div></div>`;$('#privacy-back').onclick=()=>({welcome:renderWelcome,context:renderContext,configuration:renderConfiguration,confirmation:renderConfirmation,interview:renderInterview,feedback:renderFeedback}[state.step]||renderWelcome)();}
+function showPrivacy(){stage.innerHTML=`<div class="panel"><div class="panel-head"><h2>Privacidad y alcance</h2></div><div class="panel-body"><p style="font-size:12px;line-height:1.7">El texto y el audio necesarios para la práctica se envían temporalmente a Google Gemini por medio de Firebase. Las respuestas de audio se analizan para contrastar su contenido con la pregunta y describir aspectos audibles de la entrega oral. La herramienta no conserva una copia de tus respuestas ni de tus grabaciones.</p><p style="font-size:12px;line-height:1.7">El sistema de estadísticas recibe únicamente eventos anónimos de uso y, si decides escribirlos, el programa académico y la territorial, CETAP o sede. No recibe respuestas, audios ni transcripciones.</p><p style="font-size:12px;line-height:1.7">En el nivel gratuito de Gemini Developer API, Google informa que el contenido puede usarse para mejorar sus productos. No introduzcas números de documento, direcciones, teléfonos ni otra información sensible. Esta práctica es formativa y no debe utilizarse como decisión automatizada de selección.</p><div class="actions"><button class="btn primary" id="privacy-back">Volver</button></div></div></div>`;$('#privacy-back').onclick=()=>({welcome:renderWelcome,context:renderContext,configuration:renderConfiguration,confirmation:renderConfirmation,interview:renderInterview,feedback:renderFeedback}[state.step]||renderWelcome)();}
 
 $('#new-practice').onclick=resetPractice;$('#restart-top').onclick=resetPractice;$('#privacy-btn').onclick=showPrivacy;$('#admin-link').onclick=()=>location.href='admin-panel.html';
 await initFirebase();renderWelcome();
