@@ -5,96 +5,27 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Administración · Simulador ESAP</title>
 <style>
-:root{--b:#003da5;--bd:#002a75;--bg:#f3f6fa;--card:#fff;--txt:#17202a;--mut:#66717d;--line:#dce3ea;--ok:#0d7a4a;--warn:#9a6700}
-*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--txt)}
-header{background:linear-gradient(135deg,var(--bd),var(--b));color:#fff;padding:22px clamp(18px,4vw,46px)}header h1{margin:0;font-size:clamp(22px,3vw,34px)}header p{margin:6px 0 0;opacity:.88}
-main{max-width:1180px;margin:0 auto;padding:24px clamp(14px,3vw,30px) 46px}.toolbar,.card{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 8px 28px rgba(18,38,63,.06)}
-.toolbar{padding:16px;display:flex;gap:12px;align-items:end;flex-wrap:wrap}.field{display:grid;gap:5px;min-width:180px;flex:1}.field label{font-size:12px;font-weight:750}.field input,.field select{border:1px solid var(--line);border-radius:9px;padding:10px 11px;font:inherit;background:#fff}.btn{border:0;border-radius:9px;padding:11px 14px;font-weight:750;cursor:pointer}.btn.primary{background:var(--b);color:#fff}.btn.secondary{background:#eaf0fb;color:var(--bd)}.btn:disabled{opacity:.55;cursor:not-allowed}
-.note{font-size:12px;color:var(--mut);margin:10px 2px 0}.status{margin:14px 0;padding:11px 13px;border-radius:10px;background:#eef4ff;color:var(--bd);font-size:13px}.status.err{background:#fff0f0;color:#9a1c1c}.status.ok{background:#ecf8f1;color:var(--ok)}
-.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:18px 0}.metric{padding:16px}.metric b{display:block;font-size:28px;color:var(--bd);margin-top:5px}.metric span{font-size:12px;color:var(--mut);font-weight:700}.section-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.card h2{font-size:16px;margin:0;padding:16px;border-bottom:1px solid var(--line)}.list{padding:8px 16px 16px}.row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;padding:9px 0;border-bottom:1px solid #edf1f5}.row:last-child{border-bottom:0}.row span:first-child{overflow-wrap:anywhere}.row b{color:var(--bd)}
-.pilot{margin-top:18px;padding:18px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}.pilot h2{padding:0;border:0;margin:0 0 5px}.pilot p{margin:0;color:var(--mut);font-size:13px;max-width:720px}.hidden{display:none!important}
-@media(max-width:850px){.grid{grid-template-columns:repeat(2,1fr)}.section-grid{grid-template-columns:1fr}}@media(max-width:480px){.grid{grid-template-columns:1fr}.toolbar{align-items:stretch}.btn{width:100%}}
+:root{--blue:#003DA5;--blue2:#0b4db6;--ink:#172033;--mut:#64748b;--bg:#f4f6fa;--card:#fff;--line:#dfe5ee;--ok:#1f7a39;--bad:#ad2f2f;--warn:#8a5b00;--shadow:0 12px 38px rgba(18,35,63,.10)}*{box-sizing:border-box}body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink)}header{background:linear-gradient(120deg,var(--blue),var(--blue2));color:#fff;padding:28px 24px}.wrap{max-width:1180px;margin:auto}.headrow{display:flex;gap:16px;justify-content:space-between;align-items:flex-start;flex-wrap:wrap}h1{font-size:25px;margin:0 0 6px}header p{margin:0;opacity:.9;line-height:1.5}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:20px;margin:18px 0}.toolbar{display:flex;gap:10px;align-items:end;flex-wrap:wrap}.field{display:flex;flex-direction:column;gap:6px}.field label{font-size:12px;font-weight:750;color:var(--mut)}input,select,button{font:inherit}input,select{border:1px solid #cad4e2;border-radius:10px;padding:10px 12px;background:#fff;min-height:42px}.key{min-width:min(420px,80vw)}button,.btn{border:1px solid #b9c8dc;border-radius:10px;padding:10px 14px;background:#fff;color:var(--blue);font-weight:750;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:7px}.primary{background:var(--blue);color:#fff;border-color:var(--blue)}button:disabled{opacity:.55;cursor:wait}.status{margin-top:12px;border-radius:11px;padding:11px 13px;background:#eef3fb;color:#27405f;font-size:13px;line-height:1.5}.status.ok{background:#eaf6ed;color:#226635}.status.err{background:#fff0ef;color:#8e2d28}.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}.stat{border:1px solid var(--line);border-radius:14px;padding:15px;background:#fbfcfe}.stat small{display:block;color:var(--mut);font-size:11px;font-weight:750;text-transform:uppercase;letter-spacing:.04em}.stat b{font-size:26px;display:block;margin-top:6px}.cols{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.section-title{font-size:16px;margin:0 0 12px}.bars{display:flex;flex-direction:column;gap:9px}.barrow{display:grid;grid-template-columns:minmax(80px,1fr) 3fr 48px;gap:8px;align-items:center;font-size:12px}.barrow .label{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.track{height:9px;background:#e8edf4;border-radius:100px;overflow:hidden}.fill{height:100%;background:var(--blue);border-radius:100px}.value{text-align:right;font-weight:800}.hint{font-size:12px;color:var(--mut);line-height:1.6}.footer{font-size:11px;color:var(--mut);padding:8px 0 24px}.actions{display:flex;gap:8px;flex-wrap:wrap}@media(max-width:850px){.cols{grid-template-columns:1fr}.key{min-width:0;width:100%}}
 </style>
 </head>
 <body>
-<header><h1>Panel de administración</h1><p>Simulador de Entrevistas Laborales ESAP · métricas anónimas y modo de pilotaje</p></header>
-<main>
-  <section class="toolbar" aria-label="Acceso a métricas">
-    <div class="field"><label for="admin-key">Clave de administrador</label><input id="admin-key" type="password" autocomplete="current-password" placeholder="ADMIN_KEY del Worker"></div>
-    <div class="field" style="max-width:220px"><label for="days">Periodo</label><select id="days"><option value="7">Últimos 7 días</option><option value="30" selected>Últimos 30 días</option><option value="90">Últimos 90 días</option><option value="365">Último año</option></select></div>
-    <button class="btn primary" id="load">Cargar métricas</button>
-    <button class="btn secondary" id="forget">Olvidar clave</button>
-  </section>
-  <p class="note">La clave se guarda solo en esta pestaña mediante sessionStorage. El archivo de GitHub Pages no contiene la clave.</p>
-  <div id="status" class="status">Ingresa la clave configurada como secreto <b>ADMIN_KEY</b> en Cloudflare y carga las métricas.</div>
-
-  <section id="dashboard" class="hidden">
-    <div class="grid">
-      <article class="card metric"><span>Usuarios anónimos aprox.</span><b id="m-visitors">0</b></article>
-      <article class="card metric"><span>Sesiones</span><b id="m-sessions">0</b></article>
-      <article class="card metric"><span>Entrevistas iniciadas</span><b id="m-started">0</b></article>
-      <article class="card metric"><span>Entrevistas completadas</span><b id="m-completed">0</b></article>
-      <article class="card metric"><span>Tasa de finalización</span><b id="m-rate">0%</b></article>
-      <article class="card metric"><span>CV cargados</span><b id="m-uploaded">0</b></article>
-      <article class="card metric"><span>CV generados</span><b id="m-generated">0</b></article>
-      <article class="card metric"><span>Sesiones con voz</span><b id="m-voice">0</b></article>
-    </div>
-    <div class="section-grid">
-      <article class="card"><h2>Uso por territorial / sede</h2><div class="list" id="territorial"></div></article>
-      <article class="card"><h2>Uso por programa académico</h2><div class="list" id="programs"></div></article>
-      <article class="card"><h2>Eventos registrados</h2><div class="list" id="events"></div></article>
-      <article class="card"><h2>Qué se registra</h2><div class="list"><div class="row"><span>Identificador</span><b>Aleatorio</b></div><div class="row"><span>Programa y territorial</span><b>Opcionales</b></div><div class="row"><span>Respuestas / audios / CV</span><b>No</b></div><div class="row"><span>Número de documento</span><b>No</b></div></div></article>
-    </div>
-  </section>
-
-  <section class="card pilot">
-    <div><h2>Pilotaje del bot</h2><p>Abre el simulador en modo administrativo. Podrás omitir cualquier pregunta. Si respondes al menos una, el bot generará retroalimentación únicamente sobre las respuestas contestadas.</p></div>
-    <button class="btn primary" id="pilot">Abrir modo de prueba</button>
-  </section>
+<header><div class="wrap headrow"><div><h1>Administración · Simulador de Entrevistas ESAP</h1><p>Métricas anónimas de uso. Este panel no recibe audios, respuestas ni transcripciones.</p></div><div class="actions"><a class="btn" href="simulador-entrevistas-esap.html?modo=prueba&v=100" target="_blank" rel="noopener">Abrir modo de prueba</a><a class="btn" href="simulador-entrevistas-esap.html?v=100" target="_blank" rel="noopener">Abrir simulador</a></div></div></header>
+<main class="wrap">
+<section class="card"><div class="toolbar"><div class="field"><label>ADMIN_KEY</label><input id="key" class="key" type="password" autocomplete="off" placeholder="Clave de administración"></div><div class="field"><label>Periodo</label><select id="days"><option value="7">7 días</option><option value="30" selected>30 días</option><option value="90">90 días</option><option value="365">365 días</option></select></div><button id="load" class="primary">Cargar métricas</button><button id="forget">Olvidar clave</button></div><div id="status" class="status">La clave se conserva solo en <code>sessionStorage</code> de esta pestaña. No se escribe en GitHub ni en el HTML.</div></section>
+<section class="card"><h2 class="section-title">Resumen</h2><div id="stats" class="stats"><div class="stat"><small>Estado</small><b>—</b></div></div><p class="hint">Por compatibilidad con la base creada en V7, los eventos de “respuesta grabada/analizada” se cuentan como sesiones que registraron al menos uno de esos eventos, no como número exacto de respuestas.</p></section>
+<section class="cols"><div class="card"><h2 class="section-title">Territoriales / sedes</h2><div id="territorial" class="bars"></div></div><div class="card"><h2 class="section-title">Programas</h2><div id="programs" class="bars"></div></div><div class="card"><h2 class="section-title">Eventos</h2><div id="events" class="bars"></div></div></section>
+<div class="footer">Panel de consulta de estadísticas generales del simulador.</div>
 </main>
 <script>
-(() => {
-  const DEFAULT_API_URL = 'https://entrevista-esap-worker.esap-entrevistas-pedro.workers.dev';
-  const API_URL = String(window.SIMULADOR_API_URL || DEFAULT_API_URL).trim();
-  const $ = id => document.getElementById(id);
-  const keyInput = $('admin-key');
-  keyInput.value = sessionStorage.getItem('esap-admin-key') || '';
-
-  $('forget').addEventListener('click', () => { sessionStorage.removeItem('esap-admin-key'); keyInput.value=''; setStatus('Clave eliminada de esta pestaña.'); });
-  $('pilot').addEventListener('click', () => { window.location.href = 'simulador-entrevistas-esap.html?modo=prueba'; });
-  $('load').addEventListener('click', loadStats);
-  $('days').addEventListener('change', () => { if (keyInput.value) loadStats(); });
-
-  async function loadStats(){
-    const key = keyInput.value.trim();
-    if(!key){ setStatus('Ingresa la clave ADMIN_KEY.', true); return; }
-    sessionStorage.setItem('esap-admin-key', key);
-    const button=$('load'); button.disabled=true; button.textContent='Cargando…'; setStatus('Consultando métricas…');
-    try{
-      const response=await fetch(API_URL,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({action:'admin-stats',adminKey:key,days:Number($('days').value)})});
-      let data={}; try{data=await response.json()}catch(_){ }
-      if(!response.ok || data.ok===false) throw new Error(data.error || `Error ${response.status}`);
-      render(data); setStatus(`Métricas cargadas para los últimos ${data.days} días.`, false, true);
-    }catch(error){ $('dashboard').classList.add('hidden'); setStatus(error.message || 'No fue posible cargar las métricas.', true); }
-    finally{button.disabled=false;button.textContent='Cargar métricas'}
-  }
-
-  function n(value){ return Number(value)||0 }
-  function render(data){
-    const s=data.summary||{}, started=n(s.interviews_started), completed=n(s.interviews_completed);
-    $('m-visitors').textContent=n(s.visitors).toLocaleString('es-CO'); $('m-sessions').textContent=n(s.sessions).toLocaleString('es-CO');
-    $('m-started').textContent=started.toLocaleString('es-CO'); $('m-completed').textContent=completed.toLocaleString('es-CO');
-    $('m-rate').textContent=started ? `${Math.round(completed/started*100)}%` : '0%';
-    $('m-uploaded').textContent=n(s.resumes_uploaded).toLocaleString('es-CO'); $('m-generated').textContent=n(s.resumes_generated).toLocaleString('es-CO'); $('m-voice').textContent=n(s.voice_sessions).toLocaleString('es-CO');
-    renderList('territorial',data.territorial); renderList('programs',data.programs); renderList('events',data.events,true); $('dashboard').classList.remove('hidden');
-  }
-  function renderList(id,items,eventNames=false){
-    const labels={context_completed:'Formulario completado',interview_started:'Entrevista iniciada',interview_completed:'Entrevista completada',resume_uploaded:'CV cargado',resume_requested:'CV solicitado',resume_generated:'CV generado',resume_blocked:'CV bloqueado por trazabilidad'};
-    const list=Array.isArray(items)?items:[]; $(id).innerHTML=list.length?list.map(x=>`<div class="row"><span>${escapeHtml(eventNames?(labels[x.label]||x.label):x.label)}</span><b>${n(x.value).toLocaleString('es-CO')}</b></div>`).join(''):'<p class="note">Sin datos en este periodo.</p>';
-  }
-  function escapeHtml(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
-  function setStatus(text,error=false,ok=false){const el=$('status');el.className=`status${error?' err':ok?' ok':''}`;el.innerHTML=escapeHtml(text)}
-})();
+const WORKER='https://entrevista-esap-worker.esap-entrevistas-pedro.workers.dev';
+const $=s=>document.querySelector(s);const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+$('#key').value=sessionStorage.getItem('esap-admin-key')||'';
+$('#forget').onclick=()=>{sessionStorage.removeItem('esap-admin-key');$('#key').value='';setStatus('Clave eliminada de esta pestaña.','ok')};
+$('#load').onclick=load;
+async function load(){const key=$('#key').value.trim();if(!key){setStatus('Escribe ADMIN_KEY.','err');return}sessionStorage.setItem('esap-admin-key',key);const b=$('#load');b.disabled=true;b.textContent='Cargando…';try{const r=await fetch(WORKER,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'admin-stats',adminKey:key,days:Number($('#days').value)})});const data=await r.json();if(!r.ok||!data.ok)throw new Error(data.error||`HTTP ${r.status}`);render(data);setStatus(`Métricas cargadas para los últimos ${data.days} días. Consulta completada correctamente.`, 'ok')}catch(e){console.error('[ADMIN_FAIL]',e);setStatus(`No fue posible cargar las métricas: ${String(e.message||e)}`,'err')}finally{b.disabled=false;b.textContent='Cargar métricas'}}
+function render(data){const s=data.summary||{};const completion=s.interviews_started?Math.round((Number(s.interviews_completed||0)/Number(s.interviews_started))*100):0;const items=[['Usuarios aprox.',s.visitors],['Sesiones',s.sessions],['Entrevistas iniciadas',s.interviews_started],['Entrevistas terminadas',s.interviews_completed],['Finalización',completion+'%'],['Sesiones con respuesta grabada',s.answers_recorded],['Sesiones con respuesta analizada',s.answers_analyzed],['Informes generados',s.feedback_generated],['Sesiones con voz',s.voice_sessions],['Fallos de IA reportados',s.ai_failures]];$('#stats').innerHTML=items.map(([l,v])=>`<div class="stat"><small>${esc(l)}</small><b>${esc(v??0)}</b></div>`).join('');renderBars('#territorial',data.territorial);renderBars('#programs',data.programs);renderBars('#events',data.events)}
+function renderBars(sel,rows=[]){const root=$(sel);if(!rows.length){root.innerHTML='<p class="hint">Sin datos.</p>';return}const max=Math.max(...rows.map(x=>Number(x.value)||0),1);root.innerHTML=rows.map(x=>`<div class="barrow"><div class="label" title="${esc(x.label)}">${esc(x.label)}</div><div class="track"><div class="fill" style="width:${Math.max(2,(Number(x.value)||0)/max*100)}%"></div></div><div class="value">${esc(x.value)}</div></div>`).join('')}
+function setStatus(t,k=''){$('#status').className='status '+k;$('#status').textContent=t}
 </script>
 </body>
 </html>
